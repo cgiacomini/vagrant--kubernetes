@@ -78,10 +78,10 @@ CoreDNS is running at https://192.168.56.10:6443/api/v1/namespaces/kube-system/s
 To further debug and diagnose cluster problems, use 'kubectl cluster-info dump'.
  
 $ kubectl get nodes -o wide
-NAME       STATUS   ROLES                  AGE    VERSION   INTERNAL-IP     EXTERNAL-IP   OS-IMAGE         KERNEL-VERSION                CONTAINER-RUNTIME
-k-master   Ready    control-plane,master   132m   v1.23.1   192.168.56.10   <none>        CentOS Linux 8   4.18.0-348.2.1.el8_5.x86_64   docker://20.10.12
-k-node1    Ready    <none>                 126m   v1.23.1   192.168.56.11   <none>        CentOS Linux 8   4.18.0-348.2.1.el8_5.x86_64   docker://20.10.12
-k-node2    Ready    <none>                 119m   v1.23.1   192.168.56.12   <none>        CentOS Linux 8   4.18.0-348.2.1.el8_5.x86_64   docker://20.10.12
+NAME       STATUS   ROLES                  AGE     VERSION   INTERNAL-IP     EXTERNAL-IP   OS-IMAGE          KERNEL-VERSION          CONTAINER-RUNTIME
+k-master   Ready    control-plane,master   4m5s    v1.23.3   192.168.56.10   <none>        CentOS Stream 8   4.18.0-358.el8.x86_64   docker://20.10.12
+k-node1    Ready    <none>                 3m45s   v1.23.3   192.168.56.11   <none>        CentOS Stream 8   4.18.0-358.el8.x86_64   docker://20.10.12
+k-node2    Ready    <none>                 3m36s   v1.23.3   192.168.56.12   <none>        CentOS Stream 8   4.18.0-358.el8.x86_64   docker://20.10.12
 
  
 $ kubectl get pods -o wide -A
