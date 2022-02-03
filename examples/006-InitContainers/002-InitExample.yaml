@@ -1,0 +1,14 @@
+# The Init container start a sleep  for 20 seconds.
+# When finished the web container is started
+kind: Pod
+apiVersion: v1
+metadata:
+  name: init-example2
+spec:
+  initContainers:
+  - name: sleepy
+    image: httpd
+    command: ['sleep', '20']
+  containers:
+  - name: web
+    image: nginx

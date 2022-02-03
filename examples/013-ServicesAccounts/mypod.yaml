@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: mypod
+spec:
+  containers:
+  - name: mybod
+    image: radial/busyboxplus
+    command:
+    - sleep
+    - "3600"

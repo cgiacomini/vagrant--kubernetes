@@ -1,0 +1,21 @@
+# Deploy 2 PODS that listen on port 8080 and return the string 'hello-kubernetes!'
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hello-world
+spec:
+  selector:
+    matchLabels:
+      run: expose-example
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        run: expose-example
+    spec:
+      containers:
+        - name: hello-world
+          image: gcr.io/google-samples/node-hello:1.0
+          ports:
+            - containerPort: 8080 
+              protocol: TCP

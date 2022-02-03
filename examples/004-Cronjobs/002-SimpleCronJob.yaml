@@ -1,0 +1,25 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: print-date
+spec:
+  schedule: "*/5 * * * *"
+  jobTemplate:
+    spec:
+      backoffLimit: 5
+      ttlSecondsAfterFinished: 100
+      template:
+        spec:
+          containers:
+          - name: print-date
+            image: node:14-alpine
+            imagePullPolicy: IfNotPresent
+            args:
+            - -e
+            - "console.log(new Date().toString());"
+          restartPolicy: OnFailure
+      parallelism: 1
+      completions: 1
+  concurrencyPolicy: "Forbid"
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 5
