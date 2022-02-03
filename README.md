@@ -409,7 +409,7 @@ curl https://fruits.singleton.net:443/apple --resolve fruits.singleton.net:443:1
 apple
 
 # Target banana application POD using https (port 443)
-curl https://fruits.singleton.net:443/banana --resolve fruits.singleton.net:443:80:192.168.56.10 --insecure
+curl https://fruits.singleton.net:443/banana --resolve fruits.singleton.net:443:192.168.56.10 --insecure
 banana
 
 ```
