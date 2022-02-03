@@ -22,6 +22,7 @@ $ tree
 .
 |-- READ.ME
 |-- Vagrantfile
+|-- install.sh
 |-- config
 |   `-- hosts
 |-- doc
@@ -35,24 +36,35 @@ $ tree
 ## Configuration
 Right now there are a couple of manual intervention to do before starting up Vagrant deployment.
 
-* config/id_rsa.pub : After installation we could ssh on one of the nodes by using the usual command "vagrant ssh <node>"
-  Apart from that during installation a centos user is also created created because I would like to be able
-  to access the nodes using that account.  For that to work we need to copy a valid id_rsa.pub in side the config directory.
+* ***config/id_rsa.pub*** : After installation is possible to ssh on the nodes by using the command "vagrant ssh <node>"
+  During the installation a ***centos*** user is also created. 
+  To access the nodes using this account, its id_rsa.pub file need to be copied inside the config directory.
   The id_rsa.pub file will be copied on all nodes.
   
-* config/hosts : this file will be appended to the nodes /etc/hosts file.
-  We can change in this file the nodes names and IP address with those we intend to use
+* ***config/hosts*** : this file will be appended to the nodes /etc/hosts file.
+  The nodes names and their IP address can be changed in this file.
 
-* Vagrantfile:  this file also contains nodes names and IP address that need to be changes accordingly to 
+* Vagrantfile: this file also contains nodes names that need to be changes accordingly to 
   the changes in config/hosts 
 
 ## Deployment
 
 To start the deployment we simply run the following commands
 
+***Note on Deployment:*** 
+* During the installation the vagrant/config directory is synced between the nodes.
+```
+config.vm.synced_folder "config/", "/vagrant",  type: "virtualbox"
+```
+For this to work we need vagrant-vbguest to be installed.
+* Because centos8 stream box does come with the kernel-dev package installed, 
+the installation the virtualbox guest addition on the nodes will fails.
+* The install.sh take care of updating the nodes with latest packages before installing virtualbox guest addition.
+* When a newer centos8 stream box will be available we will get rid of install.sh and just "vagrant up" as usual
+
 ```
 # Cluster Deployment
-$ vagrant up
+$ sh ./install.sh
 ...
  
 # Retrieve Kube config file
@@ -370,7 +382,7 @@ spec:
 ```
 ### Deploy the ingress
 ```
-$ kubectl apply -f fruits.ingress.yaml
+$ kubectl apply -f fruits-ingress.yaml
 ingress.networking.k8s.io/fruits-ingress created
 
 # Wait a couple of minutes to be sure that the created ingress get assigned an external IP address

@@ -17,7 +17,7 @@ log()
 }
 
 ###############################################################################
-initialseMaster()
+initializeMaster()
 {
    log "Configure kubeadm"
    sudo kubeadm config images pull
@@ -30,20 +30,18 @@ initialseMaster()
    sudo cp -f /etc/kubernetes/admin.conf $HOME/.kube/config
    sudo chown $(id -u):$(id -g) $HOME/.kube/config
 
-   sudo mkdir -p ~vagrant/.kube
-   sudo cp -f /etc/kubernetes/admin.conf ~vagrant/.kube/config
-   sudo chown vagrant:vagrant ~vagrant/.kube/config
-
    sudo mkdir -p ~centos/.kube
    sudo cp -f /etc/kubernetes/admin.conf ~centos/.kube/config
-   sudo chown centos:centos ~centos/.kube/config
+   sudo chown -R centos:centos ~centos/.kube
 
    log "Save kubeconfig"
-   sudo cp -f /etc/kubernetes/admin.conf /vagrant/config/kube-config
+   sudo cp -f /etc/kubernetes/admin.conf /vagrant/kube-config
+   sudo chown vagrant.vagrant /vagrant/kube-config
+   chmod u+x  /vagrant/kube-config
+
    log "Save join script"
-   mkdir -p /vagrant/config
-   kubeadm token create --print-join-command > /vagrant/config/join-cluster.sh
-   chmod +x /vagrant/config/join-cluster.sh
+   kubeadm token create --print-join-command > /vagrant/join-cluster.sh
+   chmod u+x /vagrant/join-cluster.sh
 
    log "Verify Status"
    kubectl get nodes 
@@ -54,7 +52,6 @@ initialseMaster()
 installFlannelCNI()
 {
    log "Configure Flannel CNI"
-   #URL=https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
    URL=https://github.com/coreos/flannel/raw/master/Documentation/kube-flannel.yml
    curl -OL --insecure $URL
 
@@ -62,7 +59,7 @@ installFlannelCNI()
    log "Adapt POD CIDR Network default: $FLANNEL_DEFAULT_CIDR -> $POD_CIDR"
    sed -i "s|${FLANNEL_DEFAULT_CIDR}|${POD_CIDR}|" kube-flannel.yml
 
-   # Forece flannel to use host only netework interface
+   # Force flannel to use host only netework interface
    text="\ \ \ \ \ \ \ \ \- --iface=eth1"
    sed -i "/--kube-subnet-mgr/ a  ${text}"  kube-flannel.yml
 
@@ -86,10 +83,6 @@ installNgnixIngressController()
    GIT_API_URL=https://api.github.com/repos/kubernetes/ingress-nginx/releases/latest
    VERSION=`curl -s $GIT_API_URL | grep tag_name |  cut -d '"' -f 4`
    URL=http://raw.githubusercontent.com/kubernetes/ingress-nginx/${VERSION}/deploy/static/provider/baremetal/deploy.yaml
-
-   #VERSION="controller-v1.1.0"
-   #log "Install NGINX Ingress Controller version : $VERSION"
-   #URL=https://raw.githubusercontent.com/kubernetes/ingress-nginx/${VERSION}/deploy/static/provider/baremetal/deploy.yaml
 
    curl -OL --insecure $URL
    kubectl apply -f deploy.yaml
@@ -166,12 +159,12 @@ EOF
 
   kubectl -n kubernetes-dashboard  patch  deployment/kubernetes-dashboard      --patch "$(cat /tmp/node-selector-patch.yaml)"
   kubectl -n kubernetes-dashboard  patch  deployment/dashboard-metrics-scraper --patch "$(cat /tmp/node-selector-patch.yaml)"
-  kubectl -n kubernetes-dashboard  get service kubernetes-dashboard -o yaml > /vagrant/config/kubernetes-dashboard-np.yaml
+  kubectl -n kubernetes-dashboard  get service kubernetes-dashboard -o yaml > /vagrant/kubernetes-dashboard-np.yaml
 
-  sed -i 's|targetPort: 8443|targetPort: 8443\n    nodePort: 30002|' /vagrant/config/kubernetes-dashboard-np.yaml
-  sed -i 's|type: ClusterIP|type: NodePort|'                         /vagrant/config/kubernetes-dashboard-np.yaml
+  sed -i 's|targetPort: 8443|targetPort: 8443\n    nodePort: 30002|' /vagrant/kubernetes-dashboard-np.yaml
+  sed -i 's|type: ClusterIP|type: NodePort|'                         /vagrant/kubernetes-dashboard-np.yaml
   kubectl -n kubernetes-dashboard  delete service kubernetes-dashboard
-  cat /vagrant/config/kubernetes-dashboard-np.yaml  | kubectl apply -f -
+  cat /vagrant/kubernetes-dashboard-np.yaml  | kubectl apply -f -
 
    log "Create Dashboard User"
 cat <<EOF | kubectl apply -f -
@@ -199,7 +192,7 @@ EOF
 }
 
 ###############################################################################
-initialseMaster
+initializeMaster
 installFlannelCNI
 installNgnixIngressController
 installDashboard

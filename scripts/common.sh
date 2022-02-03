@@ -12,22 +12,22 @@ log()
 systemUpdate()
 {
    log "Updating System pkgs"
-   sudo mkdir /etc/yum.repos.d/EPEL-SAVE
-   sudo mv /etc/yum.repos.d/epel* /etc/yum.repos.d/EPEL-SAVE
    sudo yum update -y
    sudo yum install -y yum-utils net-tools curl
    sudo yum install -y iproute-tc
+   sudo systemctl enable firewalld
+   sudo systemctl start firewalld
 }
 
 ###############################################################################
 systemSettings()
 {
    log "Setup sshd"
-   sudo cat /vagrant/config/hosts >> /etc/hosts
+   sudo cat /vagrant/hosts >> /etc/hosts
    sudo systemctl stop sshd
-   sudo sed -i 's|#  PasswordAuthentication|PasswordAutentication|g' /etc/ssh/ssh_config
-   sudo sed -i 's|#  IdentityFile|IdentityFile|g' /etc/ssh/ssh_config
-   sudo sed -i 's|#  Port|Port|g' /etc/ssh/ssh_config
+   sudo sed -i 's|#   PasswordAuthentication|PasswordAutentication|g' /etc/ssh/ssh_config
+   sudo sed -i 's|#   IdentityFile|IdentityFile|g' /etc/ssh/ssh_config
+   sudo sed -i 's|#   Port|Port|g' /etc/ssh/ssh_config
    sudo systemctl start sshd
 
    log "Disabling swap permanently"
@@ -84,7 +84,7 @@ installDocker()
   sudo usermod -aG docker centos
   sudo usermod -aG wheel  centos
   sudo mkdir /home/centos/.ssh
-  sudo cp /vagrant/config/id_rsa.pub /home/centos/.ssh/authorized_keys
+  sudo cp /vagrant/id_rsa.pub /home/centos/.ssh/authorized_keys
   sudo chmod 700 /home/centos/.ssh/authorized_keys
   sudo chown -R centos.centos /home/centos/.ssh
 
