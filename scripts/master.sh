@@ -105,8 +105,9 @@ spec:
         run-ingress-controller: "true"
 EOF
   log "Add tolerations property to ingress controller deployment"
-  # master node has tain node-role.kubernetes.io/master.
-  # We need to make ingress controller POD telerate this taint in order to
+  # master node has tain node-role.kubernetes.io/master and
+  # node-role.kubernetes.io/control-plane. We need to make 
+  # ingress controller POD telerate these taints in order to
   # be able to be deployed on the master node
 
   cat <<EOF | tee /tmp/ingress-pod-toleration-patch.yaml
@@ -164,10 +165,30 @@ spec:
         run-dashboard: "true"
 EOF
 
+  log "Add tolerations property to ingress controller deployment"
+  # master node has tain node-role.kubernetes.io/master and
+  # node-role.kubernetes.io/control-plane. We need to make 
+  # dashboard controller POD telerate these taints in order to
+  # be able to be deployed on the master node
+  cat <<EOF | tee /tmp/dashboard-pod-toleration-patch.yaml
+spec:
+  template:
+    spec:
+      tolerations:
+        - key: node-role.kubernetes.io/master
+          operator: Equal
+          effect: NoSchedule
+        - key: node-role.kubernetes.io/control-plane
+          operator: Equal
+          effect: NoSchedule
+EOF
   kubectl -n kubernetes-dashboard  patch  deployment/kubernetes-dashboard      --patch "$(cat /tmp/node-selector-patch.yaml)"
+  kubectl -n kubernetes-dashboard  patch  deployment/kubernetes-dashboard      --patch "$(cat /tmp/dashboard-pod-toleration-patch.yaml)"
   kubectl -n kubernetes-dashboard  patch  deployment/dashboard-metrics-scraper --patch "$(cat /tmp/node-selector-patch.yaml)"
-  kubectl -n kubernetes-dashboard  get service kubernetes-dashboard -o yaml > /vagrant/kubernetes-dashboard-np.yaml
+  kubectl -n kubernetes-dashboard  patch  deployment/dashboard-metrics-scraper --patch "$(cat /tmp/dashboard-pod-toleration-patch.yaml)"
+ 
 
+  kubectl -n kubernetes-dashboard  get service kubernetes-dashboard -o yaml > /vagrant/kubernetes-dashboard-np.yaml
   sed -i 's|targetPort: 8443|targetPort: 8443\n    nodePort: 30002|' /vagrant/kubernetes-dashboard-np.yaml
   sed -i 's|type: ClusterIP|type: NodePort|'                         /vagrant/kubernetes-dashboard-np.yaml
   kubectl -n kubernetes-dashboard  delete service kubernetes-dashboard
