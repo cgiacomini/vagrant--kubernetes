@@ -217,6 +217,24 @@ subjects:
   name: admin-user
   namespace: kubernetes-dashboard
 EOF
+
+cat <<EOF | kubectl apply -f -
+apiVersion: v1
+kind: Secret
+metadata:
+  name: admin-user-secret
+  namespace: kubernetes-dashboard
+  annotations:
+    kubernetes.io/service-account.name: admin-user
+type: kubernetes.io/service-account-token
+EOF
+
+# Wait for the token controller to populate the secret with a token:
+while ! kubectl describe secret admin-user-secret | grep -E '^token' >/dev/null; do
+  echo "waiting for token..." >&2
+  sleep 1
+done
+
 }
 
 ###############################################################################

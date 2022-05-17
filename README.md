@@ -451,6 +451,16 @@ banana
 
 In order to access the Kubernetes Dashboard from our workstation, a NodePort  service has been created during the cluster deployment,
 as well as an admin user account  with full privileges to modify the cluster.
+
+**Kubernetes < 1.24**
+*A secret with a token is automatically created for the service account.*
+
+**Kubernetes > 1.24**
+In Kubernetes 1.24, ServiceAccount token secrets are no longer automatically generated.
+See : https://github.com/kubernetes/kubernetes/blob/master/CHANGELOG/CHANGELOG-1.24.md
+This means, in Kubernetes 1.24, you need to manually create the Secret; the token key in the data field will be automatically set for you.
+( a secret *admin-user* has been created during the cluster deployment)
+
 The dashboard have been configured to force its deployment on the k-master node.
 Verify that kubernetes-dashboard service is present
 
@@ -467,6 +477,7 @@ kubernetes-dashboard   kubernetes-dashboard        NodePort    10.106.168.28    
 
 We can access the dashboard UI then using the followin URL : **https://192.168.56.10:30002**
 Before doing so we need first to obtain a token we will use to login to the UI.
+
 
 ```
 # Obtain a valid token for the admin-user
