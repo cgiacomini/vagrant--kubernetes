@@ -19,6 +19,10 @@ log()
 ###############################################################################
 initializeMaster()
 {
+   # Fix [ERROR CRI]: container runtime is not running:
+   sudo sed -ie 's|^disabled_plugins|#disabled_plugins|g'  /etc/containerd/config.toml
+   sudo systemctl restart containerd
+
    log "Configure kubeadm"
    sudo kubeadm config images pull
 
@@ -111,6 +115,9 @@ spec:
     spec:
       tolerations:
         - key: node-role.kubernetes.io/master
+          operator: Equal
+          effect: NoSchedule
+        - key: node-role.kubernetes.io/control-plane
           operator: Equal
           effect: NoSchedule
 EOF
