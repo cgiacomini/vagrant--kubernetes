@@ -102,6 +102,10 @@ kubernetes-dashboard   dashboard-metrics-scraper-d8b54b9c5-jrg8b   1/1     Runni
 kubernetes-dashboard   kubernetes-dashboard-867c49dc4f-bjxxs       1/1     Running     0          132m   10.10.0.3       k-master   <none>           <none>
 ```
 **Note**:
+All node should be on the same private network defined in install.sh start script. 
+It may happen that after installation, the wrong network interface hase been used.
+I such a case we can manually set *KUBELET_EXTRA_ARGS=--node-ip=192.168.56.XX* in */etc/sysconfig/kubelet* on all nodes
+
 
 The cluster deployed uses Flannel as CNI container Network Interface 
 For simplicity Kubernates dashboard is forced, by the deployment scripts, to run on the  master node.
