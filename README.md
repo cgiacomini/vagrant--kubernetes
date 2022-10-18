@@ -44,6 +44,14 @@ Right now there are a couple of manual intervention to do before starting up Vag
 * ***config/hosts*** : this file will be appended to the nodes /etc/hosts file.
   The nodes names and their IP address can be changed in this file.
 
+* ***root CA certificates*** In case the network is behind a proxy (a company wide man-in-the-middle proxies for internal security)
+   most probaly get the followinf error is rised "x509: certificate signed by unknown authority" while trying to upgrade the OS
+   packages or pulling the kubernetes images from the web. That is because the proxy interetps SSL communication and replace the 
+   to the endpoint and replace the certificate of the endpoint. To solve this we need to update the kubernetes nodes with the 
+   company Root CA self signed certificate. To do so all certifactes in ***config/RootCA*** directory are automatically update in all
+   kubernetes nodes.
+   
+
 * Vagrantfile: this file also contains nodes names that need to be changes accordingly to 
   the changes in config/hosts 
 
@@ -345,7 +353,7 @@ apple
 
 ## Testing NGINX Ingress Controller
 **Note**:
-* On virtualox we do not have a loadbalancer installed so the ingress controller service is not assigned an external IP address.
+* On virtualbox we do not have a loadbalancer installed so the ingress controller service is not assigned an external IP address.
 * During the cluster deployment we have forced the NGINX Ingress Controller service to run on the master node.
 * We also assigned to the ingress controller service an externalIP, the master node IP.
 

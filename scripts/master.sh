@@ -20,27 +20,30 @@ log()
 initializeMaster()
 {
    # Fix [ERROR CRI]: container runtime is not running:
-   sudo sed -ie 's|^disabled_plugins|#disabled_plugins|g'  /etc/containerd/config.toml
-   sudo systemctl restart containerd
+   sed -ie 's|^disabled_plugins|#disabled_plugins|g'  /etc/containerd/config.toml
+   systemctl restart containerd
 
    log "Configure kubeadm"
-   sudo kubeadm config images pull
+   kubeadm config images pull
 
    log "Master node initialization"
-   sudo kubeadm init --apiserver-advertise-address=$MASTER_IP \
+   kubeadm init --apiserver-advertise-address=$MASTER_IP \
                      --pod-network-cidr=$POD_CIDR 
 
    mkdir -p $HOME/.kube
-   sudo cp -f /etc/kubernetes/admin.conf $HOME/.kube/config
-   sudo chown $(id -u):$(id -g) $HOME/.kube/config
+   cp -f /etc/kubernetes/admin.conf $HOME/.kube/config
 
-   sudo mkdir -p ~centos/.kube
-   sudo cp -f /etc/kubernetes/admin.conf ~centos/.kube/config
-   sudo chown -R centos:centos ~centos/.kube
+   mkdir -p ~centos/.kube
+   cp -f /etc/kubernetes/admin.conf ~centos/.kube/config
+   chown -R centos:centos ~centos/.kube
+
+   mkdir -p ~vagrant/.kube
+   cp -f /etc/kubernetes/admin.conf ~vagrant/.kube/config
+   chown -R vagrant:vagrant ~vagrant/.kube
 
    log "Save kubeconfig"
-   sudo cp -f /etc/kubernetes/admin.conf /vagrant/kube-config
-   sudo chown vagrant.vagrant /vagrant/kube-config
+   cp -f /etc/kubernetes/admin.conf /vagrant/kube-config
+   chown vagrant:vagrant /vagrant/kube-config
    chmod u+x  /vagrant/kube-config
 
    log "Save join script"
@@ -84,6 +87,7 @@ installFlannelCNI()
 ###############################################################################
 installNgnixIngressController()
 {
+   # Install nginx for baremetal ( Nodeport ) Virtualbox does not have loadbalancer
    GIT_API_URL=https://api.github.com/repos/kubernetes/ingress-nginx/releases/latest
    VERSION=`curl -s $GIT_API_URL | grep tag_name |  cut -d '"' -f 4`
    URL=http://raw.githubusercontent.com/kubernetes/ingress-nginx/${VERSION}/deploy/static/provider/baremetal/deploy.yaml
@@ -130,13 +134,13 @@ spec:
   - 192.168.56.10
 EOF
 
-  kubectl -n ingress-nginx  patch  deployment/ingress-nginx-controller --patch "$(cat /tmp/node-selector-patch.yaml)"
-  kubectl -n ingress-nginx  patch  deployment/ingress-nginx-controller --patch "$(cat /tmp/ingress-pod-toleration-patch.yaml)"
-  kubectl -n ingress-nginx  patch  svc/ingress-nginx-controller        --patch "$(cat /tmp/external-ips.yaml)"
+  #kubectl -n ingress-nginx  patch  deployment/ingress-nginx-controller --patch "$(cat /tmp/node-selector-patch.yaml)"
+  #kubectl -n ingress-nginx  patch  deployment/ingress-nginx-controller --patch "$(cat /tmp/ingress-pod-toleration-patch.yaml)"
+  #kubectl -n ingress-nginx  patch  svc/ingress-nginx-controller        --patch "$(cat /tmp/external-ips.yaml)"
 
-  POD_NAMESPACE=ingress-nginx
-  POD_NAME=$(kubectl get pods -n $POD_NAMESPACE -l app.kubernetes.io/name=ingress-nginx -o jsonpath='{.items[2].metadata.name}')
-  kubectl exec -it $POD_NAME -n $POD_NAMESPACE -- /nginx-ingress-controller --version
+  #POD_NAMESPACE=ingress-nginx
+  #POD_NAME=$(kubectl get pods -n $POD_NAMESPACE -l app.kubernetes.io/name=ingress-nginx -o jsonpath='{.items[2].metadata.name}')
+  #kubectl exec -it $POD_NAME -n $POD_NAMESPACE -- /nginx-ingress-controller --version
 }
 
 
@@ -230,7 +234,7 @@ type: kubernetes.io/service-account-token
 EOF
 
 # Wait for the token controller to populate the secret with a token:
-while ! kubectl describe secret admin-user-secret | grep -E '^token' >/dev/null; do
+while ! kubectl describe secret admin-user-secret -n kubernetes-dashboard | grep -E '^token' >/dev/null; do
   echo "waiting for token..." >&2
   sleep 1
 done
@@ -238,6 +242,7 @@ done
 }
 
 ###############################################################################
+echo "WHO AM I : " $(whoami)
 initializeMaster
 installFlannelCNI
 installNgnixIngressController
