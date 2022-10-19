@@ -29,7 +29,7 @@ spec:
 
 ## Explanation
 
-In this exampe we deploy whose container need to start as root, but since we have specified
+In this exampe we deploy nginx in a POD whose container need to start as root, but since we have specified
 **runAsNonRoot: true** as security context, the container will fail to start.
 
 ```
@@ -48,10 +48,8 @@ $ kubectl describe pof nginxsecure
   Normal   Scheduled  46s               default-scheduler  Successfully assigned default/nginxsecure to k-node1
   Normal   Pulled     3s                kubelet            Successfully pulled image "nginx" in 41.874012543s
   Normal   Pulling    2s (x2 over 45s)  kubelet            Pulling image "nginx"
-  Warning  Failed     0s (x2 over 3s)   kubelet            Error: container has runAsNonRoot and image will run as root (pod: "nginxsecure_default(ec263204-c530-4991-a258-15fea1045041)", co
-ntainer: nginx)
+  Warning  Failed     0s (x2 over 3s)   kubelet            Error: container has runAsNonRoot and image will run as root (pod: "nginxsecure_default(ec263204-c530-4991-a258-15fea1045041)", container: nginx)
   Normal   Pulled     0s                kubelet            Successfully pulled image "nginx" in 1.667340538s
-
 ```
 
 ## Example 2
@@ -83,11 +81,11 @@ spec:
 
 ## Explanation
 
-* In the configuration file, the runAsUser field specifies that for any Containers in the Pod, all processes run with user ID 1000. 
-* The runAsGroup field specifies the primary group ID of 3000 for all processes within any containers of the Pod. 
-* If this field is omitted, the primary group ID of the containers will be root(0). 
-* Any files created will also be owned by user 1000 and group 3000 when runAsGroup is specified. 
-* Since fsGroup field is specified, all processes of the container are also part of the supplementary group ID 2000. i
+* In the configuration file, the **runAsUser** field specifies that for any Containers in the POD, all processes run with user ID 1000. 
+* The **runAsGroup** field specifies the primary group ID of 3000 for all processes within any containers of the POD. 
+  If this field is omitted, the primary group ID of the containers will be root(0). 
+  Any files created will also be owned by user 1000 and group 3000 when runAsGroup is specified. 
+* Since **fsGroup** field is specified, all processes of the container are also part of the supplementary group ID 2000.
 * The owner for volume /data/demo and any files created in that volume will be Group ID 2000.
 
 ```
