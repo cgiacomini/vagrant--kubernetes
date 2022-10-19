@@ -11,10 +11,10 @@
 
 
 In the follow yaml file, for example for mysql container there is:
-    * a request at least 128Mi and a 1/4 of CPU.
-    * We request at least 64Mi minimum to be able to execute.
-    * We limit the memory usage to 128Mi maximum.
-    * We limit the CPU usage half CPU time
+* a request at least 128Mi and a 1/4 of CPU.
+* We request at least 64Mi minimum to be able to execute.
+* We limit the memory usage to 128Mi maximum.
+* We limit the CPU usage half CPU time
 
 ***001-ResourcesLimitation.yaml***
 ```
