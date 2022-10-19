@@ -1,12 +1,12 @@
 # side-car example
-## Unique Container vs Multiple containers PDs
-Most of the case we have one only container in a POD because are easier to build and maintain,
-but when needed we can have multiple containers too, in this case  the following scenarios could apply:
+## Unique Container vs Multiple containers PODs
+In most cases we only have one container in a POD because they are easier to build and maintain,
+but when necessary we can also have more containers, in this case the following scenarios could apply:
 
 ![side-car](../../doc/side-car.jpg)
 
 * ***side-car*** container is a container that enhances the primary application.
-For instance for logging, or for example a web application plus helpers containers.
+For instance for logging, or for a web application plus helpers containers.
 * ***ambassador*** container  is a container that represents the primary container to the outside world such as a proxy.
 * ***adapter*** container  which is used to adapt the traffic or data pattern to match the traffic or data pattern in other applications in the cluster.
 
@@ -62,7 +62,7 @@ $ kubectl config view --minify | grep namespace
     namespace: training
  
 # Create the sidecas pod example
-$ kubectl create -f side-car.yml
+$ kubectl create -f side-car.yaml
 pod/side-car-pod created
  
 $  kubectl get pods
@@ -71,7 +71,9 @@ side-car-pod   2/2     Running   0         16s
 ```
 ## Explanation
 We connect to the sidecar container ( the web app ) of the sidecar-pod
-The two containers uses **/var/log**, the busybox one create and write the file **date.txt** while the side-car webapp container uses **/var/log** as its root documents directory.
+The two containers uses the  **logs** volume
+ * the busyboxcontainer mount it in **/var/log** and create and write the file **date.txt** in it
+ * the webapp container mount it in **/var/www/html** as its root documents directory.
 By using the web app we can then access the file date.txt
 
 ## Access the webapp
