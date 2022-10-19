@@ -2,9 +2,9 @@
 * Pods normally are created to run forever.
 * To create a POD that runs a limited duration we use jobs instead.
 * Jobs are useful for tasks like backup, calculation, batch processing etc.
-* A Pod that is started by a Job must have its restartPolicy se to **OnFailure** or **Never**.
-    * ***OnFailure*** we re-run the container in the same Pod
-    * ***Never*** will re-run the failing container in a new Pod.
+* A POD that is started by a Job must have its restartPolicy set to **OnFailure** or **Never**.
+    * ***OnFailure*** we re-run the container in the same POD
+    * ***Never*** will re-run the failing container in a new POD.
 * There are three different Jobs types:
     * ***non parallel jobs***:
         * completions=1
@@ -50,7 +50,7 @@ $ kubectl get jobs
 NAME         COMPLETIONS   DURATION   AGE
 simple-job   1/1           9s         9s
 
-# We can see the the PD in which the job has been executed is  marked as completed.
+# We can see the the POD in which the job has been executed is  marked as completed.
 $ kubectl get pods
 NAME                  READY   STATUS      RESTARTS   AGE
 simple-job--1-sbbsq   0/1     Completed   0          29s
