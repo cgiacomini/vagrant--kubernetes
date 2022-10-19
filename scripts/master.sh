@@ -134,13 +134,15 @@ spec:
   - 192.168.56.10
 EOF
 
-  #kubectl -n ingress-nginx  patch  deployment/ingress-nginx-controller --patch "$(cat /tmp/node-selector-patch.yaml)"
-  #kubectl -n ingress-nginx  patch  deployment/ingress-nginx-controller --patch "$(cat /tmp/ingress-pod-toleration-patch.yaml)"
-  #kubectl -n ingress-nginx  patch  svc/ingress-nginx-controller        --patch "$(cat /tmp/external-ips.yaml)"
+kubectl -n ingress-nginx  patch  deployment/ingress-nginx-controller --patch "$(cat /tmp/node-selector-patch.yaml)"
+kubectl -n ingress-nginx  patch  deployment/ingress-nginx-controller --patch "$(cat /tmp/ingress-pod-toleration-patch.yaml)"
+kubectl -n ingress-nginx  patch  svc/ingress-nginx-controller        --patch "$(cat /tmp/external-ips.yaml)"
 
-  #POD_NAMESPACE=ingress-nginx
-  #POD_NAME=$(kubectl get pods -n $POD_NAMESPACE -l app.kubernetes.io/name=ingress-nginx -o jsonpath='{.items[2].metadata.name}')
-  #kubectl exec -it $POD_NAME -n $POD_NAMESPACE -- /nginx-ingress-controller --version
+# Let some time to  pod to be up and running 
+sleep  1m
+POD_NAMESPACE=ingress-nginx
+POD_NAME=$(kubectl get pods -n $POD_NAMESPACE -l app.kubernetes.io/name=ingress-nginx -o jsonpath='{.items[2].metadata.name}')
+kubectl exec -it $POD_NAME -n $POD_NAMESPACE -- /nginx-ingress-controller --version
 }
 
 

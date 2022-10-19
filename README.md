@@ -64,11 +64,8 @@ To start the deployment we simply run the following commands
 ```
 config.vm.synced_folder "config/", "/vagrant",  type: "virtualbox"
 ```
-For this to work we need vagrant-vbguest to be installed.
-* Because centos8 stream box does come with the kernel-dev package installed, 
-the installation the virtualbox guest addition on the nodes will fails.
-* The install.sh take care of updating the nodes with latest packages before installing virtualbox guest addition.
-* When a newer centos8 stream box will be available we will get rid of install.sh and just "vagrant up" as usual
+For this to work we need Virtual Box Guest addition to be installed on the nodes
+the vagrant box ***generic/centos8s***  comes with a preinstalled Virtual Box Guest addition.
 
 ```
 # Cluster Deployment
@@ -280,7 +277,7 @@ Address 1: 10.108.56.226 apple-service.default.svc.cluster.local
 ```
 
 ## Testing *Flannel* pod to pod communication
-One thing we have to make sure is that Conatainer Network Interface (CNI) works as expected.
+We also have to make sure is that Conatainer Network Interface (CNI) works as expected.
 From within a pod deployed on a cluster node we should be able to communicate with another pod
 deployed on another node.
 
