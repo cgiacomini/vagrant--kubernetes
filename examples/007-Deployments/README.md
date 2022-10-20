@@ -1,4 +1,5 @@
 # Deployment
+
 Deployments to take care of scalability, update strategy, history of PODs.
 
 # Deployment Scalability
@@ -9,6 +10,7 @@ Deployments to take care of scalability, update strategy, history of PODs.
   It is used to guarantee a stable number of PODs always running.
 
 ![ReplicaSet](../../doc/ReplicaSet.png)
+
 
 
 ## Example 1
