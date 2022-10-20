@@ -205,7 +205,7 @@ nginx-run-779bcb85bd-fzk5c   1/1     Running   0          7s    k8s-app=nginx-ru
 ```
 
 # Deployment History
-* Major changes in the deployment cause the rcreation of a new ReplicaSet that uses the new proprieties that has changed.
+* Major changes in the deployment cause the recreation of a new ReplicaSet that uses the new proprieties that has changed.
 * The old ReplicaSet is kept but the number of Pods is set to 0.
 * This make easy to undo the changes if needed by using: kubectl rollout history of a specific deployment.
 * So when making a change, this change is applied as a rolling update and the changed version is deployed.
