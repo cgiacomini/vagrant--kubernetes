@@ -76,7 +76,7 @@ redis-7d757c948f   1         1         1       1m
   ex: information about licenses, maintainers, and much more.
 
 
-## Example 2 - Mmanually setting labels
+## Example 2 - Manually setting labels
 ***002-nginx-deployment.yaml***
 ```
 apiVersion: apps/v1
@@ -123,8 +123,6 @@ spec:
       securityContext: {}
       terminationGracePeriodSeconds: 30
 ```
-
-manually setting labels
 
 ```
 # Deploy nginx-run
@@ -182,7 +180,6 @@ Events:
 
 Kubernetes deployment through the replica set makes sure that the desired amount of PODs is available, by monitoring Pods that match the label.
 If we manually remove a POD label, for example, Kubernetes will recreate the POD with the specific label as given in the deployment YAML file
-
 
 ```
 # Get the Pods labels
