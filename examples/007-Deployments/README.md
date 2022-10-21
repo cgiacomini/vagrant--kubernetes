@@ -220,7 +220,7 @@ nginx-run-779bcb85bd-fzk5c   1/1     Running   0          7s    k8s-app=nginx-ru
         * ***maxSurge***: is the number of pods that are allowed to run beyond the desired number of pods specified in a replica to guarantee minimal availability
 * Use kubectl rollout undo to undo a previous change
 
-## Using rollout history**
+## Using rollout history
 ```
 # Check nginx-run deployment rollout history. here one revision only that is because nothing has changed in deployment.
 $ kubectl rollout history deployment nginx-run
