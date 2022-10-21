@@ -202,7 +202,7 @@ $ kubectl get pod --show-labels
 NAME                         READY   STATUS    RESTARTS   AGE   LABELS
 nginx-run-779bcb85bd-84lqq   1/1     Running   0          12m   pod-template-hash=779bcb85bd
 nginx-run-779bcb85bd-fzk5c   1/1     Running   0          7s    k8s-app=nginx-run,pod-template-hash=779bcb85bd
-```
+GG```
 
 # Deployment History
 * Major changes in the deployment cause the recreation of a new ReplicaSet that uses the new proprieties that has changed.
@@ -418,3 +418,54 @@ spec:
         resources: {}
 status: {}
 ```
+## Deployment Alternatives
+
+Most of the time applications are deployes usin Deployments. There two kind if Deployments:
+
+1. DemonSet  : A DaemonSet is a Deployment that starts one Pod instance on every node in the cluster. 
+               When a node is added to the cluster the Daemon set deployment start the required PODs on that node too.
+2. StatefulSets : StatefulSets are valuable for applications that require
+  * Stable, unique network identifiers.
+  * Stable, persistent storage.
+  * Ordered, graceful deployment and scaling.
+  * Ordered, automated rolling updates.
+                                        
+
+## Example 4 -  Daemon Set Deployment
+***004-daemonset.yaml***
+```
+---
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: nginxdaemon
+  namespace: training
+  labels:
+    k8s-app: nginxdaemon
+spec:
+   selector:
+     matchLabels:
+       name: nginxdaemon
+   template:
+      metadata:
+        labels:
+          name: nginxdaemon
+      spec:
+        containers:
+        - name: nginx
+          image: nginx
+
+```
+
+We see that two pods are running, on on each worker node:
+
+```
+$ kubectl get ds,pod -o wide
+NAME                         DESIRED   CURRENT   READY   UP-TO-DATE   AVAILABLE   NODE SELECTOR   AGE     CONTAINERS   IMAGES   SELECTOR
+daemonset.apps/nginxdaemon   2         2         2       2            2           <none>          2m21s   nginx        nginx    name=nginxdaemon
+
+NAME                    READY   STATUS    RESTARTS   AGE     IP           NODE        NOMINATED NODE   READINESS GATES
+pod/nginxdaemon-77fv5   1/1     Running   0          2m21s   10.10.1.44   k8s-node1   <none>           <none>
+pod/nginxdaemon-t5pnm   1/1     Running   0          2m21s   10.10.2.55   k8s-node2   <none>           <none>
+```
+
