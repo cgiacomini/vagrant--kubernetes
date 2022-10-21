@@ -62,7 +62,6 @@ redis-7d757c948f-sdbf4        1/1     Running     0          63s
 $ kubectl get rs
 NAME               DESIRED   CURRENT   READY   AGE
 redis-7d757c948f   1         1         1       1m
-
 ```
 
 # Labels, Selectors and Annotations
@@ -177,7 +176,6 @@ Events:
   Normal  ScalingReplicaSet  59s   deployment-controller  Scaled up replica set nginx-run-779bcb85bd to 1
 ```
 
-
 Kubernetes deployment through the replica set makes sure that the desired amount of PODs is available, by monitoring Pods that match the label.
 If we manually remove a POD label, for example, Kubernetes will recreate the POD with the specific label as given in the deployment YAML file
 
@@ -202,7 +200,7 @@ $ kubectl get pod --show-labels
 NAME                         READY   STATUS    RESTARTS   AGE   LABELS
 nginx-run-779bcb85bd-84lqq   1/1     Running   0          12m   pod-template-hash=779bcb85bd
 nginx-run-779bcb85bd-fzk5c   1/1     Running   0          7s    k8s-app=nginx-run,pod-template-hash=779bcb85bd
-GG```
+```
 
 # Deployment History
 * Major changes in the deployment cause the recreation of a new ReplicaSet that uses the new proprieties that has changed.
@@ -424,7 +422,7 @@ Most of the time applications are deployes usin Deployments. There two kind if D
 
 1. DemonSet  : A DaemonSet is a Deployment that starts one Pod instance on every node in the cluster. 
                When a node is added to the cluster the Daemon set deployment start the required PODs on that node too.
-2. StatefulSets : StatefulSets are valuable for applications that require
+2. StatefulSets : StatefulSets are valuable for applications that require:
   * Stable, unique network identifiers.
   * Stable, persistent storage.
   * Ordered, graceful deployment and scaling.
