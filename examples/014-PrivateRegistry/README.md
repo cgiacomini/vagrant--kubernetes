@@ -18,5 +18,5 @@ we do not have a DNS runnig.
 192.168.56.200 centos8s-server.singleton.net centos8s-server
 ```
 
-[Insecure Docker Registry](InsecureRegistry.md)
+[Insecure Docker Registry](InsecureRegistry.md)<br\>
 [Basic Authentication Registry](BasiAuthenticationRegistry.md)
