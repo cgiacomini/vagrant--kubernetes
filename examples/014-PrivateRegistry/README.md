@@ -20,3 +20,4 @@ we do not have a DNS runnig.
 
 - [Insecure Docker Registry](InsecureRegistry.md)  
 - [Basic Authentication Registry](BasicAuthenticationRegistry.md)  
+- [Self Signed CA Certificate Registry](SelfSignedCACertificateRegistry.md)
