@@ -19,3 +19,4 @@ we do not have a DNS runnig.
 ```
 
 [Insecure Docker Registry](InsecureRegistry.md)
+[Basic Authentication Registry](BasiAuthenticationRegistry.md)
