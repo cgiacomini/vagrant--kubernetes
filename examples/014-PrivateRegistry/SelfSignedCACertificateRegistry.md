@@ -133,5 +133,8 @@ $ docker push centos8s-server.singleton.net:443/alpine
 ```
 # Querying the registry
 ```
-curl   -u centos:centos  https://centos8s-server.singleton.net:443/v2/_catalog
+$ curl   -u centos:centos  https://centos8s-server.singleton.net:443/v2/_catalog
+{"repositories":["alpine"]}
+$ curl   -u centos:centos  https://centos8s-server.singleton.net:443/v2/alpine/tags/list
+{"name":"alpine","tags":["latest"]}
 ```
