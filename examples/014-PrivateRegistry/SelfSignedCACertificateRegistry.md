@@ -1,34 +1,21 @@
 ## Registry server with a self signed certificate.
 
-To better secure the registry access we could create a self signed certificate for our private docker registry.
-The certificate then need to be added to all hosts the will requires access the to our private registry.
-
-We use OpenSSL to generate a self signed certificate with SAN (Subject Alternative Name)
-The raeson to use SAN is because the registry could complain about the old style CN (common name) certificates.
-
-If we ask for the current installed certificate on our private docker registry we see that there is none:
+To better secure the registry access we could create a self signed certificate for our private docker registry.  
+The certificate then need to be added to all hosts the will requires access the to our private registry.  
+  
+If we ask for the current installed certificate on our running private docker registry we see that there is none:
 ```
- openssl s_client -showcerts -connect localhost:5000
+$ openssl s_client -showcerts -connect localhost:5000
 CONNECTED(00000003)
-139811634358080:error:1408F10B:SSL routines:ssl3_get_record:wrong version number:ssl/record/ssl3_record.c:332:
----
 no peer certificate available
----
 No client certificate CA names sent
----
-SSL handshake has read 5 bytes and written 289 bytes
-Verification: OK
----
-New, (NONE), Cipher is (NONE)
-Secure Renegotiation IS NOT supported
-Compression: NONE
-Expansion: NONE
-No ALPN negotiated
-Early data was not sent
+...
+...
 Verify return code: 0 (ok)
 ```
-
 ### Generate Self Signed Certificate with SAN
+We use OpenSSL to generate a self signed certificate with SAN (Subject Alternative Name)  
+The raeson to use SAN is because the registry could complain about the old style CN (common name) certificates
 ```
 $ openssl req -nodes -x509 -sha256 -newkey rsa:4096 \
    -keyout registry_auth.key \
@@ -41,8 +28,8 @@ Generating a RSA private key
 ................................................................................................++++
 writing new private key to 'registry_auth.key
 ```
-In case we want just to use an IP address, prefix it with IP: instead of DNS.  
-We now have to copy the certificate in the directoty we used to mount as volume on the docker registry container
+In case we want just to use an IP address, prefix it with IP: instead of DNS.    
+We now have to copy the certificate in the directoty we used to mount as volume on the docker registry container.
 
 ```
 $ sudo mkdir -p  /var/lib/docker-registry/certs
@@ -64,9 +51,14 @@ $ docker run -d -p 443:443 \
     -e REGISTRY_HTTP_TLS_KEY=/data/certs/registry_auth.key \
     registry:2.7
 ```
-If we ask for the current installed certificate on our private docker registry we see that there is one:
+***Note:*** Using this along with basic authentication requires to also trust the certificate into the OS cert store for some versions of docker.
 ```
-openssl s_client -showcerts -connect 192.168.56.200:443 < /dev/null
+$ sudo cp /var/lib/docker-registry/certs/registry_auth.crt /etc/pki/ca-trust/source/anchors
+$ sudo  sudo update-ca-trust
+```
+If we now ask for the current installed certificate on our private docker registry we see that there is one:
+```
+$ openssl s_client -showcerts -connect 192.168.56.200:443 < /dev/null
 CONNECTED(00000003)
 Can't use SSL_get_servername
 depth=0 C = FR, ST = Alpes Maritimes, L = Nice, O = SINGLETON, OU = R&D, CN = docker-registry
@@ -78,19 +70,18 @@ verify return:1
 Certificate chain
  0 s:C = FR, ST = Alpes Maritimes, L = Nice, O = SINGLETON, OU = R&D, CN = docker-registry
    i:C = FR, ST = Alpes Maritimes, L = Nice, O = SINGLETON, OU = R&D, CN = docker-registry
------BEGIN CERTIFICATE-----
 ...
-...
-9TCnni9W1MBfvDQoXHB7ogje7Zvjsw==
------END CERTIFICATE-----
----
 Server certificate
 subject=C = FR, ST = Alpes Maritimes, L = Nice, O = SINGLETON, OU = R&D, CN = docker-registry
-
 issuer=C = FR, ST = Alpes Maritimes, L = Nice, O = SINGLETON, OU = R&D, CN = docker-registry
-
 ---
 No client certificate CA names sent
+Peer signing digest: SHA256
+Peer signature type: RSA
+Server Temp Key: X25519, 253 bits
+---
+SSL handshake has read 2387 bytes and written 382 bytes
+Verification: OK
 ...
 ...
     Timeout   : 7200 (sec)
@@ -99,20 +90,4 @@ No client certificate CA names sent
 ---
 DONE
 ```
-
-### Trying to login
-Now the registry is running with a self signed certificate but we cannot yet login 
-```
-$ docker login centos8s-server:443
-Error response from daemon: Get "https://192.168.56.200:443/v2/": x509: certificate signed by unknown authority
-```
-
-we must instruct docker to trust the self-signed certificate by copying the self-signed certificate to
-/etc/docker/certs.d/<your_registry_host_name>:<your_registry_host_port>/
-```
-$ sudo mkdir -p /etc/docker/certs.d/192.168.56.200:5000
-$ sudo mkdir -p /etc/docker/certs.d/192.168.56.200:443
-$ sudo cp /var/lib/docker-registry/certs/registry_auth.crt /etc/docker/certs.d/192.168.56.200:5000
-$ sudo cp /var/lib/docker-registry/certs/registry_auth.crt /etc/docker/certs.d/192.168.56.200:443
-
 
