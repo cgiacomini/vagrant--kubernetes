@@ -44,6 +44,7 @@ $ docker run -d -p 443:443 \
     --restart=always \
     -v /var/lib/docker-registry:/data \
     -e REGISTRY_AUTH=htpasswd \
+    -e REGISTRY_STORAGE_FILESYSTEM_ROOTDIRECTORY=/data \
     -e REGISTRY_AUTH_HTPASSWD_REALM="Registry Realm" \
     -e REGISTRY_AUTH_HTPASSWD_PATH=/data/auth/registry.password \
     -e REGISTRY_HTTP_ADDR=0.0.0.0:443 \
@@ -107,9 +108,12 @@ We assume now that we do not want to access to the registry only bye its FQDN (c
 We have then to instruct the docker client on all nodes to trust the certificate by coping it int the following directory:  
 */etc/docker/certs.d/<your_registry_host_name>:<your_registry_host_port>/*
 ```
+# On all hosts
 $ sudo mkdir /etc/docker/certs.d/centos8s-server.singleton.net:443
-$ sudo cp 
-$ sudo cp /var/lib/docker-registry/certs/registry_auth.crt  /etc/docker/certs.d/centos8s-server.singleton.net\:443/
+$ sudo openssl s_client -showcerts -connect centos8s-server.singleton.net:443 < /dev/null | sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' > /tmp/cert.crt
+$ sudo cp /tmp/cert.crt /etc/pki/ca-trust/source/anchors/
+$ sudo cp /tmp/cert.crt /etc/docker/certs.d/centos8s-server.singleton.net\:443
+$ sudo sudo update-ca-trust
 ```
 Now we can login using the FQDN Of the host runnig the local docker registry
 ```
@@ -121,4 +125,13 @@ https://docs.docker.com/engine/reference/commandline/login/#credentials-store
 
 Login Succeeded
 ```
-
+### Pushing an image 
+```
+$ docker pull alpine:latest
+$ docker tag  alpine:latest  centos8s-server.singleton.net:443/alpine
+$ docker push centos8s-server.singleton.net:443/alpine
+```
+# Querying the registry
+```
+curl   -u centos:centos  https://centos8s-server.singleton.net:443/v2/_catalog
+```
