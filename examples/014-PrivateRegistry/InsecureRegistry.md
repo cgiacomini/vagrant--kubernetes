@@ -1,7 +1,7 @@
-## insecure docker registry
+## Insecure Private Docker Registry
 
 ### Starting the registry
-A docker registry can be run as as a docker image by pulling the and running the official registry image from DockerHub.
+A docker registry can run as a docker image by pulling the image and running the official registry image from DockerHub.
 
 ```
 docker run -p 5000:5000 -v /var/lib/docker-registry:/data \
@@ -9,7 +9,7 @@ docker run -p 5000:5000 -v /var/lib/docker-registry:/data \
     -e REGISTRY_STORAGE_FILESYSTEM_ROOTDIRECTORY=/data \
     registry:2.7
 
-# Verify we can connect to the registry and retrieve some info concerning existing images
+# Verify that we can connect to the registry and retrieve some info concerning existing images
 curl http://localhost:5000/v2/_catalog
 {"repositories":[]}
 
@@ -17,10 +17,8 @@ curl http://localhost:5000/v2/_catalog
 
 ### Pushing an image
 
-The first step is to have a valid image to be pushed to the new local registry.
-We can achieve this by creating our one image by build one via a Dockerfile or simply
-pulling one from DockerHub and then pushing it the our new local registry.
-
+Here we simply pull a small docker image from DockerHub for test purpose.
+We use library/alpine because is a relatives small image.
 ```
 # Pulling a small docker image from DockerHub
 $ docker pull alpine:latest
@@ -30,7 +28,7 @@ Digest: sha256:bc41182d7ef5ffc53a40b044e725193bc10142a1243f395ee852a8d9730fc2ad
 Status: Downloaded newer image for alpine:latest
 docker.io/library/alpine:latest
 
-# Verify we now have the alpine image downloade
+# Verify we now have the alpine image downloaded
 $ docker images
 REPOSITORY                       TAG        IMAGE ID       CREATED         SIZE
 alpine                           latest     9c6f07244728   2 months ago    5.54MB
@@ -62,9 +60,7 @@ $ curl localhost:5000/v2/alpine/tags/list
 
 ### Pulling the image
 
-Now we can delete our alpine image and tag from docker and try to pull it back this time from
-our local registry.
-
+Now we can delete our local alpine image and tag from docker and try to pull it back this time from our local registry.
 ```
 $ docker rmi alpine:latest
 Untagged: alpine:latest
