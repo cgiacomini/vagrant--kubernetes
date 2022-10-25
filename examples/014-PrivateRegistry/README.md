@@ -1,8 +1,8 @@
 # Private Registry using Securing communication
 
-Right now we have one master node  (k8s-master) and two worker nodes (k8s-node1, k8s-node2).
-Here we add a 4th machine (centos8s-server), this new host is intended to run all additional services that are
-not properly related to kubernetes, for example a local private docker registry.
+Right now we have one master node  (k8s-master) and two worker nodes (k8s-node1, k8s-node2).  
+Here we add a 4th machine (centos8s-server), this new host is intended to run all additional services that are  
+not properly related to kubernetes, for example a local private docker registry.  
 For this reason the new host will not have kubernets software installe on it.
 
 
@@ -18,5 +18,5 @@ we do not have a DNS runnig.
 192.168.56.200 centos8s-server.singleton.net centos8s-server
 ```
 
-[Insecure Docker Registry](InsecureRegistry.md)<br\>
-[Basic Authentication Registry](BasiAuthenticationRegistry.md)
+[Insecure Docker Registry](InsecureRegistry.md)  
+[Basic Authentication Registry](BasiAuthenticationRegistry.md)  
