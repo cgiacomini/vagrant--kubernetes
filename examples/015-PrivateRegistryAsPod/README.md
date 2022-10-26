@@ -300,7 +300,7 @@ docker-registry   ClusterIP   10.102.235.196   192.168.56.10   5000/TCP   13s
 We can now try to isse a docker login from any node outside the cluster.
 To to so we first add the following line to the host **/etc/hosts** file so it can
 resolve the docker-registry name to be the k8s-node IP address
-***/eth/hosts***
+***/et/hosts***
 
 ```
 192.168.56.10  docker-registry.singleton.net docker-registry
