@@ -1,6 +1,6 @@
 # Persistent Volume Claims
 * Is used to define what type of storage is needed. 
-* It talk to the available backend storage provedr to claim available volumes of the storge type.
+* It talk to the available backend storage provedir to claim available volumes of the storge type.
 
 # Example 
 ***persistent-volume.yaml***
@@ -132,5 +132,3 @@ root@task-pv-pod:/# curl http://localhost/
 Hello from Kubernetes storage
 
 ```
-
-
