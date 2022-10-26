@@ -1,0 +1,52 @@
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: docker-registry
+  namespace: docker-registry
+  labels:
+    app: registry
+spec:
+  nodeSelector:
+   run-ingress-controller: "true"
+  tolerations:
+  - key: node-role.kubernetes.io/master
+    operator: Equal
+    effect: NoSchedule
+  - key: node-role.kubernetes.io/control-plane
+    operator: Equal
+    effect: NoSchedule
+  containers:
+  - name: registry
+    image: registry:2.7
+    volumeMounts:
+    - name: repository
+      mountPath: "/var/lib/registry"
+    - name: certificate
+      mountPath: "/certs"
+      readOnly: true
+    - name: autentication
+      mountPath: "/auth"
+      readOnly: true
+    env:
+    - name: REGISTRY_AUTH
+      value: "htpasswd"
+    - name: REGISTRY_AUTH_HTPASSWD_REALM
+      value: "Registry Realm"
+    - name: REGISTRY_AUTH_HTPASSWD_PATH
+      value: "/auth/registry.password"
+    - name: REGISTRY_HTTP_TLS_CERTIFICATE
+      value: "/certs/tls.crt"
+    - name: REGISTRY_HTTP_TLS_KEY
+      value: "/certs/tls.key"
+  volumes:
+  - name: repository
+    persistentVolumeClaim:
+      claimName: docker-registry-repo-pvc
+  - name: certificate
+    secret:
+      secretName: cert-secret
+  - name: autentication
+    secret:
+      secretName: auth-secret
+

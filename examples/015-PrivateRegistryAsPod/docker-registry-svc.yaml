@@ -1,0 +1,14 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: docker-registry
+  namespace: docker-registry
+spec:
+  externalIPs:
+  - 192.168.56.10
+  selector:
+    app: registry
+  ports:
+  - port: 5000
+    targetPort: 5000
