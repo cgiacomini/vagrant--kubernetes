@@ -350,5 +350,3 @@ We have no pushed any images yet so the repository is empty but accessible with 
 $ curl   -u centos:centos  https://docker-registry:5000/v2/_catalog
 {"repositories":[]}
 ```
-
-
