@@ -131,10 +131,81 @@ $ docker pull alpine:latest
 $ docker tag  alpine:latest  centos8s-server.singleton.net:443/alpine
 $ docker push centos8s-server.singleton.net:443/alpine
 ```
-# Querying the registry
+### Querying the registry
 ```
 $ curl   -u centos:centos  https://centos8s-server.singleton.net:443/v2/_catalog
 {"repositories":["alpine"]}
 $ curl   -u centos:centos  https://centos8s-server.singleton.net:443/v2/alpine/tags/list
 {"name":"alpine","tags":["latest"]}
+```
+
+# Run a POD with an image from the local docker registry
+
+## Create a docker-registry secret
+
+We first need to create a secret that will be used by all nodes pulling the image to autenticate theirself to the registry.  
+Is the equivalent for kubernetes of a docker login ( see ref Ref(https://jamesdefabia.github.io/docs/user-guide/kubectl/kubectl_create_secret_docker-registry/)
+
+```
+$ kubectl create secret docker-registry  centos8s-server-secret --docker-server=centos8s-server.singleton.net:443 --docker-username=centos --docker-password=centos -n docker-registry
+secret/reg-secret created
+
+$ kubectl get secrets -n docker-registry
+NAME                     TYPE                             DATA   AGE
+centos8s-server-secret   kubernetes.io/dockerconfigjson   1      20m
+```
+
+## Pull an immage 
+
+First we download a busybox image localy to our host using docker client command
+```
+$ docker pull busybox
+Using default tag: latest
+latest: Pulling from library/busybox
+22b70bddd3ac: Pull complete
+Digest: sha256:125113b35efe765c89a8ed49593e719532318d26828c58e26b26dd7c4c28a673
+Status: Downloaded newer image for busybox:latest
+docker.io/library/busybox:latest
+
+$ docker images
+REPOSITORY                                 TAG       IMAGE ID       CREATED        SIZE
+busybox                                    latest    bc01a3326866   6 hours ago    1.24MB
+```
+## Push the image to the local registry
+
+Now try to push the image in our docker-registry running as a POD.
+As usual we need to tag the image to refrence the docker registry
+
+```
+$ docker tag busybox centos8s-server.singleton.net:443/busybox
+The push refers to repository [entos8s-server.singleton.net:443/busybox]
+0438ade5aeea: Pushed
+
+$ docker images 
+REPOSITORY                                  TAG       IMAGE ID       CREATED        SIZE
+centos8s-server.singleton.net:443/busybox   latest    bc01a3326866   7 hours ago    1.24MB
+busybox                                     latest    bc01a3326866   7 hours ago    1.24MB
+
+$ docker push centos8s-server.singleton.net:443/busybox
+Using default tag: latest
+The push refers to repository [centos8s-server.singleton.net:443/busybox]
+0438ade5aeea: Pushed
+```
+
+We now verify the catalog reports a new repostory on the docker-registry
+```
+$ curl   -u centos:centos  https://centos8s-server.singleton.net:443/v2/_catalog
+{"repositories":["busybox"]}
+```
+
+## Try to create a new POD with the busybox image pulled from docker-registry
+For this to work we need to specify the secret to use to access the registry
+
+```
+$ kubectl run busybox-pod --image=centos8s-server.singleton.net:443/busybox -n docker-registry --overrides='{"apiVersion": "v1", "spec": {"imagePullSecrets": [{"name":  "centos8s-server-secret"}]}}' -- sleep 3600
+pod/busybox-pod created
+
+$ kubectl get pods -docker-registry
+NAMESPACE              NAME                                         READY   STATUS      RESTARTS        AGE
+docker-registry        busybox-pod                                  1/1     Running     0               6s
 ```
