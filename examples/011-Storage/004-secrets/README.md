@@ -75,7 +75,7 @@ type: Opaque
 ```
 
 # Create secrets with YAML file
-It is also possible to create secrets using YAML file, in his case we have encode the secrets values in *base64*, using base64 command,
+It is also possible to create secrets using YAML file, in this case we have encode the secrets values in *base64*, using base64 command,
 as for the below example:
 
 ```
