@@ -7,15 +7,15 @@
 ## POD assigned IPs ranges
 ```
 # Get node1 assigned POD IPs range
-$ kubectl get node k8s-node1.singleton.net -o jsonpath='{.spec.podCIDR}'
+$ kubectl get node k8s-node1 -o jsonpath='{.spec.podCIDR}'
 10.244.1.0/24
  
 # Get node2 assigned POD IPs rang
-$ kubectl get node k8s-node2.singleton.net -o jsonpath='{.spec.podCIDR}'
+$ kubectl get node k8s-node2 -o jsonpath='{.spec.podCIDR}'
 10.244.2.0/24
  
 # Get master node assigned POD IPs rang
-$ kubectl get node k8s-master.singleton.net -o jsonpath='{.spec.podCIDR}'
+$ kubectl get node k8s-master -o jsonpath='{.spec.podCIDR}'
 10.244.0.0/24
  
 # Get services ClusterIPs CIDR and the POD subnet
@@ -25,10 +25,10 @@ serviceSubnet: 10.96.0.0/12
 ````
 ![PODs and Cluster Network](../../../doc/PODsAndClusterNetwork.jpg)
 
-* Pods **labels** (key-value pairs) are used by services to identify the pods  should forward the requests to. 
-* POD's containers **exposed ports** are used by services to identify to which port should the request send to.
-* Services selectors are used to identify the pods with the given labels and to which should forward the requests to.
-* Service **port** define the port exposed by the service and **targetPort** define the pods target port to which the requests will be send to.
+* PODs's **labels**_ (key-value pairs) are used by services to identify the pods to forward requests to
+* PODs's containers_ **exposed ports**_ are used by services to identify to which port the request should be sent to.
+* Services **selectors** are used to identify the pods with the given labels and to which should forward the requests to.
+* Service **port** define the port exposed by the service and **targetPort** define the PODs target port to which the requests will be sent to.
 ![ClusterIP Service](../../../doc/ClusterIPService.jpg)
 
 ## Deploy ClusterId service
