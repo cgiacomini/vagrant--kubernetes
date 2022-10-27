@@ -1,4 +1,4 @@
-Allow all kubernetes node to access the docker-registry which run as a POD
+# Allow all kubernetes node to access the docker-registry which run as a POD
 
 ## /etc/hosts
 Update all nodes's ***/etc/hosts*** file to add docker-registry
@@ -33,7 +33,7 @@ $ curl   -u centos:centos  https://docker-registry:5000/v2/_catalog
 Ref(https://jamesdefabia.github.io/docs/user-guide/kubectl/kubectl_create_secret_docker-registry/)
 Normally to push/pull images to the registry we need to autenticate our self with the **docker login** command.  
 
-In kubernetes when creating applications, in order for the nodes to pull images on your behalf, they have to have the credentials.
+In kubernetes when creating applications, in order for the nodes to pull images from the repository on your behalf, they have to have the credentials.
 You can provide this information by creating a dockercfg secret and attaching it to your service account.
 ```
 $ kubectl create secret docker-registry reg-secret --docker-server=docker-registry:5000 --docker-username=centos --docker-password=centos -n docker-registry
@@ -63,7 +63,7 @@ REPOSITORY                                 TAG       IMAGE ID       CREATED     
 busybox                                    latest    bc01a3326866   6 hours ago    1.24MB
 
 ```
-Now try to push in our docker-registry running as a POD.  
+Now try to push the image on docker-registry.  
 As usual we need to tag the image to refrence the POD docker registry
 
 ```
@@ -93,7 +93,7 @@ $ curl   -u centos:centos  https://docker-registry:5000/v2/_catalog
 For this to work we need to specify the secret to use to access the registry
 
 ```
-$ kubectl run busybox-pod --image=docker-registry:5000/busybox:v1 -n docker-registry --overrides='{"apiVersion": "v1", "spec": {"imagePullSecrets": [{"name": "reg-secret"}]}}'
+$ kubectl run busybox-pod --image=docker-registry:5000/busybox:v1 -n docker-registry --overrides='{"apiVersion": "v1", "spec": {"imagePullSecrets": [{"name": "reg-secret"}]}}' 
 ```
 
 
