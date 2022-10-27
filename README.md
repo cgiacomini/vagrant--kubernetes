@@ -16,7 +16,7 @@ On the Windows Laptop, our host system, we need the following required software 
 The project need to be cloned on the host Windows10 machine
 
 ```
-$ git clone https://github.com/cgiacomini/vagrant-kubernetes.git
+$ git clone https://github.com/cgiacomini/vagrant--kubernetes.git
 $ cd vagrant-Kubernetes
 $ tree
 .
