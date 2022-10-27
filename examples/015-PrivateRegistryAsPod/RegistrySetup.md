@@ -26,8 +26,8 @@ We use OpenSSL to generate a self signed certificate with SAN (Subject Alternati
 ```
 $ mkdir -p registry/certs
 $ openssl req -nodes -x509 -sha256 -newkey rsa:4096 \
-   -keyout registry_auth.key \
-   -out registry/cets
+   -keyout registry/certs/registry_auth.key \
+   -out registry/certs/registry_auth.crt \
    -days 356 \
    -subj "/C=FR/ST=Alpes Maritimes/L=Nice/O=SINGLETON/OU=R&D/CN=docker-registry"  \
    -addext "subjectAltName = DNS:docker-registry"
@@ -47,9 +47,8 @@ kubectl create secret tls my-tls-secret \
    --cert <certificate> \
    -n docker-registry
 ```
-Or we can create its own proper yaml file as follow.  
-This way would be easier to reaply in case we need to do so.
-
+Or we can create a yaml so would be easier to reaply in case we need to do so.
+The format of the yaml file is as follow:
 ```
 --- 
 apiVersion: v1
@@ -63,7 +62,7 @@ metadata:
 type: kubernetes.io/tls
 ```
 
-For this we though have to provide the certificate and the key in base64 encoded format.
+we have to provide the certificate and the key in base64 encoded format.
 
 ```
 $ cat registry/certs/registry_auth.crt | base64 -w 0
@@ -106,25 +105,22 @@ kubernetes-dashboard   kubernetes-dashboard-key-holder   Opaque                 
 
 ```
 
-
 ## Create base autentication secret
 We create the secret from a password file create with htpassword command line
 
 ```
 $ mkdir -p registry/auth
-$ htpasswd -Bc registry/auth registry.password centos
-$ New password:
-$ Re-type new password:
+$ htpasswd -Bbc registry/auth/registry.password centos centos
+Adding password for user centos
 
 $ kubectl create secret generic auth-secret -n docker-registry --from-file=registry/auth/registry.password
 secret/auth-secret created
 
-$ k get secrets -n docker-registry
+$ kubectl get secrets -n docker-registry
 NAME          TYPE                DATA   AGE
 auth-secret   Opaque              1      21s
 cert-secret   kubernetes.io/tls   2      98m
 
-cgiacomini@NCEL94641 ~/GitHub/vagrant-kubernetes/examples/015-PrivateRegistryAsPod
 $ k get secret -n docker-registry auth-secret -o yaml
 apiVersion: v1
 data:
