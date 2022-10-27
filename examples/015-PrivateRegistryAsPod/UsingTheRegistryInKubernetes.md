@@ -91,9 +91,10 @@ $ curl   -u centos:centos  https://docker-registry:5000/v2/_catalog
 
 ## Try to create a new POD with the busybox image pulled from docker-registry 
 For this to work we need to specify the secret to use to access the registry
+We also make the busybox POD to stay alive by telling int to sleep 3600s.
 
 ```
-$ kubectl run busybox-pod --image=docker-registry:5000/busybox:v1 -n docker-registry --overrides='{"apiVersion": "v1", "spec": {"imagePullSecrets": [{"name": "reg-secret"}]}}' 
+$ kubectl run busybox-pod --image=docker-registry:5000/busybox:v1 -n docker-registry --overrides='{"apiVersion": "v1", "spec": {"imagePullSecrets": [{"name": "reg-secret"}]}}'  -- sleep 3600
 ```
 
 
