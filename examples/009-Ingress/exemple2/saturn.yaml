@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: saturn
+  name: saturn
+  namespace: training
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: saturn
+  template:
+    metadata:
+      labels:
+        app: saturn
+    spec:
+      containers:
+      - image: httpd
+        name: httpd
