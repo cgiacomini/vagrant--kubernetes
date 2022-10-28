@@ -48,5 +48,5 @@ An alternative is to work with ***Ingress***
 * To use ingress we need to deploy an ingress controller
 * There are different ingress controllers available ingress-nginx, traefik.io, contour etc. 
 
-![Ingress Example](../../../doc/IngressExample1.jpg)
-![Ingress Example](../../../doc/IngressExample2jpg)
+![Ingress Example](../../../doc/IngressExample1.jpg)  
+![Ingress Example](../../../doc/IngressExample2.jpg)  
