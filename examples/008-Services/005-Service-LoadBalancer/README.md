@@ -37,8 +37,8 @@ sidecar-app      NodePort       10.103.79.108   <none>        8080:30701/TCP   2
 sidecar-svc      NodePort       10.100.57.117   <none>        8080:30887/TCP   59m
 sidecar-svc-lb   LoadBalancer   10.98.209.154   <pending>     8080:30889/TCP   11m
 ```
-Here the Kubernetes cluster is implemented on virtualbox  that is the reason why  EXTERNAL-IP is in pending status as virtualbox does not provide load balancing.
-In cloud providers such openshift, aws, azure, gcp etc. the EXTERNAL-IP is automatically provided. 
+Here the Kubernetes cluster is implemented on virtualbox, that's why EXTERNAL-IP is pending. Virtualbox doesn't provide load balancing.   
+With cloud providers like openshift, aws, azure, gcp and so on, the EXTERNAL IP is provided automatically.  
 An alternative is to work with ***Ingress***
 
 # Ingress
@@ -46,7 +46,7 @@ An alternative is to work with ***Ingress***
 * Traffic routing are controlled by rules defined in ingress resources.
 * It is used to get service reachable from out side the cluster via defined URLs it allow load balancing traffic
 * To use ingress we need to deploy an ingress controller
-* There are different ingress controllers available ingres-nginx, traefik.io, contour etc. 
+* There are different ingress controllers available ingress-nginx, traefik.io, contour etc. 
 
 ![Ingress Example](../../../doc/IngressExample1.jpg)
 ![Ingress Example](../../../doc/IngressExample2jpg)
