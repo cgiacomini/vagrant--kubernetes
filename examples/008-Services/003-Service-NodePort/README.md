@@ -90,7 +90,7 @@ NAME          TYPE       CLUSTER-IP      EXTERNAL-IP   PORT(S)          AGE
 sidecar-svc   NodePort   10.104.86.107   <none>        8080:30887/TCP   2m54s
 ```
 
-# Testing
+## Testing
 To verify we can target the sidecar-app application via the nodePort service we need to identify first the node IP address on which the application PODs are running
 ```
 $ kubectl get pods -o wide
