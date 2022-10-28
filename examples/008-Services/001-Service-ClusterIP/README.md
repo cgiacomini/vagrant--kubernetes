@@ -75,7 +75,7 @@ There are two way to do this
 
 ### Using Environment Variables
 To access the sidecar-app application's endpoints, targeted by the sidecar-svc service, we can use the services ClusterIP address and Port,  in this case :  10.97.98.36:8080
-**Each POD created after a service creation is seeded with the environment variables giving information related to the services.**
+**Each POD created *AFTER* a service creation is seeded with the environment variables giving information related to the services.**
 
 ***POD Services Env vars***
 ```
@@ -146,7 +146,7 @@ The pods records have the following naming convention:
 $ kubectl run curl --image=radial/busyboxplus:curl -i --tty  ( or "kubectl exec curl -it --tty   -- /bin/sh" if already running )
 If you don't see a command prompt, try pressing enter.
 [ root@curl:/ ]$ # Verify that the service name can be resolved
-[ root@curl:/ ]$ nslookup sidecar-svc.default
+[ root@curl:/ ]$ nslookup sidecar-svc
 [ root@curl:/ ]$ Server: 10.96.0.10
 Address 1: 10.96.0.10 kube-dns.kube-system.svc.cluster.local
 Name: sidecar-svc.default
@@ -181,26 +181,34 @@ Address 1: 10.96.0.10 kube-dns.kube-system.svc.cluster.local
  
 Name:      10.36.0.0
 Address 1: 10.36.0.0 10-36-0-0.sidecar-svc.default.svc.cluster.local
+ 
+# Verify POD to POD communication by accessing the POD within the curl POD and using the DNS name
+curl http://10.36.0.0.sidecar-svc.training.svc.cluster.local/date.txt
+Mon Sep 13 12:36:38 UTC 2021
+Mon Sep 13 12:36:48 UTC 2021
+Mon Sep 13 12:36:58 UTC 2021
+Mon Sep 13 12:37:08 UTC 2021
+Mon Sep 13 12:37:18 UTC 2021
 ```
 ## Headless Services
-In some situations it’s desired to be able to retrieve the IP addresses of all the pods that are connected to a certain service.
+In some situations it is desired to be able to retrieve the IP addresses of all the pods that are connected to a certain service.
 For example,  when pods are stateful, like a deployed databases and the client want to communicate to one of the PODs selectively, or when pods need to communicate each other.
 In such situation PODs replicas are not identical, they have their individual state and characteristics.
 For example on Couchbase we can address N1QL queries only to those Couchbase cluster nodes that has n1ql service,
-or in case of MYSQL where a new work node need to connect to one another worker to synchronize.
+or in case of MYSQL where a new worker node need to connect to one another worker to synchronize.
 
 In this situations we need to be able to communicate to a specific POD directly, but how we can do that?
 We could query the API call to the Kubernetes API server to return a list of PODs and their IP addresses , but that would be inefficient.
 
 Here is where the headless service come to handy.
 
-To avoid requests being load-balanced behind one single IP address of the services, we can explicitly specifying ClusterIP property to be equal "None”.
+To avoid requests being load-balanced behind one single IP address of the services, we can explicitly specifying *ClusterIP* property to be equal *"None”*.
 
 As seen before Kubernetes also create a DNS record for each POD behind a specific service and we can use nslookup to discover PODs IP addresses.
 Usually when we perform a nslookup  for a service Kubernetes return the single IP address of the service ( the service's ClusterIP address).
 However we can tell Kubernetes we do not need a cluster IP address for the service  explicitly specifying ClusterIP property to be equal "None”.
-This way Kubernetes won’t allocate any IP address to the service but still create DNS records for the service and each endpoint.
-This way, when doing a nslookup of the service,  Kubernetes will return the POD's IP address instead.
+This way Kubernetes won’t allocate any IP address to the service but still create DNS records for the service and each endpoint;
+when doing a nslookup of the service,  ***Kubernetes will return the POD's IP address instead.***
 
 ### Deply Headless Service
 ```
@@ -209,10 +217,9 @@ $ kubectl create -f sidecar.yml
 deployment.apps/sidecar-app created
  
 # Check the application is deployed
-$ Kubectl get pods -A
+$ Kubectl get pods
 NAMESPACE     NAME                                               READY   STATUS    RESTARTS         AGE
 default       curl                                               1/1     Running   3 (115m ago)     19d
-default       pod-volume                                         2/2     Running   4 (51m ago)      18d
 default       sidecar-app-6f58cd9946-8zdkl                       2/2     Running   0                2m39s
 default       sidecar-app-6f58cd9946-cvbc7                       2/2     Running   0                2m38s
 default       sidecar-app-6f58cd9946-mq6jc                       2/2     Running   0                2m38s
@@ -226,6 +233,7 @@ service/sidecar-svc-headless created
 $ kubectl get services
 NAME                   TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)    AGE
 sidecar-svc-headless   ClusterIP   None             <none>        8080/TCP   8s
+...
  
 # Get PODs IPs by viewing the service endpoints
 $ kubectl get endpoints sidecar-svc-headless
