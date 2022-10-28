@@ -1,8 +1,7 @@
 # Network Policies
 * A Network Policy is like a firewall.
-* By default, all pods can reach one another.
+* By default, pods can communicate with each other irrespective of their namespace.
 * Network isolation can be configured to block traffic to pods by running pods in dedicated namespaces.
-* Between namespaces by default there is no traffic, unless routing has been configured.
 * Network Policy can be used to block Egress as well as Ingress traffic, and it works like a firewall.
 * Network Policy is a separate object in the API.
 
