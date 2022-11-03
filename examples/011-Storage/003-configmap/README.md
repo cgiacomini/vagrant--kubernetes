@@ -1,4 +1,7 @@
 # ConfigMap
+* ConfigMap for setting Environment variables
+* ConfigMap for configfiles
+* ConfigMap for command line arguments
 
 ## ConfigMap for setting Environment variables
 We can create configMaps for environment variable settings that will be used later by PODs 
@@ -78,7 +81,7 @@ spec:
         - configMapRef:
             name: variables
 ```
-# Deployment
+***Deployment***
 ```
 $ kubectl apply -f 001-pod.yaml
 pod/demo-pod created
@@ -108,11 +111,10 @@ CAR=TOYOTA
 ```
 
 ## ConfigMap for configfiles
-We can create configmaps to provide configuration files; the PODs will use them as a mounted volume which contains the cofiguration file.
+We can create configmaps to provide configuration files; the PODs will use them as a mounted volume which contains the cofiguration file.  
 
-
-The following yaml file define a configMap named **cm-example**. 
-This configMap define  configuration file the contains a couple of lines as example.
+The following yaml file define a configMap named **cm-example**.  
+This configMap define a configuration file that contains a couple of lines as example.
 ***002-cm-example.yaml***
 ```
 apiVersion: v1
@@ -125,8 +127,7 @@ metadata:
   name: cm-example
   namespace: default
 ```
-
-### Deploy the configMap
+***Deployment***
 ```
 kubectl apply -f 002-cm-example.yaml
 configmap/cm-example created
@@ -190,5 +191,9 @@ Every 5s: ls /etc/config/                                   2022-01-18 10:13:29
 
 default.conf
 
+# Verify default.conf contents:w
+$ k exec cm-example-pod -it -- cat /etc/config/default.conf
+hostname="myhost"
+port=1234
 ```
 
