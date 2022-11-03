@@ -5,14 +5,14 @@
 * To use Persistent Volumes PODs uses **Persistent Volumes Claims** (PVC) to request access to specific storage.
 * **ConfiMaps** are specific volumes object that connect to configuration files and variables. 
 * They are the best way to provide dynamic data within a POD.
-* **Secrets** do the same as configmap but by encoding the date they contains.
+* **Secrets** do the same as configmap but by encoding the data they contains.
 
 ## Pod Volumes
 * The POD-local volume is create by defining the ***spec.volumes***  property in the POD YAML specification file.
-* To use the POD-loacl volume the containers mounts the volume by specified in ***spec.containers.volumemounts***  in the POD YAML specification file.
+* To use the POD-local volume the containers mounts the volume by specified in ***spec.containers.volumemounts***  in the POD YAML specification file.
 
-Here the POD volume  is created as an ***EmptyDir*** type and mounted in the two containers running centos7
-on a specified mouthPath called /centos1 for container centos1 and /centos2 for container  centos2.
+Here the POD volume is created as an ***EmptyDir*** type and mounted in the two containers running centos7
+on a specified mouthPath called */centos1* for container *centos1* and */centos2* for container *centos2*.
 
 # Example 
 
