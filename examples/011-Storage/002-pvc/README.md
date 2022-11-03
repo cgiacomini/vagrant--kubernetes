@@ -1,6 +1,6 @@
 # Persistent Volume Claims
-* Is used to define what type of storage is needed. 
-* It talk to the available backend storage provedir to claim available volumes of the storge type.
+* Is used to define what type of storage is needed. 002-pvc
+* It talk to the available backend storage provider to claim available volumes of the storge type.
 
 # Example 
 ***persistent-volume.yaml***
@@ -112,7 +112,7 @@ default                task-pv-pod                                 1/1     Runni
 
 As we see the POD has been scheduled on k-node1 and in this simple example the pod has claimed a volume (task-pv-claim) that will be mounted on ***/usr/share/nginx/html***.
 The volume claim task-pv-claim is bound to the persistent volume (task-pv-volume) that is and *hostPath* (local filesystyem on the node) at the path ***/mnt/data***
-So the result is that the POD will mount from k-node (the node on which is running on) filesystem the path /mnt/data on the POD filesystem /usr/share/nginx/html.
+So the result is that the POD will mount from k-node1 (the node on which is running on) filesystem the path /mnt/data on the POD filesystem /usr/share/nginx/html.
 ```
 # Connect to k-node1 node and create a simple html page
 $ ssh k-node1
