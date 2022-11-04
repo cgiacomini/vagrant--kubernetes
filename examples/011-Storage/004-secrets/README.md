@@ -21,26 +21,25 @@ Secrets can be created in a similar way we can create ConfigMaps
 ### Example 1
 ```
 # Create an ssh key we want to use inside a pod as a secret
-$ ssh-keygen.exe
+$ ssh-keygen.exe -f  ./mysshkey
 Generating public/private rsa key pair.
-Enter file in which to save the key (/home/cgiacomini/.ssh/id_rsa): ./mysshkey
-Enter passphrase (empty for no passphrase): <mypassphrase>
-Enter same passphrase again: <mypassphrase>
+Enter passphrase (empty for no passphrase):
+Enter same passphrase again:
 Your identification has been saved in ./mysshkey
 Your public key has been saved in ./mysshkey.pub
 The key fingerprint is:
-SHA256:HFp68FYHMyC5KiDJGhIjBj0b0ceKabKvQGUNE7zQnJw cgiacomini@NCEL94641
+SHA256:Z3CnOge/vKcpFb4jFgFNAgLmr+1VBrMTG988gGqNn24 cgiacomini@NCEL94641
 The key's randomart image is:
 +---[RSA 3072]----+
-|o.**+.....+      |
-|+o+E= +.   +     |
-|++.O.+..o . .    |
-|B.B.. .B o .     |
-|+B   .o S        |
-|+ . .  o         |
-|.. .             |
-|. .              |
-|..               |
+|.o. ...o.        |
+|o  .  o..        |
+| .   * o. . .    |
+|  . + O =o.o     |
+|   = = +S*+.     |
+|  + . = .*+      |
+| . . +  ooo.     |
+|  . oE  ++oo.    |
+|   ... . o*=     |
 +----[SHA256]-----+
 
 $ ls 
@@ -53,9 +52,7 @@ secret/mysecret created
 # Check  the secret has been created
 $ kubectl get secrets
 NAME                  TYPE                                  DATA   AGE
-default-token-6rfps   kubernetes.io/service-account-token   3      5d6h
 mysecret              Opaque                                2      63s
-
 
 # Check secret content
 $ kubectl get secrets mysecret -o yaml
@@ -192,7 +189,7 @@ Secrets can be created and their values can be used to set PODs environment vari
 
 ```
 # Create a secret from a litteral
-$ $ kubectl create secret generic my-new-secret --from-literal=password=root
+$ kubectl create secret generic my-new-secret --from-literal=password=root
 
 # Verify how the secret is created
 $ kubectl get secret my-new-secret -o yaml
