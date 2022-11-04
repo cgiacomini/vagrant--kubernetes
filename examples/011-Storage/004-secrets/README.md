@@ -16,9 +16,7 @@ There are several type of secrets
 Secrets can be created in a similar way we can create ConfigMaps
 
 
-### Create Secrets from a file containing variable setting.
-
-### Example 1
+## Create Secrets from a file containing variable setting.
 ```
 # Create an ssh key we want to use inside a pod as a secret
 $ ssh-keygen.exe -f  ./mysshkey
@@ -70,10 +68,9 @@ metadata:
 type: Opaque
 
 ```
-
-# Create secrets with YAML file
-It is also possible to create secrets using YAML file, in this case we have encode the secrets values in *base64*, using base64 command,
-as for the below example:
+## Create secrets with YAML file
+It is also possible to create secrets using YAML file, in this case we have encode the secrets values in *base64*, 
+using base64 command, as for the below example:
 
 ```
 # base64 username
@@ -87,7 +84,6 @@ dGhlcGFzc3dvcmQ=
 
 create the secret YAML file with the encoded values
 ***001-secret-example.yaml***
-
 ```
 apiVersion: v1
 data:
@@ -135,9 +131,7 @@ $ kubectl get secrets secret-example  --template={{.data.user}} | base64  -d
 centosuser
 
 ```
-# Use the secret in a POD
-
-### Example using secret in a POD
+## Example using secret in a POD
 ***001-pod-example.yaml***
 ```
 apiVersion: v1
@@ -157,7 +151,7 @@ spec:
     secret:
        secretName: secret-example
 ```
-# Deployment
+Deployment
 ```
 # Deploy the POD
 $ kubectl apply -f 001-pod-example.yaml
@@ -184,7 +178,7 @@ thepassword
 centosuser
 ```
 
-# Create secrets with variables
+## Create secrets with variables
 Secrets can be created and their values can be used to set PODs environment variables
 
 ```
@@ -205,7 +199,7 @@ metadata:
   uid: 12aac36a-9b9e-4515-ac40-55be3ae3bdcf
 type: Opaque
 ```
-# Use the secret to set a POD environment variable
+Use the secret to set a POD environment variable
 ***002-pod-example.yaml***
 ```
 apiVersion: v1
@@ -224,7 +218,7 @@ spec:
           name: my-new-secret
           key: password
 ```
-# Deploy the POD
+Deploy the POD
 ```
 kubectl apply -f 002-pod-example.yaml
 pod/secret-pod-example2 created
@@ -239,4 +233,8 @@ secret-pod-example2   1/1     Running   0          9s
 Every 5s: echo root                                         2022-01-19 14:55:46
 
 root
+```
+## Crete a secret with TLS 
+```
+$ kubectl create secret tls <secret_name> --cert=tls/my.crt --key=tls/my.key
 ```
