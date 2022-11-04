@@ -238,3 +238,7 @@ root
 ```
 $ kubectl create secret tls <secret_name> --cert=tls/my.crt --key=tls/my.key
 ```
+
+## Docker registry secrets
+Thare are docker registry secrets that a kubernets cluster uses to authenticate with a container registry to pull private images.  
+See - [Self Signed CA Certificate Registry](../../014-PrivateRegistry/README.md) section.
