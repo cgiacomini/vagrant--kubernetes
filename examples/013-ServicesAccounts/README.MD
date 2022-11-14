@@ -37,7 +37,7 @@ secrets:
 ```
 
 When creating a ***serviceaccount*** a ***service account token*** is also generated.
-The token is used by an application to authenticate to the the kubernetes API Server.
+The token is used by an application to authenticate to the kubernetes API Server.
 Every created pods mount the secret that contains the default service account token.
 
 ```
@@ -109,7 +109,7 @@ mypod   1/1     Running   0          6s
 
 
 ## Get the POD YAML
-$ kubeclt get pod mypod -o yaml
+$ kubectl get pod mypod -o yaml
 apiVersion: v1
 kind: Pod
 ...
