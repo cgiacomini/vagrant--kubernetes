@@ -209,8 +209,7 @@ requests.memory  600M   1G
 
 ```
 The 3rd POD is running just fine since it does not overpass any imposed max requests and limits.
-We see we still have **requests.cpu     1500m** and if we start a 4th POD that it requires a 1 CPU  
-the deployment will fail since we only can request the 0.5 available.
+We see we still have **requests.cpu 1500m** and if we start a 4th POD that it requires a 1 CPU the deployment will fail since we can only request the 0.5 available.
 
 ```
 $ kubectl apply -f nginx4.yaml
