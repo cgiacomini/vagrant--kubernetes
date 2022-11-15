@@ -188,7 +188,7 @@ spec:
     emptyDir: {}
 ```
 
-Deply and very
+Deploy and veryfy
 ```
 $ kubecl apply -f 004-InitExamlpe.yaml
 pod/init-example4 created
