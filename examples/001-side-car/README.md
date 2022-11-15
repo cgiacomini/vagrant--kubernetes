@@ -3,7 +3,7 @@
 In most cases we only have one container in a POD because they are easier to build and maintain,
 but when necessary we can also have more containers, in this case the following scenarios could apply:
 
-![side-car](../../doc/side-car.jpg)
+![side-car](../../doc/multi-container-pod-design.png)
 
 * ***side-car*** container is a container that enhances the primary application.
 For instance for logging, or for a web application plus helpers containers.
