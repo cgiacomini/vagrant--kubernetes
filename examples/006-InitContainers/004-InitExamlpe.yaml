@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: init-example4
+spec:
+  initContainers:
+  - name: config
+    image: busybox
+    command: ['sh', '-c', 'mkdir -p /var/www/html && date  > /var/www/html/date.txt && sleep 20']
+    volumeMounts:
+    - name: configdir
+      mountPath: "/var/www/html"
+  - name: config-error
+    image: busybox
+    command: ['sh', '-c', 'for i in 1 2 3 4 A; do sleep $i; done']
+  containers:
+  - image: centos/httpd
+    name: webapp
+    ports:
+    volumeMounts:
+    - name: configdir
+      mountPath: "/var/www/html"
+  volumes:
+  - name: configdir
+    emptyDir: {}

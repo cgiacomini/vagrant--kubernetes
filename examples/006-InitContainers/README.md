@@ -83,15 +83,12 @@ To split up the initialization logic, work can be distributed the into multiple 
 In case we have defined multiple init containers in the manifest file then they run in the order of definition.  
 If an init container fails then the POD is restarted.
 
-
-
-
 ## Example 3
-
 In this second example the init container create a document filled with the current date inside a voulme mounted on the following path /var/www/html, then sleep 20 seconds to simulate extra work.
 Once finished the web application container starts. It also mount the same volume also as /var/www/html.
 httpd process in the webapp container listen by default on port 80.
 
+***003-InitExample.yaml***
 ```
 apiVersion: v1
 kind: Pod
@@ -156,3 +153,67 @@ Tue Nov 15 11:36:30 UTC 2022
 # Cleanup the job
 $ kill %1
 ```
+
+## Example 4
+In this example we have a POD with two init containers. The init containers are execute in sequence following the order as they are declared in the manifest yaml file.  
+The second init container, when executed,  will cause an error and the POD fails.   
+We can always retrieve the logs for the failed init container and figure out what the issue come from.
+
+***004-InitExample.yaml***
+```
+apiVersion: v1
+kind: Pod
+metadata:
+  name: init-example4
+spec:
+  initContainers:
+  - name: config
+    image: busybox
+    command: ['sh', '-c', 'mkdir -p /var/www/html && date  > /var/www/html/date.txt && sleep 20']
+    volumeMounts:
+    - name: configdir
+      mountPath: "/var/www/html"
+  - name: config-error
+    image: busybox
+    command: ['sh', '-c', 'for i in 1 2 3 4 A; do sleep $i; done']
+  containers:
+  - image: centos/httpd
+    name: webapp
+    ports:
+    volumeMounts:
+    - name: configdir
+      mountPath: "/var/www/html"
+  volumes:
+  - name: configdir
+    emptyDir: {}
+```
+
+Deply and very
+```
+$ kubecl apply -f 004-InitExamlpe.yaml
+pod/init-example4 created
+
+cgiacomini@NCEL94641 ~/GitHub/vagrant-kubernetes/examples/006-InitContainers
+$ kubecl get pods -
+NAMESPACE              NAME                                         READY   STATUS      RESTARTS       AGE
+ckad                   init-example4                                0/1     Init:0/2    0              3s
+
+# after 20s the first init container has finished
+$ kubecl get pods
+NAME            READY   STATUS     RESTARTS   AGE
+init-example4   0/1     Init:1/2   0          28s
+
+# The second init container starts but end with error
+$ kubecl get pods
+NAME            READY   STATUS       RESTARTS   AGE
+init-example4   0/1     Init:Error   0          36s
+
+# We retrieve the logs to see what is the issue causing the error
+
+$ kubecl logs init-example4  --container config-error
+sleep: invalid number 'A'
+
+# The POD is then now in error and try to restart by reesecuting the init containers
+$ kubecl get pods
+NAME            READY   STATUS                  RESTARTS      AGE
+init-example4   0/1     Init:CrashLoopBackOff   7 (50s ago)   13m
