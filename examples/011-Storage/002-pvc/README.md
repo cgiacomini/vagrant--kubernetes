@@ -1,6 +1,15 @@
+# Persistent Volumes
+* The **PersistentVolume** is the storage device in a Kubernetes cluster, completely decoupled from the PODs.  
+* The storage is provided as part of the kubernetes cluster by an administrator or dynamically provisioned using Storage Classes.  
+
+A peristent volume can be created statically or dynamically.
+* static approach: we need to reffer a storage device by creating a persisten volume.
+* dynamic approach: does not require the creation of a persistent volume, it will be instead created automatically from the PersisteVolumeClaim by setting a **storageclassName**.
+A storage class provide a definition of storage types. 
+
 # Persistent Volume Claims
-* Is used to define what type of storage is needed. 002-pvc
-* It talk to the available backend storage provider to claim available volumes of the storge type.
+* The **PersistentVolumeClaim** requests the resources of a PersistentVolume (size and access type)
+* It talk to the available backend storage provider to claim available volumes of the storge type. Usually are the kubernetes administrators that setup a storage class.
 
 # Example 
 ***persistent-volume.yaml***
