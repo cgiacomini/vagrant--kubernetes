@@ -71,8 +71,8 @@ drwxr-xr-x 1 root root 32 Sep 15 03:08 ..
 * Cluster resource that is used to store data. Is an abstract object that need to be bound  to a real physical storage provider
 like local hard-drive from the cluster nodes or external NFS server, databases, cloud storages etc.
 * There are different volumes types we can use:
-    * EmptyDir : Create a temporary empty directory on the host
-    * hostPath :
+    * EmptyDir : Create a temporary empty directory volume that can be mounted from al container inside the POD.
+    * hostPath : File or directory from the host node’s filesystem
     * azureDisk :
     * awsElasticBlockStore :
     * gcePersistetDisk :
