@@ -254,6 +254,3 @@ drwxr-xr-x 3 root root 18 Dec 29 19:28 ..
 root@task-pv-pod:/# curl http://localhost/
 Hello from Kubernetes storage
 ```
-
-
-

@@ -3,10 +3,6 @@ kind: Pod
 metadata:
   name: task-pv-pod
 spec:
-  volumes:
-    - name: task-pv-storage
-      persistentVolumeClaim:
-        claimName: task-pv-claim
   containers:
     - name: task-pv-container
       image: nginx
@@ -14,5 +10,9 @@ spec:
         - containerPort: 80
           name: "http-server"
       volumeMounts:
-        - mountPath: "/usr/share/nginx/html"
-          name: task-pv-storage
+        - name: task-pv-storage
+          mountPath: "/usr/share/nginx/html"
+  volumes:
+    - name: task-pv-storage
+      persistentVolumeClaim:
+        claimName: task-pv-claim
