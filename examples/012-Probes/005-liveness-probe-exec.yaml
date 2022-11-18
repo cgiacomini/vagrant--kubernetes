@@ -1,0 +1,21 @@
+# The  while loop touch the file every 5 secs. 
+# The livenessProbe verify if the file has been modified in the last minute.
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: liveness-pod
+spec:
+  containers:
+  - image: busybox
+    name: app
+    args:
+    - /bin/sh
+    - -c
+    - 'while true; do touch /tmp/heartbeat.txt; sleep 30; done;'
+    livenessProbe:
+      exec:
+        command:
+        - test `find /tmp/heartbeat.txt -mmin -1`
+      initialDelaySeconds: 5
+      periodSeconds: 30

@@ -3,6 +3,7 @@ Probes are part of the containers specs and can be used to test the access to th
 They are meant to be use to verify that the application is reacting.
 * ***readinessProbe***: used to make sure the POD is made available only when the readinessProbe succeed
 * ***livenessProbe***: is used to check the availability of a POD during its life time.
+* ***startupProbe***: it wait for a predefined amount of time before a liveness probe is allowed to start probing.
 They both work the same way but
 
 For each probe there are three possible types:
@@ -10,6 +11,7 @@ For each probe there are three possible types:
 * ***exec***: is a command that when execute should return **0** as the exit value
 * ***httpGet***: is an http request that should returns a response code between 200 and 399
 * ***tcpSocket***: verify that a specific socket connecivity ( a port ) is available.
+
 ## readinessProbe - exec example
 In the following POD the exec command is executed every 5 seconds
 and the POD never get ready because the /tmp/noxistsfile never get created.
@@ -303,4 +305,28 @@ probes-example               1/2     Running   0          17s
 $ k get pods
 probes-example               2/2     Running   0          24s
 ```
+## Liveness Probe
 
+```
+# The  while loop touch the file every 5 secs. 
+# The livenessProbe verify if the file has been modified in the last minute.
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: liveness-pod
+spec:
+  containers:
+  - image: busybox
+    name: app
+    args:
+    - /bin/sh
+    - -c
+    - 'while true; do touch /tmp/heartbeat.txt; sleep 5; done;'
+    livenessProbe:
+      exec:
+        command:
+        - test `find /tmp/heartbeat.txt -mmin -1`
+      initialDelaySeconds: 5
+      periodSeconds: 30
+```

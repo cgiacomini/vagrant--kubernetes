@@ -8,8 +8,8 @@ spec:
   - name: nginx-probe
     image: nginx
     readinessProbe:
-      tcpSocket:
-        port: 80
       initialDelaySeconds: 5
       periodSeconds: 10
+      tcpSocket:
+        port: 80
 
