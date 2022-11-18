@@ -3,8 +3,15 @@ Probes are part of the containers specs and can be used to test the access to th
 They are meant to be use to verify that the application is reacting.
 * ***readinessProbe***: used to make sure the POD is made available only when the readinessProbe succeed
 * ***livenessProbe***: is used to check the availability of a POD during its life time.
-* ***startupProbe***: it wait for a predefined amount of time before a liveness probe is allowed to start probing.
-They both work the same way but
+* ***startupProbe***: it wait for a predefined amount of time before a liveness and readines probes are allowed to start probing.
+
+
+Probes can have the (among others) the folowing fields:
+* ***initialDelaySeconds***: how many seconds should pass before probes should be active
+* ***periodSeconds***: the probing frequency
+* ***timeoutSeconds***: the number of seconds after which the probe times out
+* ***successThreshold***: how many times should the probe succeed before the container should be seen as healthy
+* ***failureThreshold***: how many times should the probe fail before the container should be seen as failing
 
 For each probe there are three possible types:
 
