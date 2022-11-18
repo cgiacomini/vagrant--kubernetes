@@ -169,7 +169,7 @@ In The POD description the Readiness probe is reporting that it failed 3 times
 
 ## readinessProbe - tcpSocket example
 Here the readiness probe is testing using **tcpsocket** probe type if the port **80** is available.
-It will wait 5 seconds (nitialDelaySeconds: 5) before testing the port availability and 
+It will wait 5 seconds (InitialDelaySeconds: 5) before testing the port availability and 
 it retries every 10 seconds (periodSeconds: 10). During the first 5 seconds then the POD status is not READY.
 
 ***003-readiness-probe-tcpsocket.yaml***
@@ -279,3 +279,28 @@ spec:
       - sleep
       - "3600"
 ```
+***Testing***
+```
+$ k apply -f  004-probes-example.yaml
+pod/probes-example created
+
+$ k get pods
+NAME                         READY   STATUS    RESTARTS   AGE
+probes-example               1/2     Running   0          4s
+
+$ k get pods
+NAME                         READY   STATUS    RESTARTS   AGE
+probes-example               1/2     Running   0          8s
+
+$ k get pods
+NAME                         READY   STATUS    RESTARTS   AGE
+probes-example               1/2     Running   0          10s
+
+$ k get pods
+NAME                         READY   STATUS    RESTARTS   AGE
+probes-example               1/2     Running   0          17s
+# Now nginx container is running and port 80 is available letting busybox container to be ready too
+$ k get pods
+probes-example               2/2     Running   0          24s
+```
+
