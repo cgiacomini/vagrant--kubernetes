@@ -12,7 +12,7 @@ For each probe there are three possible types:
 * ***tcpSocket***: verify that a specific socket connecivity ( a port ) is available.
 ## readinessProbe - exec example
 In the following POD the exec command is executed every 5 seconds
-and the PODD never get ready because the /tmp/noxistsfile never get created.
+and the POD never get ready because the /tmp/noxistsfile never get created.
 ***001-readiness-probe-exec.yaml***
 ```
 apiVersion: v1
@@ -236,11 +236,20 @@ Containers:
     Ready:          True
     Restart Count:  0
     Readiness:      tcp-socket :80 delay=5s timeout=1s period=10s #success=1 #failure=3
-...
-...
-
 ```
-In The POD description the Readiness probe is reporting that it failed 3 times 
+
+In The POD description the Readiness probe is reporting that it failed 3 times. nginx container was not yet read.
+Then once the container is ready  since the redinessprobe is execued with an intervall of 10 second,   
+if we get the pods logs we see the the GET executed with 10 sec period.
+```
+kubectl logs probe-test-ready-httpget
+...
+10.10.2.1 - - [18/Nov/2022:10:07:19 +0000] "GET / HTTP/1.1" 200 615 "-" "kube-probe/1.25" "-"
+10.10.2.1 - - [18/Nov/2022:10:07:29 +0000] "GET / HTTP/1.1" 200 615 "-" "kube-probe/1.25" "-"
+10.10.2.1 - - [18/Nov/2022:10:07:39 +0000] "GET / HTTP/1.1" 200 615 "-" "kube-probe/1.25" "-"
+10.10.2.1 - - [18/Nov/2022:10:07:49 +0000] "GET / HTTP/1.1" 200 615 "-" "kube-probe/1.25" "-"
+10.10.2.1 - - [18/Nov/2022:10:07:59 +0000] "GET / HTTP/1.1" 200 615 "-" "kube-probe/1.25" "-"
+```
 
 ## readinessProbe - Start PODs in order example
 The following esample will start container **app** only when container **webapp** is ready.
