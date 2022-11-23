@@ -1,16 +1,18 @@
 # Ephemeral Containers
-Sometimes container's don’t have any Unix utility tools preinstalled not even a shell.
-Ephemeral container can be deployed for troubleshooting of these minimal containers that usually not allow the usage of the exec command.  
-Kubernetes provide the ***kubectl debug*** command to add an ephemeral container to a running Pod for debugging purposes.  
-The ephemeral container could be used to inspect the other containers in the Pod regardless of their state and content.
-Kubernetes POD's spec has the attribute ***ephemeralContainers*** to holds a list of Container-like objects.
-This attribute is one of the few Pod spec attributes that can be modified for an already created Pod instance.
+
+[ ***Ref:*** Super article abut ephemeral containers : https://iximiuz.com/en/posts/kubernetes-ephemeral-containers]
+
+* Sometimes container's don’t have any Unix utility tools preinstalled not even a shell; Ephemeral container can be deployed for troubleshooting of these minimal  containers that usually not allow the usage of the exec command.  
+* Kubernetes provide the ***kubectl debug*** command to add an ephemeral container to a running Pod for debugging purposes.  
+* The ephemeral container could be used to inspect the other containers in the Pod regardless of their state and content.
+* Kubernetes POD's spec has the attribute ***ephemeralContainers*** to holds a list of Container-like objects.
+* This attribute is one of the few Pod spec attributes that can be modified for an already created Pod instance.
 
 
-Here we install a ![side-car](../001-side-car/README.md) application to simulate a simple minimal pod.  
+Here we install a [side-car](../001-side-car/README.md) application to simulate a simple minimal pod.  
 It run busybox with all tools and bash but is just for demonstration purpose.
 
-When the appliacation is deployed we add to it an ephemeral container
+We deploy the application and then we add to it an ephemeral container
 ```
 $ kubectl get pods -A
 NAMESPACE              NAME                                         READY   STATUS    RESTARTS         AGE
@@ -47,9 +49,9 @@ Tue Nov 22 15:50:47 UTC 2022
 From the shell we opened on the ephemeral container we can certainly run curl since the containers share the same networks.  
 and localhost correspond on the POD IP. But how to see the running process and the filesystem of the application containers  
 from the ephemeral one ?  
-Sometime also the application containers has crashed.    
-Kubernetes says that When using ephemeral containers, it's helpful to enable process namespace sharing so you can view processes in other containers.
-
+Looks like thatephaemeral container run with an isolated process namespace so that ps does not reveal processes in other containers.  
+Kubernetes says that when using ephemeral containers, it's helpful to enable process namespace sharing so you can view processes in other containers.
+to do so we need to add ***--target*** option to our command line to target the container we want to attach and inspect with the ephemeral container.
 ## Attach an ephemeral container to a specif POD container
 
 ### Attach an ephemeral container to side-car container of the side-car-pod
@@ -142,7 +144,6 @@ spec:
 Deploy the POD
 
 ```
-
 $ k apply -f side-car-pod.yaml
 pod/side-car-pod created
 
@@ -150,12 +151,10 @@ $ k get pods
 NAME           READY   STATUS    RESTARTS   AGE
 side-car-pod   2/2     Running   0          4s
 
-
 # attach an ephemeral container to any of the container of the POD
 $ kubectl debug -it --attach=false  side-car-pod --image=busybox  -it --target side-car -n ckad
 Targeting container "side-car". If you don't see processes from this container it may be because the container runtime doesn't support this feature.
 Defaulting debug container name to debugger-jkd6f.
-
 
 # Open a shell to the debugger and check the list of process
 $  kubectl attach -it -c debugger-jkd6f side-car-pod  -n ckad
@@ -174,4 +173,13 @@ PID   USER     TIME  COMMAND
   103 root      0:00 sh
   140 root      0:00 sleep 10
   141 root      0:00 ps
+```
+
+We can also explore each individaul containers filesystem.  
+Knowing the PID of the running process in a container, from the ephemeral container, we can access its filesystem at ***/proc/(PID)/root***
+so for the container named **app** running busybox, we can see the PID of the while loop is **7**, so we can access the root filesystem as follow:
+```
+/ # ls /proc/7/root
+bin   dev   etc   home  proc  root  sys   tmp   usr   var
+/ #
 ```
