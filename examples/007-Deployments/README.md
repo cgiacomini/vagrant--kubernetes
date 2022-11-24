@@ -418,11 +418,11 @@ status: {}
 ```
 ## Deployment Alternatives
 
-Most of the time applications are deployes usin Deployments. There two kind if Deployments:
+Most of the time applications are deployed using Deployments. There are two two others kind if Deployments:
 
-1. DemonSet  : A DaemonSet is a Deployment that starts one Pod instance on every node in the cluster. 
+1. ***DemonSet***  : A DaemonSet is a Deployment that starts one Pod instance on every node in the cluster. 
                When a node is added to the cluster the Daemon set deployment start the required PODs on that node too.
-2. StatefulSets : StatefulSets are valuable for applications that require:
+2. ***StatefulSets*** : StatefulSets are valuable for applications that require:
   * Stable, unique network identifiers.
   * Stable, persistent storage.
   * Ordered, graceful deployment and scaling.
