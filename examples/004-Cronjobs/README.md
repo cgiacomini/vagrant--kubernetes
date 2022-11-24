@@ -2,7 +2,7 @@
 CronJobs are used for tasks that need to run on a regular basic at a specific time.
 When running a CronJob a Job will be scheduled and when it start it run a POD.
 ## Example 1
-We create a cron job which runs every 5 minutes.
+We create a cron job which runs every 5 minutes.  
 ***001-SimpleCronJob.yaml***
 ```
 apiVersion: batch/v1
@@ -30,36 +30,36 @@ The job is scheduled to run every 5 minutes, when scheduled it start a POD which
 $ kubectl apply -f 001-SimpleCronJob.yaml
 cronjob.batch/print-date created
 
-# Check cronjob after 5 minutes. It says that 72s ago a job has been scheduled and executed
+# Check cronjob after 5 minutes. It says that 65s ago a job has been scheduled and executed
 $ kubectl get cronjobs
-NAME         SCHEDULE      SUSPEND   ACTIVE   LAST SCHEDULE   AGE
-print-date   */5 * * * *   False     0        72s             6m8s
+NAME            SCHEDULE      SUSPEND   ACTIVE   LAST SCHEDULE   AGE
+hello-cronjob   */5 * * * *   False     0        65s             4m36s
 
 # One POD has been deployed
 $ kubectl get pods
-NAME                        READY   STATUS      RESTARTS   AGE
-print-date-27371230-cl4h8   0/1     Completed   0          77s
+NAME                           READY   STATUS      RESTARTS      AGE
+hello-cronjob-27821340-9h5j5   0/1     Completed   0             93s
 
 # a job has started
 $ kubectl get jobs
-NAME                  COMPLETIONS   DURATION   AGE
-print-date-27371230   1/1           33s        2m6s
-
+NAME                     COMPLETIONS   DURATION   AGE
+hello-cronjob-27821340   1/1           6s         2m18s
 
 # Check cronjob after 10 minutes. It says that 10s ago a job has been scheduled and executed
 $ kubectl get cronjobs
-NAME         SCHEDULE      SUSPEND   ACTIVE   LAST SCHEDULE   AGE
-print-date   */5 * * * *   False     0        10s             10m
-
-# A second POD has been deployed
-$ kubectl get pods
-NAME                        READY   STATUS      RESTARTS   AGE
-print-date-27371230-cl4h8   0/1     Completed   0          5m15s
-print-date-27371235-rrjlw   0/1     Completed   0          15s
+NAME            SCHEDULE      SUSPEND   ACTIVE   LAST SCHEDULE   AGE
+hello-cronjob   */5 * * * *   False     0        13s             8m44s
 
 # second job has been executed
 $ kubectl get jobs
-NAME                  COMPLETIONS   DURATION   AGE
-print-date-27371230   1/1           33s        5m22s
-print-date-27371235   1/1           2s         22s
+NAME                     COMPLETIONS   DURATION   AGE
+hello-cronjob-27821340   1/1           6s         5m27s
+hello-cronjob-27821345   1/1           5s         27s
+
+# A second POD has been deployed
+$ kubectl get pods
+NAME                           READY   STATUS      RESTARTS      AGE
+hello-cronjob-27821340-9h5j5   0/1     Completed   0             5m31s
+hello-cronjob-27821345-dz4lf   0/1     Completed   0             31s
+side-car-pod                   2/2     Running     2 (81m ago)   19h
 ```
