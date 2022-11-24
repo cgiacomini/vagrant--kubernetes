@@ -6,8 +6,6 @@ spec:
   schedule: "*/5 * * * *"
   jobTemplate:
     spec:
-      backoffLimit: 5
-      ttlSecondsAfterFinished: 100
       template:
         spec:
           containers:
@@ -18,8 +16,3 @@ spec:
             - -e
             - "console.log(new Date().toString());"
           restartPolicy: OnFailure
-      parallelism: 1
-      completions: 1
-  concurrencyPolicy: "Forbid"
-  successfulJobsHistoryLimit: 3
-  failedJobsHistoryLimit: 5
