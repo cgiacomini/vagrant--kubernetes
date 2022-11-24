@@ -1,7 +1,7 @@
 apiVersion: batch/v1
 kind: CronJob
 metadata:
-  name: print-date
+  name: "hello-cronjob"
 spec:
   schedule: "*/5 * * * *"
   jobTemplate:
@@ -9,10 +9,10 @@ spec:
       template:
         spec:
           containers:
-          - name: print-date
-            image: node:14-alpine
-            imagePullPolicy: IfNotPresent
+          - name: hello
+            image: busybox
             args:
-            - -e
-            - "console.log(new Date().toString());"
+            - /bin/sh
+            - -c
+            - date; echo hello from k8s cluster
           restartPolicy: OnFailure
