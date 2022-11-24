@@ -1,6 +1,10 @@
 # CronJobs
-CronJobs are used for tasks that need to run on a regular basic at a specific time.
-When running a CronJob a Job will be scheduled and when it start it run a POD.
+* CronJobs are used for tasks that need to run on a regular basic at a specific time.
+* When running a CronJob a Job will be scheduled and when it start it run a POD.
+* By default, a CronJob retains the last three successful Pods and the last failed PODs. 
+* ***spec.successfulJobsHistoryLimit*** allow to reconfigure the job retention history limits.
+* ***spec.failedJobsHistoryLimit*** allow to reconfigure the retention history of failed jobs.
+
 ## Example 1
 We create a cron job which runs every 5 minutes.  
 ***001-SimpleCronJob.yaml***
