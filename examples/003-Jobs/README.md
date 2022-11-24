@@ -15,6 +15,8 @@
     * ***parallel jobs with a work queue***: multiple jobs started, when a job complete successfully, the job is completed.
         * completions=1
         * parallelism=m  - how many jobs in parallel
+* Other Job properties
+    * ***spec.backoffLimit*** : specify the number of retries before considering a Job as failed.
 
 ## Example 1 - 
 ***001-SimpleJob.yaml***
