@@ -2,7 +2,7 @@
 CronJobs are used for tasks that need to run on a regular basic at a specific time.
 When running a CronJob a Job will be scheduled and when it start it run a POD.
 ## Example 1
-We create a cron job which runs every two minutes.
+We create a cron job which runs every 5 minutes.
 ***001-SimpleCronJob.yaml***
 ```
 apiVersion: batch/v1
