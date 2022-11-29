@@ -4,15 +4,14 @@
 * ConfigMap for command line arguments
 
 ## ConfigMap for setting Environment variables
-We can create configMaps for environment variable settings that will be used later by PODs 
-in their containers environment. We can use a file containing the variable settings or
-simply use the litteral aproach.
+We can create configMaps for environment variable settings that will be used later by PODs in their containers environment.  
+We can use a file containing the variable settings or simply use the literal aproach.
 
 ### Create ConfigMap from a file containing variable setting.
-
 ```
 # Create file containing variables
-echo "CAR=TOYOTA" > variables-file
+echo "CAR=TOYOTA"         > variables-file
+echo "MOTORCYCLE=YAMAHA" >> variables-file 
 
 # Create the configmap
 $ kubectl create cm variables --from-env-file=variables-file
@@ -28,6 +27,7 @@ $ kubectl get cm variables -o yaml
 apiVersion: v1
 data:
   CAR: TOYOTA
+  MOTORCYCLE: YAMAHA
 kind: ConfigMap
 metadata:
   creationTimestamp: "2022-01-17T16:13:25Z"
@@ -35,11 +35,9 @@ metadata:
   namespace: default
   resourceVersion: "286352"
   uid: c53ff17a-0f9b-4599-ab53-13fd1a92623a
-
 ```
 
 ### Create ConfigMap from literals
-
 ```
 # Create the configmap
 kubectl create cm literals --from-literal=CAR=FIAT --from-literal=TRUCK=JUMPER
@@ -65,7 +63,8 @@ metadata:
   uid: 603934c3-ca9f-4df0-ba0a-427b845e5487
 ```
 
-### Example using configMap in a POD
+### Using the configMap in a POD [ envFrom ]
+Using **envFrom** all variables in the configmap are imported in the POD environment.   
 ***001-pod.yaml***
 ```
 apiVersion: v1
@@ -90,28 +89,71 @@ $ kubectl get pods
 NAME       READY   STATUS    RESTARTS   AGE
 demo-pod   1/1     Running   0          5s
 
-$ kubectl logs demo-pod
-
-Every 5s: env                                               2022-01-18 10:07:13
-
-KUBERNETES_SERVICE_PORT=443
-KUBERNETES_PORT=tcp://10.96.0.1:443
-HOSTNAME=demo-pod
-SHLVL=2
-HOME=/root
-KUBERNETES_PORT_443_TCP_ADDR=10.96.0.1
+$ k exec demo-pod -it -- env
 PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
-KUBERNETES_PORT_443_TCP_PORT=443
-KUBERNETES_PORT_443_TCP_PROTO=tcp
-KUBERNETES_SERVICE_PORT_HTTPS=443
-KUBERNETES_PORT_443_TCP=tcp://10.96.0.1:443
-KUBERNETES_SERVICE_HOST=10.96.0.1
-PWD=/
+HOSTNAME=demo-pod
 CAR=TOYOTA
+MOTORCYCLE=YAMAHA
+KUBERNETES_PORT_443_TCP_PROTO=tcp
+KUBERNETES_PORT_443_TCP_PORT=443
+KUBERNETES_PORT_443_TCP_ADDR=10.96.0.1
+KUBERNETES_SERVICE_HOST=10.96.0.1
+KUBERNETES_SERVICE_PORT=443
+KUBERNETES_SERVICE_PORT_HTTPS=443
+KUBERNETES_PORT=tcp://10.96.0.1:443
+KUBERNETES_PORT_443_TCP=tcp://10.96.0.1:443
+TERM=xterm
+HOME=/root
 ```
 
+**Note**: All variables defined inside the configmap data are imported inside the POD environment as they are defined.
+So is important when using this aproach to define the variable following the conventional way. 
+
+### Using the configMap in a POD [ valueFrom ]
+Using valueFrom we can selectively import specific variables from the configmap into the POD envirnment.
+***002-pod.yaml***
+```
+apiVersion: v1
+kind: Pod
+metadata:
+  name: demo-pod-2
+spec:
+  containers:
+  - name: demo-pod-2
+    image: cirros
+    command: ["/bin/sh", "-c", "watch -n 5 env"]
+    env:
+      - name: TRUCK
+        valueFrom:
+          configMapKeyRef:
+            name: literals
+            key: TRUCK
+```
+***Deployment***
+```
+$ k apply -f 002-pod.yaml
+pod/demo-pod-2 created
+
+# get the POD env
+$ kubectl exec demo-pod-2 -- env
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+HOSTNAME=demo-pod-2
+TRUCK=JUMPER
+KUBERNETES_PORT_443_TCP_ADDR=10.96.0.1
+KUBERNETES_SERVICE_HOST=10.96.0.1
+KUBERNETES_SERVICE_PORT=443
+KUBERNETES_SERVICE_PORT_HTTPS=443
+KUBERNETES_PORT=tcp://10.96.0.1:443
+KUBERNETES_PORT_443_TCP=tcp://10.96.0.1:443
+KUBERNETES_PORT_443_TCP_PROTO=tcp
+KUBERNETES_PORT_443_TCP_PORT=443
+HOME=/root
+```
+Only the variable selected from the configMap is imported.
+
 ## ConfigMap for configfiles
-We can create configmaps to provide configuration files; the PODs will use them as a mounted volume which contains the cofiguration file.  
+We can create configmaps to provide configuration files.  
+The PODs will use them as a mounted volume which contains the cofiguration file.  
 
 The following yaml file define a configMap named **cm-example**.  
 This configMap define a configuration file that contains a couple of lines as example.
