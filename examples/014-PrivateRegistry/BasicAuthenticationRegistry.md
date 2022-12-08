@@ -51,7 +51,7 @@ $ curl  localhost:5000/v2/_catalog
 level=warning msg="error authorizing context: basic authentication challenge for realm "Registry Realm": invalid authorization credential"
 ```
 
-Trying to pull an image from the refistry also gives authentication error
+Trying to pull an image from the registry also gives authentication error
 
 ```
 $ docker pull localhost:5000/alpine
