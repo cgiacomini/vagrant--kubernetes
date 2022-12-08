@@ -1,7 +1,7 @@
 ## Registry server with a self signed certificate.
 
 To better secure the registry access we could create a self signed certificate for our private docker registry.  
-The certificate then need to be added to all hosts the will requires access the to our private registry.  
+The certificate then need to be added to all hosts that will requires access the to our private registry.  
   
 If we ask for the current installed certificate on our running private docker registry we see that there is none:
 ```
