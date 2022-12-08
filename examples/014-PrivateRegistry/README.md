@@ -1,13 +1,10 @@
 # Private Registry using Securing communication
 
 Right now we have one master node  (k8s-master) and two worker nodes (k8s-node1, k8s-node2).  
-Here we add a 4th machine (centos8s-server), this new host is intended to run all additional services that are  
-not properly related to kubernetes, for example a local private docker registry.  
-For this reason the new host will not have kubernets software installe on it.
-
-
-The new hostname is to be configured also in each kubernetes nodes in ***/etc/hosts*** since right now
-we do not have a DNS runnig.
+Here we add a 4th machine (centos8s-server).   
+This new host will not have kubernets software installed on it.  
+It is only intended to run all additional services,for example a local private docker registry.   
+The new hostname FQDN is added to each kubernetes nodes ***/etc/hosts***, since right now we do not have a DNS service runnig.
 
 ***new /etc/hosts for all nodes***
 ```
