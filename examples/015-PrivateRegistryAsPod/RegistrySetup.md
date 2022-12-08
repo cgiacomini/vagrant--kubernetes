@@ -39,7 +39,7 @@ writing new private key to 'registry_auth.key
 
 ### Create a TSL secret
 
-We can do it easyly on a command line like this example
+We can do it easily on a command line like this example
 
 ```
 kubectl create secret tls my-tls-secret \
@@ -47,7 +47,7 @@ kubectl create secret tls my-tls-secret \
    --cert <certificate> \
    -n docker-registry
 ```
-Or we can create a yaml so would be easier to reaply in case we need to do so.
+Or we can create a yaml so would be easier to replay in case we need to do so.
 The format of the yaml file is as follow:
 ```
 --- 
@@ -278,7 +278,7 @@ docker-registry   1/1     Running   0          51s   10.10.0.34   k8s-master   <
 ### Docker Registry Service
 
 To access the docker-registry pod we create a service.  
-The pod is labeled *app: registry* so the services *selector* property need to be set as *app: registry* as well.  
+The pod is labeled **app: registry** so the services *selector* property need to be set as *app: registry* as well.  
 The name of the service must match with the *Common Name* (CN) field specified when creating the  
 Self Signgned Certificate  *CN=docker-registry*.
 The service expose the port 5000 which then target the pod port 5000
