@@ -104,7 +104,7 @@ $ docker login 192.168.56.200:443
 Error response from daemon: Get "https://192.168.56.200:443/v2/": x509: certificate signed by unknown authority
 ```
 
-We assume now that we do not want to access to the registry only bye its FQDN (centos8s.singleton.net)  
+We assume now that we  want to access to the registry only by its FQDN (centos8s.singleton.net)  
 We have then to instruct the docker client on all nodes to trust the certificate by coping it int the following directory:  
 */etc/docker/certs.d/<your_registry_host_name>:<your_registry_host_port>/*
 ```
