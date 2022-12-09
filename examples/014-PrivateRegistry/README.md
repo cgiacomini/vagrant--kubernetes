@@ -1,9 +1,7 @@
 # Private Registry using Securing communication
 
-Right now we have one master node  (k8s-master) and two worker nodes (k8s-node1, k8s-node2).  
-Here we add a 4th machine (centos8s-server).   
-This new host will not have kubernets software installed on it.  
-It is only intended to run all additional services,for example a local private docker registry.   
+The deployed kubernetes cluster via kubeadm command has one master (k8s-master) and two worker nodes (k8s-node1, k8s-node2).  
+Here we add a 4th VM (centos8s-server) which will be not part of the cluster but will be configured to run a private docker registry.
 The new hostname FQDN is added to each kubernetes nodes ***/etc/hosts***, since right now we do not have a DNS service runnig.
 
 ***new /etc/hosts for all nodes***
