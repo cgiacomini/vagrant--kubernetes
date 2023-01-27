@@ -45,9 +45,9 @@ Right now there are a couple of manual intervention to do before starting up Vag
   The nodes names and their IP address can be changed in this file.
 
 * ***root CA certificates*** In case the network is behind a proxy (a company wide man-in-the-middle proxies for internal security)
-   most probaly get the followinf error is rised "x509: certificate signed by unknown authority" while trying to upgrade the OS
-   packages or pulling the kubernetes images from the web. That is because the proxy interetps SSL communication and replace the 
-   to the endpoint and replace the certificate of the endpoint. To solve this we need to update the kubernetes nodes with the 
+   most probaly get the following error is rised "x509: certificate signed by unknown authority" while trying to upgrade the OS
+   packages or pulling the kubernetes images from the web. That is because the proxy inercepts the SSL communication and replace the 
+   the certificate of the endpoint. To solve this we need to update the kubernetes nodes with the 
    company Root CA self signed certificate. To do so all certifactes in ***config/RootCA*** directory are automatically update in all
    kubernetes nodes.
    
