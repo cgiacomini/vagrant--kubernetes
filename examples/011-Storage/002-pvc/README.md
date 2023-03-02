@@ -106,8 +106,10 @@ storageclass.storage.k8s.io/manual created
 $ kubectl get sc manual -o wide
 NAME     PROVISIONER                    RECLAIMPOLICY   VOLUMEBINDINGMODE      ALLOWVOLUMEEXPANSION   AGE
 manual   kubernetes.io/no-provisioner   Delete          WaitForFirstConsumer   false                  16s
+```
 
-We could make **manual** storage class as the default one. This way will be used to dynamically provision storage for PersistentVolumeClaims that do not require any specific storage class.
+We could make **manual** storage class as the default one.  
+This way will be used to dynamically provision storage for PersistentVolumeClaims that do not require any specific storage class.
 
 ```
 $ kubectl patch storageclass manual  -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'
@@ -118,13 +120,9 @@ NAME               PROVISIONER                    RECLAIMPOLICY   VOLUMEBINDINGM
 manual (default)   kubernetes.io/no-provisioner   Delete          WaitForFirstConsumer   false                  18h
 ```
 
-
-
-
-```
 ### Create the persistent volume
-Here a persistent volume is created using the storage class **manual** just defined. 
-It will have a capacity of 10G Bytes and will be mounted read-write by a single node.
+Here a persistent volume is created using the storage class **manual** just defined.   
+It will have a capacity of 10G Bytes and will be mounted read-write by a single node.  
 ***hostpath*** specify that the peristent volume use a directory on the node to emulate a network-attached storage.
 
 ***persistent-volume.yaml***
