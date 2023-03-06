@@ -36,7 +36,7 @@ secrets:
 - name: default-token-6rfps
 ```
 
-When creating a ***serviceaccount*** a ***service account token*** is also generated.
+When creating a ***serviceaccount*** a ***service account token*** is also generated (**Note:** not anymore from kubernetes 1.22.0 )
 The token is used by an application to authenticate to the kubernetes API Server.
 Every created pods mount the secret that contains the default service account token.
 
