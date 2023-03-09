@@ -1,0 +1,38 @@
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: prometheus-service-ingress
+  namespace: monitoring
+  annotations:
+     prometheus.io/scrape: 'true'
+     prometheus.io/port:   '9090'
+spec:
+  selector:
+    app: prometheus-server
+  ports:
+  - protocol: TCP
+    port: 9090
+    targetPort: 9090
+    name: http
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: prumetheus-ui
+  namespace: monitoring
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: prometheus.singleton.net
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: "prometheus-service-ingress"
+            port:
+              number: 9090
+
+

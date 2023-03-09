@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: bluegreen-test-svc
+  namespace: ckad
+spec:
+  selector:
+    app: bluegreen-test
+    color: blue
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80

@@ -1,0 +1,7 @@
+apiVersion: singleton.dev/v1  # The group/version
+kind: BeeHive
+metadata:
+  name:  test-beehive
+spec:
+  supers: 3
+  bees: 60000

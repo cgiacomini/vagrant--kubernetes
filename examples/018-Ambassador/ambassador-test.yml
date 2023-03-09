@@ -1,0 +1,45 @@
+# ‘Forward’ or classic proxies are used to send requests from a user to a target site through a server.
+# A 'Reverse proxy' server is a type of proxy server that typically sits behind the firewall in a private network and directs client requests to the appropriate backend server.
+# HAProxy is a free, very fast and reliable reverse-proxy.
+
+# Config map for the haproxy container. It listen on port 8080 and target port 8081 where the service ambassador-test-svc is listening
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: haproxy-config
+  namespace: ckad
+data:
+  haproxy.cfg: |
+    frontend ambassador
+    bind *:8080
+    default_backend ambassador_test_svc
+    backend ambassador_test_svc
+    server svc ambassador-test-svc:8081
+
+# This pod has two containers on container running haproxy with the above configuration
+# a second container excuting a loop over the curl command targeting the pod local port 8080
+# ambassador-test(container) ---> haproxy(contatiner):8080 --> ambassador(container):8081 ---> nginx(container):80
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: ambassador-test
+  namespace: ckad
+spec:
+  containers:
+  - name: main
+    image: radial/busyboxplus:curl
+    command: ['sh', '-c', 'while true; do curl localhost:8080; sleep 5; done']
+
+  - name: ambassador
+    image: haproxy:2.4
+    volumeMounts:
+    - name: config
+      mountPath: /usr/local/etc/haproxy/
+
+  volumes:
+  - name: config
+    configMap:
+      name: haproxy-config
+
