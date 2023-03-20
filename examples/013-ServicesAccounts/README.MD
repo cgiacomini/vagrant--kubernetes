@@ -1,26 +1,37 @@
-# Services Account, Roles  and Roles binding  
-***!!! TO BE REWORKED BECAUSE OF CHANGES IN KUBERNETES 1.24.0  !!!***
+# Services Account, Roles and Roles binding  
 
+## Services Accounts
 Any processes or applications in a container which resides within a POD
 can access the cluster by getting authenticated to the API server,
 using a service account.
 
-* Services account are used for basic authentication
-* Roles and Roles binding are used for authorization
-* By default every POD uses a default serivice account
+* Services account are used for basic authentication, A service account provides an identity for processes that run in a Pod,
+* Roles and Roles Binding are used for authorization
+* By default every POD uses a default service account
 * Every namespaces has a default service account called ***default***
+* Services Accounts are bound to specific namespaces. 
+Kubernetes API differentiate internal and external users.
 
-All namespaces as a default service account
+As shown below, since Kubernetes 1.24.0 secrets are not generated automatically any longer when creating services account. v
+The reason for this is to avoid never expiring tokens and avoid possible security issues.  
+Now when a POD is created *kubelet* uses the *TokenRequest API* to generate a token specifically for that Pod, which is mounted as a projected volume.  
+The token expires after an hour or when the Pod is deleted, whichever comes first.  
+Kubelet renews the token at regular intervals so the Pod always has a valid token mounted.  
+If you absolutely need a never-expiring token stored in a Secret, you can still get one by creating the Secret yourself and adding a special annotation. Kubernetes will then add the token to the Secret for you.
 
+### list the deployed services accounts
 ```
 $ kubectl get sa -A | grep default
-default                default                              1         7d1h
-ingress-nginx          default                              1         6d19h
-kube-node-lease        default                              1         7d1h
-kube-public            default                              1         7d1h
-kube-system            default                              1         7d1h
-kubernetes-dashboard   default                              1         7d1h
+NAMESPACE              NAME                                 SECRETS   AGE
 
+default                default                              0         152d
+docker-registry        default                              0         145d
+ingress-nginx          default                              0         152d
+kube-flannel           default                              0         152d
+kube-node-lease        default                              0         152d
+kube-public            default                              0         152d
+kube-system            default                              0         152d
+kubernetes-dashboard   default                              0         152d
 ```
 
 ***default service account***
@@ -38,10 +49,6 @@ secrets:
 - name: default-token-6rfps
 ```
 
-When creating a ***serviceaccount*** a ***service account token*** is also generated (**Note:** not anymore from kubernetes [1.24.0](https://github.com/cgiacomini/vagrant--kubernetes) )
-The token is used by an application to authenticate to the kubernetes API Server.
-Every created pods mount the secret that contains the default service account token.
-
 ```
 $ kubectl describe serviceaccount default -n default
 Name:                default
@@ -54,33 +61,6 @@ Tokens:              default-token-6rfps
 Events:              <none>
 ```
 
-The token ***default-token-6rfps*** is stored as a secret object
-```
-# Get The secret name
-$ kubectl get secret -n default
-NAME                  TYPE                                  DATA   AGE
-default-token-6rfps   kubernetes.io/service-account-token   3      7d1h
-
-# Show the secret content
-$ kubectl describe secret  default-token-6rfps -n default
-Name:         default-token-6rfps
-Namespace:    default
-Labels:       <none>
-Annotations:  kubernetes.io/service-account.name: default
-              kubernetes.io/service-account.uid: c9616138-2365-42f0-802b-ed3579a2ad39
-Type:  kubernetes.io/service-account-token
-Data
-====
-ca.crt:     1099 bytes
-namespace:  7 bytes
-token:      eyJhbGciOiJSUzI1N.................
-```
-
-The secret has three data values all base64 encoded:
-* ca.crt
-* namespace
-* thoken
-
 This allow the service account to be used to connect the the API server.
 ## Create a POD
 ***mypod.yaml***
@@ -88,7 +68,8 @@ This allow the service account to be used to connect the the API server.
 apiVersion: v1
 kind: Pod
 metadata:
-  name: mypod
+  name:mypod
+  namespace: default
 spec:
   containers:
   - name: mybod
@@ -174,6 +155,7 @@ $ kubectl exec mypod -it -- /bin/sh
 The curl fails because it tries to access the API but is not alowed.
 An access token should be provided.
 ```
+$ kuctl exec mypod -it -- /bin/sh
 DEFAULT_SA_TOKEN=$(cat /run/secrets/kubernetes.io/serviceaccount/token)
 / # curl -H "Authorization: Bearer $DEFAULT_SA_TOKEN" https://kubernetes/api/v1 --insecure
 {
@@ -195,9 +177,10 @@ DEFAULT_SA_TOKEN=$(cat /run/secrets/kubernetes.io/serviceaccount/token)
     ...
 ```
 
-Using the default token ***curl*** can access the API server an retrieve some cluster information.
+Using the default token ***curl*** can access the API server and retrieve some cluster information.
 But **curl** is not allow to request information about pods using the default serviceaccount token.
 ```
+$ kubectl exec mypod -it -- /bin/sh
 / # DEFAULT_SA_TOKEN=$(cat /run/secrets/kubernetes.io/serviceaccount/token)
 / # curl -H "Authorization: Bearer $DEFAULT_SA_TOKEN" https://kubernetes/api/v1/namespace/default/pods --insecure
 {
@@ -273,7 +256,6 @@ subjects:
     name: mypod-sa
     namespace: default
 ```
-***Deploy***
 ```
 $ kubectl apply -f mypod-rolebinding.yaml
 rolebinding.rbac.authorization.k8s.io/mypod-rolebinding created
@@ -293,9 +275,34 @@ Subjects:
   Kind            Name      Namespace
   ----            ----      ---------
 ```
+
+## Deploy the POD which uses our Service Account
+We redeploy the POD by specifying our new service account.
+***new-mypod.yaml***
+```
+apiVersion: v1
+kind: Pod
+metadata:
+  name: new-mypod
+  namespace: default
+spec:
+  serviceAccountName: mypod-sa
+  containers:
+  - name: new-mybod
+    image: radial/busyboxplus
+    command:
+    - sleep
+    - "3600"
+```
+```
+$ kubectl apply -f new-mypod.yaml 
+pod/new-mypod created
+```
+
 Now the service account mypod-sa and the role mypod-role are bound and the service account used in the pod.
 The pod then can list PODs in the namespace default ( See RoleBinding and ClusterRoleBinding)
 ```
+ $ kubectl exec new-mypod -it -- /bin/sh
 / # DEFAULT_SA_TOKEN=$(cat /run/secrets/kubernetes.io/serviceaccount/token)
 / # curl -H "Authorization: Bearer $DEFAULT_SA_TOKEN" https://kubernetes/api/v1/namespaces/default/pods --insecure
 {
