@@ -1,4 +1,6 @@
-# Services Account, Roles  and Roles binding
+# Services Account, Roles  and Roles binding  
+***!!! TO BE REWORKED BECAUSE OF CHANGES IN KUBERNETES 1.24.0  !!!***
+
 Any processes or applications in a container which resides within a POD
 can access the cluster by getting authenticated to the API server,
 using a service account.
