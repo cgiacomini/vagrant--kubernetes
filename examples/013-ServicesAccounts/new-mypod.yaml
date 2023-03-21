@@ -2,7 +2,7 @@ apiVersion: v1
 kind: Pod
 metadata:
   name: new-mypod
-  namespace: ckad
+  namespace: default
 spec:
   serviceAccountName: mypod-sa
   containers:

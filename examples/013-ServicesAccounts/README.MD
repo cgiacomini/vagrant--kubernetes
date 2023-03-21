@@ -12,7 +12,7 @@ using a service account.
 * Services Accounts are bound to specific namespaces. 
 Kubernetes API differentiate internal and external users.
 
-As shown below, since Kubernetes 1.24.0 secrets are not generated automatically any longer when creating services account. v
+As shown below, since Kubernetes 1.24.0 secrets are not generated automatically any longer when creating services account.  
 The reason for this is to avoid never expiring tokens and avoid possible security issues.  
 Now when a POD is created *kubelet* uses the *TokenRequest API* to generate a token specifically for that Pod, which is mounted as a projected volume.  
 The token expires after an hour or when the Pod is deleted, whichever comes first.  
@@ -34,21 +34,16 @@ kube-system            default                              0         152d
 kubernetes-dashboard   default                              0         152d
 ```
 
-***default service account***
+### Default service account
 ```
 $ kubectl get sa default -n default -o yaml
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  creationTimestamp: "2022-01-13T09:24:05Z"
   name: default
   namespace: default
-  resourceVersion: "459"
-  uid: c9616138-2365-42f0-802b-ed3579a2ad39
-secrets:
-- name: default-token-6rfps
 ```
-
+As you see here no token is assigned to the service account 
 ```
 $ kubectl describe serviceaccount default -n default
 Name:                default
@@ -56,12 +51,11 @@ Namespace:           default
 Labels:              <none>
 Annotations:         <none>
 Image pull secrets:  <none>
-Mountable secrets:   default-token-6rfps
-Tokens:              default-token-6rfps
+Mountable secrets:   <none>
+Tokens:              <none>
 Events:              <none>
 ```
 
-This allow the service account to be used to connect the the API server.
 ## Create a POD
 ***mypod.yaml***
 ```
@@ -89,7 +83,6 @@ pod/mypod created
 $ kubectl get pods
 NAME    READY   STATUS    RESTARTS   AGE
 mypod   1/1     Running   0          6s
-
 
 ## Get the POD YAML
 $ kubectl get pod mypod -o yaml
@@ -135,7 +128,7 @@ spec:
             path: namespace
 ```
 
-The created pod has mounted a default secret which contains the token curl can use to access the API server.
+**The created pod has mounted a volume that contains the required service account token and certificate to  access the API server.**
 ```
 ## Connect to the POD and try to access the API server via REST API without the token
 $ kubectl exec mypod -it -- /bin/sh
@@ -152,7 +145,7 @@ $ kubectl exec mypod -it -- /bin/sh
 }
 ````
 
-The curl fails because it tries to access the API but is not alowed.
+The curl fails because it tries to access the API but is not allowed.
 An access token should be provided.
 ```
 $ kuctl exec mypod -it -- /bin/sh
@@ -197,7 +190,7 @@ $ kubectl exec mypod -it -- /bin/sh
   "code": 403
 }
 ```
-## Create a ServiceAccout
+## Create a ServiceAccount
 ***mypod-sa***
 ```
 apiVersion: v1

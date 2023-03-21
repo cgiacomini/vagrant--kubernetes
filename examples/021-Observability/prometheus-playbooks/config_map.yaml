@@ -20,8 +20,8 @@ data:
           summary: High Memory Usage
   prometheus.yml: |-
     global:
-      scrape_interval: 5s
-      evaluation_interval: 5s
+      scrape_interval: 5s # default is every 1 minute
+      evaluation_interval: 5s  # default is every 1 minute
     rule_files:
       - /etc/prometheus/prometheus.rules
     alerting:
