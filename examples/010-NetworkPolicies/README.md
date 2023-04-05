@@ -68,7 +68,7 @@ db-networkpolicy   app=database   3m5s
 
 ```
 
-# Isolata PODs in a Namespace
+# Isolate PODs in a Namespace
 ## Disallow all traffic
 We can block all ingress and egress communication to all PODs. we start by preparing the followin yaml file.
 ***002-disallow-traffic.yaml***
