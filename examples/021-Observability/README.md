@@ -42,10 +42,10 @@ The following manifest file is used to create a ***ServiceAccount*** and bind it
 
 >***Note:***  
 >>* A ***Role*** can only be used to grant access to resources within a single namespace while a ***ClusterRole*** is cluster-scoped. 
-To the ClusterRole we assign specific permissions to different kind of resources.  
+We create a ClusterRole and we assign specific permissions to different kind of resources.  
 We add to it the permissions to *get*, *list* and *watch* nodes, services endpoints, pods, and ingresses and also to PersistentVolumes and PersistentVolumesClaims.  
 >>* A RoleBinding grants permissions to a role in its namespace while a ClusterRoleBinding grants cluster-wide access.
->>* Since we purposely create out service account in the monitoring namespace is required to specify the namespace of the ServiceAccount when we refer to it while creating the ClusterRoleBinding to select it.
+>>* Since we purposely create our ServiceAccount in the monitoring namespace, is required to specify the namespace of the ServiceAccount when we refer to it while creating the ClusterRoleBinding to select it.
 
 ***cluster_role.yaml***
 ```
@@ -264,7 +264,7 @@ data:
 ```
 ### Prometheus storage
 Prometheus needs a dedicated storage to store the scrapped data, here we have decided to use an NFS share for this purpose.  
-Now there four possible choices here:
+Now there are four possible choices here:
 1. Mount the NFS share as a volume inside the prometheus POD using ***hostPath*** type.
 2. Mount the NFS share as a volume inside the prometheus POD using ***nfs*** type.
 3. Mount the NFS share as a volume inside a persistentVolume using ***hostPath*** type.
@@ -273,7 +273,7 @@ Now there four possible choices here:
 ***hostPath*** will work here because all node are mounting the NFS share.
 For choices 3. and 4. the deployment  will have to use a persistentVolumeClaim.  
 
-But if we want to a dynamic storage provisioning then using a PV and a PVC is the choice.  
+But if we want a dynamic storage provisioning then using a PV and a PVC is the choice.  
 With ***Dynamic Storage Provisioning***, the Kubernetes Control Plane automatically allocate storage to containers when it detects that the container need it.  
 The storage is selected based on the storage class required by the container requirements. The Control Plane create a PV and and attach it to the container.
 
