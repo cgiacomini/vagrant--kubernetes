@@ -37,15 +37,14 @@ data:
           - targets:
              - localhost:9090
       
-      # Example-001 config
-      - job_name: 'example-001'
+      # Example-001v1 config
+      - job_name: 'example-001v1'
         kubernetes_sd_configs:
         - role: pod
         relabel_configs:
         - source_labels: [__meta_kubernetes_pod_label_app_kubernetes_io_name]
           action: keep
-          regex: example-001
+          regex: example-001v1
         - source_labels: [__meta_kubernetes_pod_container_port_name]
           action: keep
           regex: metrics
-
