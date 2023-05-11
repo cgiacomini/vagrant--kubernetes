@@ -4,10 +4,10 @@
 In this example the ***centos8s-server.singleton.net*** server, configured and used in [example-014-PriveRegistry](../014-PrivateRegistry/README.md)
 will be configured to serve as NFS server. The NFS server will share a portion of its filesystem to all nodes of the couchbase cluster.
 The shared folder will be used than to store Prometheus metrics. 
-The NFS server and the nodes configuration procedure is described in [NFSServerCentos.md](./NFSServerCentos.md).
+The NFS server and the nodes configuration procedure is described in [NFSServerCentos.md](./NFSServerCentos.md).  
 
 The NFS share is mounted on all nodes in the ***/mnt/cluster_nfs*** mount point.
-A dedicate directory to host prometheus metrics is created the shared NFS on the NFS sever.
+A dedicate directory to host prometheus metrics is created in the shared NFS on the NFS sever.
 
 ```
 $ sudo mkdir -p /mnt/nfs_shares/cluster_nfs/Prometheus
@@ -37,15 +37,16 @@ kubectl apply -f namespace.yaml
 ```
 ### Create Service Account, Role and Role binding
 Prometheus uses Kubernetes APIs to read all the available metrics from Nodes, Pods, Deployments, etc.  
-For this reason, we need to create an RBAC policy with read access to required API groups and bind the policy to the monitoring namespace.
+For this reason, we need to create an RBAC policy with read access to the required API groups and bind the policy to the monitoring namespace.
 The following manifest file is used to create a ***ServiceAccount*** and bind it to a ***ClusterRole***.  
 
 >***Note:***  
->>* A ***Role*** can only be used to grant access to resources within a single namespace while a ***ClusterRole*** is cluster-scoped. 
-We create a ClusterRole and we assign specific permissions to different kind of resources.  
+>>* A ***Role*** can only be used to grant access to resources within a single namespace while a ***ClusterRole*** is cluster-scoped.  
+We create a ClusterRole and we assign to it specific permissions for different kind of resources.  
 We add to it the permissions to *get*, *list* and *watch* nodes, services endpoints, pods, and ingresses and also to PersistentVolumes and PersistentVolumesClaims.  
 >>* A RoleBinding grants permissions to a role in its namespace while a ClusterRoleBinding grants cluster-wide access.
 >>* Since we purposely create our ServiceAccount in the monitoring namespace, is required to specify the namespace of the ServiceAccount when we refer to it while creating the ClusterRoleBinding to select it.
+>>* Note: The API group “” (empty string) represents the core Kubernetes API.
 
 ***cluster_role.yaml***
 ```
