@@ -145,9 +145,9 @@ $ curl   -u centos:centos  https://centos8s-server.singleton.net:443/v2/example-
 The image is pushed and available.
 
 ## Create the Secret
-To allow kubernetes nodes to pull the image from the Private Registry they need t authenticate their self to the registry.  
-secrets objects have namespace scope, so we need to create the required secret in the *monitoring* namespace which is where we deploy the PODs.
-We proceed in the same way describe in [SelfSignedCACertificateRegistry.md](../../../014-PrivateRegistry/gistry/SelfSignedCACertificateRegistry.md).
+To allow kubernetes nodes to pull the image from the Private Registry they need to authenticate theirself to the registry.  
+Secrets objects have namespace scope, so we need to create the required secret in the *monitoring* namespace which is where we deploy the PODs.
+We proceed in the same way described in [SelfSignedCACertificateRegistry.md](../../../014-PrivateRegistry/gistry/SelfSignedCACertificateRegistry.md).
 ```
 $ kubectl create secret docker-registry  centos8s-server-secret --docker-server=centos8s-server.singleton.net:443 --docker-username=centos --docker-password=centos -n monitoring
 secret/centos8s-server-secret created
@@ -203,9 +203,6 @@ deployment.apps/example-001 created
 $ kubectl get pods -n monitoring -o wide
 NAME                                     READY   STATUS    RESTARTS      AGE   IP            NODE         NOMINATED NODE   READINESS GATES
 example-001-6987bc77fc-rgkrb             1/1     Running   0             22s   10.10.1.189   k8s-node1    <none>           <none>
-node-exporter-9m25d                      1/1     Running   1 (70m ago)   24h   10.10.0.38    k8s-master   <none>           <none>
-node-exporter-qh2qs                      1/1     Running   1 (70m ago)   24h   10.10.1.186   k8s-node1    <none>           <none>
-node-exporter-zqwg6                      1/1     Running   1 (70m ago)   24h   10.10.2.231   k8s-node2    <none>           <none>
 prometheus-deployment-847b77bd49-4tms9   1/1     Running   1 (70m ago)   18h   10.10.2.234   k8s-node2    <none>           <none>
 
 # Verify the POD is listening on ports 8000 and 8001
@@ -216,10 +213,11 @@ tcp        0      0 0.0.0.0:8000            0.0.0.0:*               LISTEN      
 tcp        0      0 0.0.0.0:8001            0.0.0.0:*               LISTEN      1/python
 
 # Verify the application can be reached from another POD in the cluster
+# Note: Use the pod IP address
 kubectl run curl --image=radial/busyboxplus:curl -i --tty -n monitoring
 If you don't see a command prompt, try pressing enter.
 [ root@curl:/ ]
-[ root@curl:/ ]$ curl http://10.10.1.194:8000/metrics
+[ root@curl:/ ]$ curl http://10.10.1.189:8000/metrics
 # HELP python_gc_objects_collected_total Objects collected during gc
 # TYPE python_gc_objects_collected_total counter
 python_gc_objects_collected_total{generation="0"} 285.0
@@ -257,13 +255,13 @@ process_open_fds 7.0
 # TYPE process_max_fds gauge
 process_max_fds 1.048576e+06
 
-[ root@curl:/ ]$ curl http://10.10.1.194:8001/hello
+[ root@curl:/ ]$ curl http://10.10.1.189:8001/hello
 Hello World
 ```
 
 We create a **Deployment** with 1 replicaset to have a POD deployed only on one node of the cluster.
 We also added a toleration to allow the application also to be scheduled on the master node.
-So how prometheus knows how to target to application to retrieve the metrics ? on which node is it running ?
+So how prometheus knows how to target to application to retrieve the metrics ? on which node is it running ?  
 Prometheus is shipped with the Kubernetes auto-discover plugin named **kubernetes_sd_configs**.  
 This plugin allow retrieving scrape targets from Kubernetes REST API. 
 WE have just to add configuration in prometheus configmap.
@@ -281,7 +279,7 @@ example-001-6987bc77fc-jtc6b   1/1     Running   0          11m   app.kubernetes
 We can use ***relabel-configs*** in our new scrape job configuration to filter metrics.  
 
 ***Note:*** 
-Prometheus changes dots . and slashes / to underscores _ during service discovery,  
+Prometheus changes dots "." and slashes "/" to underscores "_" during service discovery,  
 so we need to replace them as follows
 ```
 __meta_kubernetes_pod_label_app_kubernetes_io_name
