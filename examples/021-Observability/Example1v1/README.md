@@ -2,13 +2,12 @@
 Counters track either the number or size of events.  
 Here we extend the code to add a counter on how many time '/hello' has been called.
 
-
+```
 $ docker build  -t example-001:v1 .
 
 $ docker images
 REPOSITORY                                 TAG          IMAGE ID       CREATED          SIZE
 example-001                                v1           21e3a4af6f17   33 seconds ago   86.8MB
-
 
 $ docker tag  example-001:v1  centos8s-server.singleton.net:443/example-001:v1
 $ docker images
@@ -58,5 +57,5 @@ $ http://10.10.1.197:8001/hello
 [ root@curl:/ ]$ curl http://10.10.1.197:8001/hello
 [ root@curl:/ ]$ curl http://10.10.1.197:8001/hello
 [ root@curl:/ ]$ curl http://10.10.1.197:8001/hellis
-
+```
 see Prometheus UI
