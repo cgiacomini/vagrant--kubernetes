@@ -26,6 +26,7 @@ spec:
       - name: centos8s-server-secret
       containers:
       - name: example-001v1
+        imagePullPolicy: Always
         image: centos8s-server.singleton.net:443/example-001:v1
         ports:
           - containerPort: 8000
