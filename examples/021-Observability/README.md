@@ -10,7 +10,7 @@
 5. [Using the prometheus Dashboard with NodePort Service](#UsingtheprometheusDashboardwithNodePortService)
 6. [Using the prometheus Dashboard using the the ingress](#UsingtheprometheusDashboardusingthetheingress)
 
-## Prepare NFS share <a name="PrepareNFSshare"></a>
+<a name="PrepareNFSshare"></a>## Prepare NFS share
 In this example the ***centos8s-server.singleton.net*** server, configured and used in [example-014-PriveRegistry](../014-PrivateRegistry/README.md)
 will be configured to serve as NFS server. The NFS server will share a portion of its filesystem to all nodes of the couchbase cluster.
 The shared folder will be used than to store Prometheus metrics. 
@@ -26,8 +26,8 @@ $ sudo chmod ugo+rwx /mnt/nfs_shares/cluster_nfs/Prometheus
 ```
 Now all nodes should have access in read/write access to the /mnt/cluster_nfs/Prometheus directory
 
-## Preparing the playbooks <a name="Preparingtheplaybooks"></a>
-### Create Namespace *monitoring*<a name="CreateNamespacemonitoring"></a>
+<a name="Preparingtheplaybooks"></a>## Preparing the playbooks
+<a name="CreateNamespacemonitoring"></a>### Create Namespace *monitoring*
 As command line
 ```
 $ kubectl create namespace monitoring
@@ -45,7 +45,7 @@ metadata:
 ```
 kubectl apply -f namespace.yaml
 ```
-### Create Service Account, Role and Role binding<a name="CreateServiceAccountRoleandRolebinding"></a>
+<a name="CreateServiceAccountRoleandRolebinding"></a>### Create Service Account, Role and Role binding
 Prometheus uses Kubernetes APIs to read all the available metrics from Nodes, Pods, Deployments, etc.  
 For this reason, we need to create an RBAC policy with read access to the required API groups and bind the policy to the monitoring namespace.
 The following manifest file is used to create a ***ServiceAccount*** and bind it to a ***ClusterRole***.  
@@ -113,7 +113,7 @@ subjects:
   name: prometheus
   namespace: monitoring
 ```
-### Create Configmap<a name="CreateConfigmap"></a>
+<a name="CreateConfigmap"></a>### Create Configmap
 Prometheus's configuration is defined in ***prometheus.yaml*** file.   
 All the alert rules for AlertManager are configured in ***prometheus.rules***.  
 We will set up an AlertManager to handle all alerting from prometheus metrics.  
@@ -273,7 +273,7 @@ data:
           action: replace
           target_label: kubernetes_name
 ```
-### Prometheus storage <a name="Prometheusstorage"></a>
+<a name="Prometheusstorage"></a>### Prometheus storage
 Prometheus needs a dedicated storage to store the scrapped data, here we have decided to use an NFS share for this purpose.  
 Now there are four possible choices here:
 1. Mount the NFS share as a volume inside the prometheus POD using ***hostPath*** type.
@@ -291,12 +291,11 @@ The storage is selected based on the storage class required by the container req
 * [Solution 1](./Storage-1st-Solution.md) - Mount the NFS share directly inside the prometheus POD using ***nfs*** 
 * [Solution 2](./Storage-2nd-Solution.md) - Mount the NFS share as a volume inside a persistentVolume using ***nfs*** type.
 
-## Accessing Prometheus  <a name="AccessingPrometheus"></a>
+<a name="AccessingPrometheus"></a>## Accessing Prometheus
 * [Method 1](./NodePortService.md) - Access via Node Port Service
 * [Method 2](./Ingress.md) - Create an Ingress
 
-## Prometheus deployment  <a name="Prometheusdeployment"></a>
-```
+<a name="Prometheusdeployment"></a>## Prometheus deployment
 $ kubectl apply -f namespace
 $ kubectl apply -f cluster_role.yaml
 $ kubectl apply -f config_map.yaml
