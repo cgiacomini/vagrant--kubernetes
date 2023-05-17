@@ -8,7 +8,7 @@
 3. [Accessing Prometheus](#AccessingPrometheus)
 4. [Prometheus deployment](#Prometheusdeployment)
 5. [Using the prometheus Dashboard with NodePort Service](#UsingtheprometheusDashboardwithNodePortService)
-6. [Using the prometheus Dashboard using the the ingres](#UsingtheprometheusDashboardusingthetheingress)
+6. [Using the prometheus Dashboard using the the ingress](#UsingtheprometheusDashboardusingthetheingress)
 
 ## Prepare NFS share <a name="PrepareNFSshare"></a>
 In this example the ***centos8s-server.singleton.net*** server, configured and used in [example-014-PriveRegistry](../014-PrivateRegistry/README.md)
@@ -304,7 +304,7 @@ $ kubectl apply -f deployment.yaml
 $ kubectl apply -f service.yaml
 $ kubectl apply -f ingress.yaml
 ```
-## Using the prometheus Dashboard with NodePort Service<a name="UsingtheprometheusDashboardwithNodePortService"></a>
+<a name="UsingtheprometheusDashboardwithNodePortService"></a>## Using the prometheus Dashboard with NodePort Service
 we can now access the prometheus dashboard using uno of the kubernetes node IP and the opened port  to target the  prometheus service.
 for example:
 ```
