@@ -311,7 +311,7 @@ for example:
 http://192.168.56.11:30909/
 ```
 
-## Using the prometheus Dashboard using the the ingress<a name="UsingtheprometheusDashboardusingthetheingress"></a>
+<a name="UsingtheprometheusDashboardusingthetheingress"></a>## Using the prometheus Dashboard using the the ingress
 Once the ingress is deployed we can access the prometheus Dashboard via the following URL : 
 ```
 http://prometheus.singleton.net
