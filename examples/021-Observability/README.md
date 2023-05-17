@@ -10,7 +10,7 @@
 5. [Using the prometheus Dashboard with NodePort Service](#UsingtheprometheusDashboardwithNodePortService)
 6. [Using the prometheus Dashboard using the the ingress](#UsingtheprometheusDashboardusingthetheingress)
 
-<a name="PrepareNFSshare"></a>## Prepare NFS share
+<a name="PrepareNFSshare"></a> ## Prepare NFS share
 In this example the ***centos8s-server.singleton.net*** server, configured and used in [example-014-PriveRegistry](../014-PrivateRegistry/README.md)
 will be configured to serve as NFS server. The NFS server will share a portion of its filesystem to all nodes of the couchbase cluster.
 The shared folder will be used than to store Prometheus metrics. 
@@ -310,7 +310,7 @@ for example:
 http://192.168.56.11:30909/
 ```
 
-<a name="UsingtheprometheusDashboardusingthetheingress"></a>## Using the prometheus Dashboard using the the ingress
+##<a name="UsingtheprometheusDashboardusingthetheingress"></a>Using the prometheus Dashboard using the the ingress
 Once the ingress is deployed we can access the prometheus Dashboard via the following URL : 
 ```
 http://prometheus.singleton.net
