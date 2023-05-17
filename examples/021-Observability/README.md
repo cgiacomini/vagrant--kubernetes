@@ -26,8 +26,8 @@ $ sudo chmod ugo+rwx /mnt/nfs_shares/cluster_nfs/Prometheus
 ```
 Now all nodes should have access in read/write access to the /mnt/cluster_nfs/Prometheus directory
 
-<a name="Preparingtheplaybooks"></a>## Preparing the playbooks
-<a name="CreateNamespacemonitoring"></a>### Create Namespace *monitoring*
+<a name="Preparingtheplaybooks"></a> ## Preparing the playbooks
+<a name="CreateNamespacemonitoring"></a> ### Create Namespace *monitoring*
 As command line
 ```
 $ kubectl create namespace monitoring
