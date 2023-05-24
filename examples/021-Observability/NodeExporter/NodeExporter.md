@@ -1,4 +1,4 @@
-# Deploy NodeExporter on all Kubernetes nodesk
+# Deploy NodeExporter on all Kubernetes nodes
 
 1) Deploy node exporter on all the Kubernetes nodes as a daemonset.  
 2) Daemonset makes sure one instance of node-exporter is running in all the nodes. It exposes all the node metrics on port 9100 on the /metrics endpoint.  
