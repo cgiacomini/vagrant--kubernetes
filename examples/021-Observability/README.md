@@ -1,3 +1,13 @@
+# Prometheus Archicture
+1. [Architecture]./PrometheusArchicture.md#prometheus-architecture)
+    1. [General](./PrometheusArchicture.md#General)
+    2. [Client Libraries](./PrometheusArchicture.md#client-libraries)
+    3. [Exporters](./PrometheusArchicture.md#exporters)
+    4. [Service Discovery](./PrometheusArchicture.md#service-discovery)
+    5. [Scraping](./PrometheusArchicture.md#scraping)
+    6. [The Dashboard](./PrometheusArchicture.md#the-ashboard)
+    7. [Rules and Alerts](./PrometheusArchicture.md#rules-and-alerts)
+    8. [Alert Monitoring](./PrometheusArchicture.md#alert-monitoring)
 # Installing Prometheus on Kubernetes
 1. [Prepare NFS share](./README.md#prepare-nfs-share)
 2. [Preparing the playbooks](./README.md#preparing-the-playbooks)
