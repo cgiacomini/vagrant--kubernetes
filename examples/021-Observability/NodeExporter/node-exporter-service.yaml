@@ -14,4 +14,4 @@ spec:
   - name: node-exporter
     protocol: TCP
     port: 9100
-    targetPort: 91
+    targetPort: 9100
