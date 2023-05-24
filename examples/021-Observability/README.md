@@ -19,6 +19,12 @@
 4. [Prometheus deployment](./README.md#Prometheus-deployment)
 5. [Using the prometheus Dashboard with NodePort Service](./README.md#Using-the-prometheus-Dashboar-dwith-NodePort-Service)
 6. [Using the prometheus Dashboard using the ingress](./README.md#Using-the-prometheus-Dashboard-using-the-ingress)
+# Node Exporter
+1. [Deploy NodeExporter on all Kubernetes nodes](./NodeExporter/NodeExporter.md#deploy-nodeExporter-on-all-kubernetes-nodes)
+    2.[Create the DaemonSet YAML file Manifest]](./NodeExporter/NodeExporter.md#create-the-daemonset-yaml-file-manifest)
+    3.[Deploy the DaemonSet](./NodeExporter/NodeExporter.md#deploy-the-daemonset)
+    4.[Create the Service to target the node exporter endpoint](./NodeExporter/NodeExporter.md#create-the-service-to-target-the-node-exporter-endpoint)
+    5.[Deploy the service](./NodeExporter/NodeExporter.md#deploy-the-service)
 # Kube State Metrics
 1. [Kube State Metrics](./KubeStateMetrics.md#kube-state-metrics)
     1. [Deployment](./KubeStateMetrics.md#Deployment)
