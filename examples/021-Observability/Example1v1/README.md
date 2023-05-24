@@ -44,7 +44,7 @@ class MyHandler(http.server.BaseHTTPRequestHandler):
 if __name__ == "__main__":
     start_http_server(8000)
     server = http.server.HTTPServer(('', 8001), MyHandler)
-    print('Prometheus metrics available on port 8000 /metrics')
+    print('Prometheus metrics available on port: 8000 /metrics')
     print('HTTP serveravailable on port 8001')
     server.serve_forever()
 ```
@@ -105,9 +105,6 @@ NAME                                     READY   STATUS    RESTARTS        AGE
 curl                                     1/1     Running   1 (3h ago)      3h1m
 example-001-5c5684868b-ndtnx             1/1     Running   0               105m
 example-001v1-9cc6ff6c9-v4mw6            1/1     Running   0               35s
-node-exporter-9m25d                      1/1     Running   1 (7h49m ago)   30h
-node-exporter-qh2qs                      1/1     Running   1 (7h49m ago)   30h
-node-exporter-zqwg6                      1/1     Running   1 (7h49m ago)   30h
 prometheus-deployment-847b77bd49-4bnnq   1/1     Running   0               88m
 ```
 ## Change Prometheus confimap
@@ -118,6 +115,8 @@ $ k delete pod prometheus-deployment-847b77bd49-4bnnq -n monitoring
 pod "prometheus-deployment-847b77bd49-4bnnq" deleted
 ```
 ## Verify metrics
+We send some requests to the application with correct and some with incorrect URL path.  
+Occasionally some random Exceptions are rised so we increment EXCEPTION counter too.
 ```
 $ k get pods -o wide
 NAME                                     READY   STATUS    RESTARTS       AGE   IP            NODE         NOMINATED NODE   READINESS GATES
@@ -125,13 +124,50 @@ curl                                     1/1     Running   2 (121m ago)   38d   
 example-001v1-9cc6ff6c9-tnskw            1/1     Running   0              97s   10.10.1.220   k8s-node1    <none>           <none>
 prometheus-deployment-847b77bd49-p9jqq   1/1     Running   0              54s   10.10.1.221   k8s-node1    <none>           <none>
 
-$ k exec curl -n monitoring -it -- /bin/sh
+# query the application pod with som http requests
+$ kubectl exec curl -n monitoring -it -- /bin/sh
 [ root@curl:/ ]$ curl http://10.10.1.220:8001/hello
 [ root@curl:/ ]$ curl http://10.10.1.220:8001/hello
 [ root@curl:/ ]$ curl http://10.10.1.220:8001/hello
 [ root@curl:/ ]$ curl http://10.10.1.220:8001/hello
 [ root@curl:/ ]$ curl http://10.10.1.220:8001/hello
 [ root@curl:/ ]$ curl http://10.10.1.220:8001/helliss
+[ root@curl:/ ]$ curl http://10.10.1.220:8001/helliss
+[ root@curl:/ ]$ curl http://10.10.1.220:8001/helliss
+...
+...
+
+# query the application pod to retrieve the metrics 
+[ root@curl:/ ]$ curl http://10.10.2.51:8000/metrics
+...
+...
+# HELP hello_worlds_requests_total Hello Worlds requested.
+# TYPE hello_worlds_requests_total counter
+hello_worlds_requests_total 12.0
+# HELP hello_worlds_requests_created Hello Worlds requested.
+# TYPE hello_worlds_requests_created gauge
+hello_worlds_requests_created 1.6849306030837066e+09
+# HELP wrong_requests_total Wrong Requests received.
+# TYPE wrong_requests_total counter
+wrong_requests_total 8.0
+# HELP wrong_requests_created Wrong Requests received.
+# TYPE wrong_requests_created gauge
+wrong_requests_created 1.6849306030837271e+09
+# HELP hello_world_exceptions_total Exceptions serving Hello World.
+# TYPE hello_world_exceptions_total counter
+hello_world_exceptions_total 2.0
+# HELP hello_world_exceptions_created Exceptions serving Hello World.
+# TYPE hello_world_exceptions_created gauge
+hello_world_exceptions_created 1.6849306030837412e+09
 ```
 
+We can see that the following counters have been incremented:
+* rong_requests_total 8.0
+* hello_worlds_requests_total 12.0
+* hello_world_exceptions_total 2.0
+
 ## see Prometheus UI
+In the Prometheus UI in Status -> Targets the example001v1 target should be visible as follow:
+![Prometheus Target](../../../doc/PythonExample1v1PrometheusUI-01.JPG)
+![Prometheus Target](../../../doc/PythonExample1v1PrometheusUI-02.JPG)
+![Prometheus Target](../../../doc/PythonExample1v1PrometheusUI-03.JPG)
