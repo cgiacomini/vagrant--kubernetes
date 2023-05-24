@@ -1,5 +1,5 @@
 # Prometheus Archicture
-1. [Architecture]./PrometheusArchicture.md#prometheus-architecture)
+1. [Architecture](./PrometheusArchicture.md#prometheus-architecture)
     1. [General](./PrometheusArchicture.md#General)
     2. [Client Libraries](./PrometheusArchicture.md#client-libraries)
     3. [Exporters](./PrometheusArchicture.md#exporters)
