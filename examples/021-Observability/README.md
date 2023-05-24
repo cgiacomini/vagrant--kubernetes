@@ -25,6 +25,9 @@
     2. [Deploy the DaemonSet](./NodeExporter/NodeExporter.md#deploy-the-daemonset)
     3. [Create the Service to target the node exporter endpoint](./NodeExporter/NodeExporter.md#create-the-service-to-target-the-node-exporter-endpoint)
     4. [Deploy the service](./NodeExporter/NodeExporter.md#deploy-the-service)
+# Monitoring Python Applications using Prometheus
+1. [Example1v0](./Example1v0/README.md)
+2. [Example1v1](./Example1v2/README.md)
 # Kube State Metrics
 1. [Kube State Metrics](./KubeStateMetrics.md#kube-state-metrics)
     1. [Deployment](./KubeStateMetrics.md#Deployment)
