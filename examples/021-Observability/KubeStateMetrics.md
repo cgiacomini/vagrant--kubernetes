@@ -19,7 +19,7 @@ serviceaccount/kube-state-metrics created
 service/kube-state-metrics created
 ```
 # Verification
-The service deployed is of type NodePort that expose port 30080 and 10081 for metrics and telemetry metrics
+The service deployed is of type NodePort that expose port 30080 and 10081 for metrics and telemetry metrics.  
 By targeting one of the kubernetes cluster node on the exposed ports we can retrieve the corresponding metrics
 
 ```
