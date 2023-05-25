@@ -155,3 +155,15 @@ node_cpu_guest_seconds_total{cpu="1", instance="10.10.2.58:9100", job="node-expo
 node_cpu_guest_seconds_total{cpu="1", instance="10.10.2.58:9100", job="node-exporter", mode="user"}  0
 ```
 
+### Agregation Operators
+Are used to combine multiple values into a single value.  
+* "sum" : add values all together
+* "min" : return the smalest value
+* "avg" : return the avarage value
+* "stddev" : return the standard deviation
+* "stdvar" : return the standard variance
+* "count" : return the number of values
+* "count_values" : return the number of values with the same value
+* "bottomk" : return the smallets number of elements
+* "topk" : return the largest number of elements
+* "quantile"
