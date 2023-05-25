@@ -86,7 +86,7 @@ In the form of graph we see the memory usage over time:
 ![TimeSeriesData-05](../../doc/TimeSeriesData-05.JPG)
 
 ### Histogram 
-A Histogram count the number of obeservations/events that fall into a set of configurable buckets, each with its own time series.  
+A Histogram count the number of obeservations/events that fall into a set of configurable ***buckets***, each with its own time series.  
 Labels are used to differentiate between buckets.
 For example, we can count how many HTTP requests fall into a response time, how long an HTTP request takes to complete:
 ```
@@ -94,12 +94,15 @@ http_request_duration_seconds_bucket{le="0.3"}
 http_request_duration_seconds_bucket{le="0.6"}
 http_request_duration_seconds_bucket{le="1.0"}
 ```
-  
 Histogram include also :
-* <metric>_count: A counter with the total number of mesurements.
-* <metric>_sum: A counter with the sum of the values of all measurements.
 ```
 http_request_duration_seconds_sum
 http_request_duration_seconds_count
-```  
-### Summay
+```
+* **_count**: A counter with the total number of mesurements.
+* **_sum**: A counter with the sum of the values of all measurements.
+
+### Summary
+Is similar to Histogram, but expose metrics in the form of ***quantiles*** instead of ***buckets***  
+While buckets divide values based on specific boundaries, quantiles divide values base on the percentils into which the fall.  
+Summary also has ***_sum*** and ***_count_***
