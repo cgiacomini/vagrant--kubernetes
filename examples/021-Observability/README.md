@@ -16,6 +16,10 @@
         2. [Gauge](./TimeSeriesData.md#gauge)
         3. [Histogram](./TimeSeriesData.md#histogram)
         4. [Summary](./TimeSeriesData.md#summary)
+ 3. [PromSQL](./PromSQL.md#querying)
+    1. [Selectors](./PromSQL.md#selectors)
+    2. [Label Matching](./PromSQL.md#label-matching)
+    3. [Offset Modifier](./PromSQL.md#offset-modifier)
 # Installing Prometheus on Kubernetes
 1. [Prepare NFS share](./README.md#prepare-nfs-share)
 2. [Preparing the playbooks](./README.md#preparing-the-playbooks)
