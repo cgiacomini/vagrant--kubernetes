@@ -8,7 +8,7 @@
     6. [The Dashboard](./PrometheusArchicture.md#the-ashboard)
     7. [Rules and Alerts](./PrometheusArchicture.md#rules-and-alerts)
     8. [Alert Monitoring](./PrometheusArchicture.md#alert-monitoring)
-2. [Prometheus Time Series Data - Data Types](/TimeSeriesData.md)
+2. [Prometheus Time Series Data - Data Types](./TimeSeriesData.md)
     1. [Metrics Name](./TimeSeriesData.md#metrics-name)
     2. [Metrics Labels](./TimeSeriesData.md#metrics-labels)
     3. [Metric Types](./TimeSeriesData.md#metrics-types)
