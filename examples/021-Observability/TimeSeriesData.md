@@ -96,10 +96,10 @@ http_request_duration_seconds_bucket{le="1.0"}
 ```
   
 Histogram include also :
-* <metric>_count: A counter with the total number of mesurements 
+* <metric>_count: A counter with the total number of mesurements.
 * <metric>_sum: A counter with the sum of the values of all measurements.
-  
 ```
 http_request_duration_seconds_sum
 http_request_duration_seconds_count
-```
+```  
+### Summay
