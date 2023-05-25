@@ -166,4 +166,11 @@ Are used to combine multiple values into a single value.
 * "count_values" : return the number of values with the same value
 * "bottomk" : return the smallets number of elements
 * "topk" : return the largest number of elements
-* "quantile"
+* "quantile" : return the quantile for a particular dimension
+
+Examples:  
+The following query uses the avg operator to get the avarage users cpu time from all the nodes 
+```
+avg(node_cpu_seconds_total{mode="user"})
+{} 1096.715
+```
