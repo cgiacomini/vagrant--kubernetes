@@ -19,7 +19,9 @@ The metric name may contain ASCII letters and digits, as well as underscores and
 The metric name is very general, *node_cpu_seconds_total* metric name does not point to a specific CPU or even specifice node.
 If we query prometheus using just the metric name we probably get a list of multiple set of of time series data.  
 Infact quering on prometues UI for node_cpu_seconds_total we get this result : 
-[TimeSeriesData-01](../../../doc/TimeSeriesData-01.JPG)
+
+![TimeSeriesData-01](../../doc/TimeSeriesData-01.JPG)
+
 We can see we get different time series for differen CPU  (0 or 1), different nodes and also for differne CPU states: user, idle, system etc.  
   
 
@@ -32,7 +34,8 @@ we can query again the prometheus UI by sepcifiying for example the label
 *node_cpu_seconds_total{instance="10.10.0.82:9100",mode="user"}*
 ```
 to get the time series for a specific node and specific CPU state.
-[TimeSeriesData-02](../../../doc/TimeSeriesData-02.JPG)
+
+![TimeSeriesData-02](../../doc/TimeSeriesData-02.JPG)
 
 A particular metrics can have  mode then one label.
 
@@ -59,8 +62,8 @@ node_cpu_seconds_total{instance="10.10.0.82:9100", mode="user", cpu="0"}[5m]
 ```
 What we obtain is a set of values over time tha always increase, and this because this metrics is a counter.  
 This metrics is telling us the total amount of CPU used in user mode since the server started up.
-[TimeSeriesData-03](../../../doc/TimeSeriesData-03.JPG)
 
+![TimeSeriesData-03](../../doc/TimeSeriesData-03.JPG)
 
 ### Gauge 
 A metric that represents a single numerical value that can arbitrarily go up and down.  
@@ -75,14 +78,28 @@ Here for example we query for *node_memory_MemAvailable_bytes* narrowed down for
 node_memory_MemAvailable_bytes{instance="10.10.0.82:9100"}
 ```
 What we obtain is the current value which may increase of decrease over time
-[TimeSeriesData-04](../../../doc/TimeSeriesData-04.JPG)
+
+![TimeSeriesData-04](../../doc/TimeSeriesData-04.JPG)
 
 In the form of graph we see the memory usage over time:
-[TimeSeriesData-05](../../../doc/TimeSeriesData-05.JPG)
 
+![TimeSeriesData-05](../../doc/TimeSeriesData-05.JPG)
 
-
-
-
-
-* Histogram samples observations (usually things like request durations or response sizes) and counts them in configurable buckets. It also provides a sum of all observed values.
+### Histogram 
+A Histogram count the number of obeservations/events that fall into a set of configurable buckets, each with its own time series.  
+Labels are used to differentiate between buckets.
+For example, we can count how many HTTP requests fall into a response time, how long an HTTP request takes to complete:
+```
+http_request_duration_seconds_bucket{le="0.3"}
+http_request_duration_seconds_bucket{le="0.6"}
+http_request_duration_seconds_bucket{le="1.0"}
+```
+  
+Histogram include also :
+* <metric>_count: A counter with the total number of mesurements 
+* <metric>_sum: A counter with the sum of the values of all measurements.
+  
+```
+http_request_duration_seconds_sum
+http_request_duration_seconds_count
+```
