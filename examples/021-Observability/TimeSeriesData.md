@@ -3,7 +3,7 @@ All Prometheus data is fundamentally stored in the form of a time series.
 Time Series Data consists of a series of values associated with different points in time.  
 Every time series is uniquely identified by its metric name and optional key-value pairs called labels.
   
-## Metric Name
+## Metrics Name
 The metric name specifies the general feature of a system that is measured.  
 
 An example of a metric name:
