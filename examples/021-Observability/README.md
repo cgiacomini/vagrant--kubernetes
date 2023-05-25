@@ -8,6 +8,14 @@
     6. [The Dashboard](./PrometheusArchicture.md#the-ashboard)
     7. [Rules and Alerts](./PrometheusArchicture.md#rules-and-alerts)
     8. [Alert Monitoring](./PrometheusArchicture.md#alert-monitoring)
+# Prometheus Time Series Data - Data Types
+1. [Metrics Name](./TimeSeriesData.md#metrics-name)
+2. [Metrics Labels](./TimeSeriesData.md#metrics-labels)
+3. [Metric Types](./TimeSeriesData.md#metrics-types)
+    1. [Counter](./TimeSeriesData.md#counter)
+    2. [Gauge](./TimeSeriesData.md#gauge)
+    3. [Histogram](./TimeSeriesData.md#histogram)
+    4. [Summary](./TimeSeriesData.md#summary)
 # Installing Prometheus on Kubernetes
 1. [Prepare NFS share](./README.md#prepare-nfs-share)
 2. [Preparing the playbooks](./README.md#preparing-the-playbooks)
