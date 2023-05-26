@@ -174,3 +174,60 @@ The following query uses the avg operator to get the avarage users cpu time from
 avg(node_cpu_seconds_total{mode="user"})
 {} 1096.715
 ```
+## Query Functions
+Prmetheus Query Language provivdes a set functions that give variety of built-in functionalities.
+There are a lot of them so for a full list of PromQL functions have a look at the Prometheus the official documentation [Query Functions](https://prometheus.io/docs/prometheus/latest/querying/functions).  
+Here are some examples:  
+
+* **abs(instant-vector)** : returns the input vector with all sample values converted to their absolute value.
+* **absent(instant-vector)** : returns a 1-element vector with the value 1 if the vector passed to it has no elements.
+* **ceil()** : rounds the sample values of all elements in v up to the nearest integer.
+* **clamp_max(instant-vector, scalar)** : clamps the sample values of all elements in v to have an upper limit of max.  
+* **rate(v range-vector)** : calculates the per-second average rate of increase of the time series in the range-vector. Basically how fast/slow the time series is increasing.
+
+Exmples **clamp_max**:
+
+```
+# The following query return the total cpu usage in seconds for the different modes since the server started up
+node_cpu_seconds_total{cpu="0", instance="10.10.0.86:9100"}
+
+node_cpu_seconds_total{cpu="0", instance="10.10.0.86:9100", job="node-exporter", mode="idle"}    2180.31
+node_cpu_seconds_total{cpu="0", instance="10.10.0.86:9100", job="node-exporter", mode="iowait"}     6.87
+node_cpu_seconds_total{cpu="0", instance="10.10.0.86:9100", job="node-exporter", mode="irq"}       64.78
+node_cpu_seconds_total{cpu="0", instance="10.10.0.86:9100", job="node-exporter", mode="nice"}       2.36
+node_cpu_seconds_total{cpu="0", instance="10.10.0.86:9100", job="node-exporter", mode="softirq"}   17.38
+node_cpu_seconds_total{cpu="0", instance="10.10.0.86:9100", job="node-exporter", mode="steal"}         0
+node_cpu_seconds_total{cpu="0", instance="10.10.0.86:9100", job="node-exporter", mode="system"}   102.57
+node_cpu_seconds_total{cpu="0", instance="10.10.0.86:9100", job="node-exporter", mode="user"}     158.98
+
+# Now we clamp the results to the maximu value of 1000
+clamp_max(node_cpu_seconds_total{cpu="0", instance="10.10.0.86:9100"}, 1000)
+
+# We see that all the values above 1000 have been substituted to 1000.
+{cpu="0", instance="10.10.0.86:9100", job="node-exporter", mode="idle"}       1000
+{cpu="0", instance="10.10.0.86:9100", job="node-exporter", mode="iowait"}     7.42
+{cpu="0", instance="10.10.0.86:9100", job="node-exporter", mode="irq"}       70.88
+{cpu="0", instance="10.10.0.86:9100", job="node-exporter", mode="nice"}       2.36
+{cpu="0", instance="10.10.0.86:9100", job="node-exporter", mode="softirq"}   19.08
+{cpu="0", instance="10.10.0.86:9100", job="node-exporter", mode="steal"}         0
+{cpu="0", instance="10.10.0.86:9100", job="node-exporter", mode="system"}   112.49
+{cpu="0", instance="10.10.0.86:9100", job="node-exporter", mode="user"}     173.7
+```
+
+Examples **rate**:
+The rate function calculate the average rate of increase. So we can use it check the increase rate of the total numbers of seconds.
+If that value is increasing rapidly then it means the the CPU usage in user mode is very high that point in time specified using the range specified.
+```
+# Get the icrease rate in the last hour
+rate(node_cpu_seconds_total{cpu="0", instance="10.10.0.86:9100"}[1h])
+
+# We see the increase rate is pretty low and it is in idle mode most of thime, that indicate a low cpu usage in the last hour.
+{cpu="0", instance="10.10.0.86:9100", job="node-exporter", mode="idle"}    0.7934712036399604
+{cpu="0", instance="10.10.0.86:9100", job="node-exporter", mode="iowait"}  0.0020663312594790635
+{cpu="0", instance="10.10.0.86:9100", job="node-exporter", mode="irq"}     0.023118992947576654
+{cpu="0", instance="10.10.0.86:9100", job="node-exporter", mode="nice"}    0.0006396449390042862
+{cpu="0", instance="10.10.0.86:9100", job="node-exporter", mode="softirq"} 0.006349171285855588
+{cpu="0", instance="10.10.0.86:9100", job="node-exporter", mode="steal"}   0
+{cpu="0", instance="10.10.0.86:9100", job="node-exporter", mode="system"}  0.035703311856247935
+{cpu="0", instance="10.10.0.86:9100", job="node-exporter", mode="user"}    0.053849760669304324
+```
