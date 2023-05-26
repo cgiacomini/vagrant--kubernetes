@@ -231,3 +231,20 @@ rate(node_cpu_seconds_total{cpu="0", instance="10.10.0.86:9100"}[1h])
 {cpu="0", instance="10.10.0.86:9100", job="node-exporter", mode="system"}  0.035703311856247935
 {cpu="0", instance="10.10.0.86:9100", job="node-exporter", mode="user"}    0.053849760669304324
 ```
+## HTTP API
+Prometheus provide HTTP API that can be used to execute queries.  
+Queries can be sent to the prometheus server with **/api/vi/query** with query parameters to pass the query we want.  
+
+Examples: 
+```
+$ curl http://prometheus.singleton.net/api/v1/query?query=node_cpu_seconds_total
+{"status":"success","data":{"resultType":"vector","result":[{"metric":{"__name__":"node_cpu_seconds_total","cpu":"0","instance":"10.10.0.86:9100","job":"node-exporter","mode":"idle"},"value":[1685089422.532,"3677.16"]},{"metric":{"__name__":"node_cpu_seconds_total","cpu":"0","instance":"10.10.0.86:9100","job":"node-exporter","mode":"iowait"},"value":[1685089422.532,"10.94"]},{"metric":
+...
+...
+```
+Because some special characters can like brachets can cause problems when sending a more complex HTTP request where we specify also some labels, we can pass the query as data to curl using **--data** option.  
+Examples:
+```
+$ curl http://prometheus.singleton.net/api/v1/query?query=node_cpu_seconds_total --data 'query=node_cpu_seconds_total{cpu="0", instance="10.10.0.86:9100"}'
+{"status":"success","data":{"resultType":"vector","result":[{"metric":{"__name__":"node_cpu_seconds_total","cpu":"0","instance":"10.10.0.86:9100","job":"node-exporter","mode":"idle"},"value":[1685089877.619,"4060.44"]},{"metric":{"__name__":"node_cpu_seconds_total","cpu":"0","instance":"10.10.0.86:9100","job":"node-exporter","mode":"iowait"},"value":[1685089877.619,"11.94"]},{"metric":{"__name__":"node_cpu_seconds_total","cpu":"0","instance":"10.10.0.86:9100","job":"node-exporter","mode":"irq"},"value":[1685089877.619,"122.5"]},{"metric":{"__name__":"node_cpu_seconds_total","cpu":"0","instance":"10.10.0.86:9100","job":"node-exporter","mode":"nice"},"value":[1685089877.619,"2.37"]},{"metric":{"__name__":"node_cpu_seconds_total","cpu":"0","instance":"10.10.0.86:9100","job":"node-exporter","mode":"softirq"},"value":[1685089877.619,"33.45"]},{"metric":{"__name__":"node_cpu_seconds_total","cpu":"0","instance":"10.10.0.86:9100","job":"node-exporter","mode":"steal"},"value":[1685089877.619,"0"]},{"metric":{"__name__":"node_cpu_seconds_total","cpu":"0","instance":"10.10.0.86:9100","job":"node-exporter","mode":"system"},"value":[1685089877.619,"194.06"]},{"metric":{"__name__":"node_cpu_seconds_total","cpu":"0","instance":"10.10.0.86:9100","job":"node-exporter","mode":"user"},"value":[1685089877.619,"294.95"]}]}}
+```
