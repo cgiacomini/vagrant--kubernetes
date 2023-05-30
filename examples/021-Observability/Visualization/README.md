@@ -92,3 +92,6 @@ http://prometheus.singleton.net/consoles/disk-io.html
 Result:  
 ![Template Console Example](../../../doc/TemplateConsoles-01.JPG)
 
+By cliking on the disk io rate value we get to the espression browser with the query that was used to obtain the metric value. 
+![Template Console Example](../../../doc/TemplateConsoles-02.JPG)
+![Template Console Example](../../../doc/TemplateConsoles-03.JPG)
