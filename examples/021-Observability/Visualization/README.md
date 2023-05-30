@@ -14,7 +14,7 @@ To use console templates we have to make sure that prometheus server is started 
 These option should pont to the location were console templates and libraries are locate.
 The deployed prometheus POD does not have yet specified in the list of prometheus arguments, but it coome with a set examples of consoles and the relate console libreries respectively inside:  
 **/usr/share/prometheus/consoles** and **/usr/share/prometheus/console_libraries**.  
-Here we configure prometheus to look for conole templates inside **/prometheus/consoles** instead. /prometheus is a mounted NFS folder used fby promethus to permanently store metrics data.
+Here we configure prometheus to look for conole templates inside **/prometheus/consoles** instead. /prometheus is a mounted NFS folder used by prometheus to permanently store metrics data.
 This way we do not loose our templates on pod restart.
 
 ### Change Prometheus deploment config
@@ -84,6 +84,7 @@ Current Disk IO: {{ template "prom_query_drilldown" (args "rate(node_disk_io_tim
 {{template "prom_content_tail" .}}
 {{template "tail"}}
 ```
+This file should be placed on the NFS server shared folder at **/mnt/nfs_shares/cluster_nfs/Prometheus/consoles**.
 
 Now we can have a look of the customazed way to visualize the metrics data for example by loading this URL in a browser:
 ```
@@ -97,4 +98,33 @@ By cliking on the disk io rate value we get to the espression browser with the q
 ![Template Console Example](../../../doc/TemplateConsoles-03.JPG)
 
 ## Console Templates Graph Library
-They can be used to desplay data in form of graph directly in served web console page.
+They can be used to desplay data in form of graph directly in served web console page.  
+To do that we just change the the previous example disk-io.html with this newer version. 
+***disk-io-graph.html***
+```
+{{template "head" .}}
+{{template "prom_content_head" .}}
+
+<h1>Disk IO Rate</h1>
+<br />
+Current Disk IO: {{ template "prom_query_drilldown" (args "rate(node_disk_io_time_seconds_total{job='node-exporter'}[5m])") }}
+<br />
+<br />
+<div id="diskIoGraph"> </div>
+<script>
+new PromConsole.Graph({
+    node: document.querySelector("#diskIoGraph"),
+    expr: "rate(node_disk_io_time_seconds_total{job="node-exporter"}[5m])"
+})
+</script>
+
+
+{{template "prom_content_tail" .}}
+{{template "tail" .}}
+```
+This file should be placed on the NFS server shared folder at **/mnt/nfs_shares/cluster_nfs/Prometheus/consoles**.
+
+The new html console file instanciate a **PromConsole.Graph** object.  
+The object requires the id of the html *div* where the graph should be displayed and the expression to be execute to retrieve data for the graph to be build.  
+Here is the result : 
+![Template Console Example](../../../doc/TemplateConsoles-04.JPG)
