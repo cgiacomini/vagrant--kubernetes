@@ -27,7 +27,11 @@
         3. [Logical Set Binary Operators](./PromSQL.md#logical-set-binary-operators)
         4. [Agregation Operators](./PromSQL.md#agregation-operators)
     3. [Query Functions](./PronSQL.md#query-functions)
-    4. [HTTP API](/PronSQL.md#http-api)
+    4. [HTTP API](./PromSQL.md#http-api)
+    5. [Visualization](./Visualization/README.md)
+       1. [Expression Browser](./Visualization/README.md#expression-browser)
+       2. [Console Templates](./Visualization/README.md#console-templates)
+       3. [Console Templates Graph Library](./Visualization/README.md#console-templates-graph-library)
 # Installing Prometheus on Kubernetes
 1. [Prepare NFS share](./README.md#prepare-nfs-share)
 2. [Preparing the playbooks](./README.md#preparing-the-playbooks)
