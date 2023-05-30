@@ -53,6 +53,45 @@ configmap/grafana-datasources created
 
 If we have different data sources we can add their yaml file in the *data* section.
 
+### Persistent volume 
+Grafana default path data is "/var/lib/grafana", this is the place whera grafana store it data. Is the place where it also store the dashboards we creates to display metrics.  
+To keep data persistent, as we did for prometheus, we mount a NFS share in /var/lib/grafana via PV and PVC.
+
+***storage.yaml***
+```
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: grafana-pv
+  namespace: monitoring
+  labels:
+    app: grafana-deployment
+spec:
+  storageClassName: nfs-storageclass
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteMany
+  nfs:
+    server: centos8s-server.singleton.net
+    path: /mnt/nfs_shares/cluster_nfs/Grafana
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: grafana-pvc
+  namespace: monitoring
+  labels:
+    app: grafana-deployment
+spec:
+  storageClassName: nfs-storageclass
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+
+```
 
 ### The deployment
 The deployment YAML file mount the configmap end also uses a emptyDir volume for its internal storage.
@@ -61,7 +100,7 @@ The deployment YAML file mount the configmap end also uses a emptyDir volume for
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: grafana
+  name: grafana-deployment
   namespace: monitoring
 spec:
   replicas: 1
@@ -94,8 +133,10 @@ spec:
             name: grafana-datasources
             readOnly: false
       volumes:
-        - name: grafana-storage
-          emptyDir: {}
+        - name: grafana-storage-volume
+          nfs:
+            server: centos8s-server.singleton.net
+            path: /mnt/nfs_shares/cluster_nfs/Grafana
         - name: grafana-datasources
           configMap:
               defaultMode: 420
@@ -190,7 +231,7 @@ For this to work, as explained for prometheus installaution, we need to add the 
 192.168.56.10  grafana.singleton.net
 ```
 
-### Verificaton
+## Verificaton
 Once deployed grafana can be accessed at the following URL : grafana.singleton.net
 ![Grafana Dashboard](../../../doc/Grafana-01.JPG)
 
@@ -205,6 +246,10 @@ We can click on it and at the bottom of the page we can click on ***Save & test*
 By clicking  on the ***Explore*** button we open a page similar to the prometheus one. From there we can send some metrics queries for example : 
 ![Grafana Data Source](../../../doc/Grafana-04.JPG)
 
+
+## Create Dashboard
+There are some prebuilt dashboard we can used in grafana. These dashboard could be seen in "grafana.com/dashboards". 
+We can use them instead of building a new one from scratch, some of them are built and ready to show prometheus metrics.  
 
 
 

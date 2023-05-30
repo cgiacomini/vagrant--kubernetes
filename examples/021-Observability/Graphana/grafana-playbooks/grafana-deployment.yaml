@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: grafana
+  name: grafana-deployment
   namespace: monitoring
 spec:
   replicas: 1
@@ -24,19 +24,22 @@ spec:
           limits:
             memory: "1Gi"
             cpu: "1000m"
-          requests: 
+          requests:
             memory: 500M
             cpu: "500m"
         volumeMounts:
           - mountPath: /var/lib/grafana
-            name: grafana-storage
+            name: grafana-storage-volume
           - mountPath: /etc/grafana/provisioning/datasources
             name: grafana-datasources
             readOnly: false
       volumes:
-        - name: grafana-storage
-          emptyDir: {}
+        - name: grafana-storage-volume
+          nfs:
+            server: centos8s-server.singleton.net
+            path: /mnt/nfs_shares/cluster_nfs/Grafana
         - name: grafana-datasources
           configMap:
               defaultMode: 420
               name: grafana-datasources
+
