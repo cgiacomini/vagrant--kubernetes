@@ -95,3 +95,6 @@ Result:
 By cliking on the disk io rate value we get to the espression browser with the query that was used to obtain the metric value. 
 ![Template Console Example](../../../doc/TemplateConsoles-02.JPG)
 ![Template Console Example](../../../doc/TemplateConsoles-03.JPG)
+
+## Console Templates Graph Library
+They can be used to desplay data in form of graph directly in served web console page.
