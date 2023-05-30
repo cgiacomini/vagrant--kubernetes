@@ -3,7 +3,7 @@ Visualization consist to create visual representations of our Prometheus data.
 Basically to create a place where can visualize Prometheus data in form of graphs and chards etc.
 For this purpose there are a variety of tools available, some alredy built in the prometheus dashboard and other provided by external projects such
 
-## Expression browsers
+## Expression browser
 Available on prometheus dashboard under the Graph endpoint.
 
 ## Console Templates
