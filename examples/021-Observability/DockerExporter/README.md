@@ -100,4 +100,7 @@ After restarting the prometheus POD we should be able to see the docker metrics 
 ![Doker Exporter](../../../doc/DockerExporter-01.JPG)
 
 We can for example query for container state metrics ***engine_daemon_container_states_containers***
+
 ![Doker Exporter](../../../doc/DockerExporter-02.JPG)
+
+We can see we have 2 PODs stopped, 1 POD running and 0 POD paused.
