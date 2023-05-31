@@ -1,4 +1,4 @@
-# Kube State Metrics (
+# Kube State Metrics
 Kube State Metrics is a service that communicates with the Kubernetes API server to obtain information about all API objects such as deployments, pods, and DaemonSets.   
 It essentially gives Kubernetes API object metrics that aren’t available via native Kubernetes monitoring components.  
 Kube State Metrics allow to monitor for example:
