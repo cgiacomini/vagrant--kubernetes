@@ -97,7 +97,7 @@ We could specify the registry server FQDN but we do not have DNS configured so w
 
 ```
 After restarting the prometheus POD we should be able to see the docker metrics in the prometheus Dashboard. 
-[Doker Exporter](../../../doc/DockerExporter-01.JPG)
+![Doker Exporter](../../../doc/DockerExporter-01.JPG)
 
 We can for example query for container state metrics ***engine_daemon_container_states_containers***
-[Doker Exporter](../../../doc/DockerExporter-02.JPG)
+![Doker Exporter](../../../doc/DockerExporter-02.JPG)
