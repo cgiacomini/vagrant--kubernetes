@@ -56,7 +56,9 @@
 1. [Kube State Metrics](./KubeStateMetrics.md#kube-state-metrics)
     1. [Deployment](./KubeStateMetrics.md#Deployment)
     2. [Verification](./KubeStateMetrics.md#Verification)
-
+# Monitoring Docker Daemon
+1. [Configure Docker](./DockerExporter/README.md#configure-Docker)
+2. [Configure Prometheus](./DockerExporter/README.md#configure-prometheus)
 ## Prepare NFS share
 In this example the ***centos8s-server.singleton.net*** server, configured and used in [example-014-PriveRegistry](../014-PrivateRegistry/README.md)
 will be configured to serve as NFS server. The NFS server will share a portion of its filesystem to all nodes of the couchbase cluster.
