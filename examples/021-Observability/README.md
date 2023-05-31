@@ -59,6 +59,9 @@
 # Monitoring Docker Daemon
 1. [Configure Docker](./DockerExporter/README.md#configure-Docker)
 2. [Configure Prometheus](./DockerExporter/README.md#configure-prometheus)
+# Monitoring Docker Containers (cAdvisor)
+1. [Run cAdvisor as a Docker Containe](./DockerExporter/README.md#run-cadvisor-as-a-docker-containe)
+2. [Configure Prometheus for cAdvisor Metrics](./DockerExporter/README.md#configure-prometheus-for-cadvisor-Metrics)
 ## Prepare NFS share
 In this example the ***centos8s-server.singleton.net*** server, configured and used in [example-014-PriveRegistry](../014-PrivateRegistry/README.md)
 will be configured to serve as NFS server. The NFS server will share a portion of its filesystem to all nodes of the couchbase cluster.
