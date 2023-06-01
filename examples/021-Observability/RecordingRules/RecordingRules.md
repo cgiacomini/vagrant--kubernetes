@@ -112,3 +112,111 @@ pod "prometheus-deployment-55d57cf76f-d8x6r" deleted
 
 Now in the prometheus Dashbord we should be able to see the metrics ***node_memory_MemFree_percent*** containing the values of our expression
 ![Recording Rule](../../../doc/RecordingRules-02.JPG)
+
+
+## Add a new rule file in Prometheus configuration
+Here we create a new recording that track the CPUs usages in the last 5 minutes, for all kubernetes nodes on which we have previusly install a nodeExporter.  
+the new config map contains a definition of a new rule file ***kubernetes-nodes.rules*** in the configmap ***data*** section which containc the forllowing rules configuration:
+```
+  kubernetes-nodes.rules: |-
+    groups:
+    - name: kubernetes-nodes
+      interval: 15s
+      rules:
+      - record: k8s_nodes:user_mode_cpu_usage
+        expr: 100 - (100 * sum(rate(node_cpu_seconds_total{job="node-exporter", mode="user"}[5m])))
+```
+
+Also in the config map the content of the ***prometheus.yaml*** file has the name of this new file in the section ***rules_files***
+
+```
+    rule_files:
+      - /etc/prometheus/prometheus.rules
+      - /etc/prometheus/kubernetes-nodes.rules
+```
+
+Here is the full configmap file:
+
+
+***recording-rules-prometheus-configmap_2nd_example.yaml***
+```
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: prometheus-server-conf
+  labels:
+    name: prometheus-server-conf
+  namespace: monitoring
+data:
+  kubernetes-nodes.rules: |-
+    groups:
+    - name: kubernetes-nodes
+      interval: 15s
+      rules:
+      - record: k8s_nodes:user_mode_cpu_usage
+        expr: 100 - (100 * sum(rate(node_cpu_seconds_total{job="node-exporter", mode="user"}[5m])))
+  prometheus.rules: |-
+    groups:
+    - name: custom_rules
+      rules:
+      - record: node_memory_MemFree_percent
+        expr: 100 - (100 * node_memory_MemFree_bytes / node_memory_MemTotal_bytes)
+    - name: devopscube demo alert
+      rules:
+      - alert: High Pod Memory
+        expr: sum(container_memory_usage_bytes) > 1
+        for: 1m
+        labels:
+          severity: slack
+        annotations:
+          summary: High Memory Usage
+  prometheus.yml: |-
+    global:
+      scrape_interval: 5s # default is every 1 minute
+      scrape_timeout: 5s # default 10s
+      evaluation_interval: 5s  # default is every 1 minute How frequently to evaluate rules
+    rule_files:
+      - /etc/prometheus/prometheus.rules
+      - /etc/prometheus/kubernetes-nodes.rules
+    alerting:
+      alertmanagers:
+      - scheme: http
+        static_configs:
+        - targets:
+          - "aletargetsrtmanager.monitoring.svc:9093"
+    scrape_configs:
+      - job_name: prometheus
+        static_configs:
+          - targets:
+             - localhost:9090
+
+      - job_name: node-exporter
+        kubernetes_sd_configs:
+           - role: endpoints
+        relabel_configs:
+           - source_labels: [__meta_kubernetes_endpoints_name]
+             regex: node-exporter
+             action: keep
+
+      - job_name: docker-exporter
+        static_configs:
+           - targets: ['192.168.56.200:9323']
+
+      - job_name: 'cAdvisor'
+        static_configs:
+        - targets: ['192.168.56.200:8080']
+
+      - job_name: 'kube-state-metrics'
+        static_configs:
+          - targets: ['kube-state-metrics.kube-system.svc.cluster.local:8080']
+
+      - job_name: 'kube-state-telemetrics'
+        static_configs:
+          - targets: ['kube-state-metrics.kube-system.svc.cluster.local:8081']
+```
+
+Once applyed the new configmap and restarted the prometheus node we can search for he rule we just created : ***k8s_nodes:user_mode_cpu_usage***
+We can visualize the metric inside  the prometheus dashboard.
+
+![Recording Rule](../../../doc/RecordingRules-03.JPG)
