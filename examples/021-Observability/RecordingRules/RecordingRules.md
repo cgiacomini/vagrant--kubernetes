@@ -18,7 +18,7 @@ As an example lett say we would like to perform the following calculation and ex
 ```
 
 if we run it inside prometheus dashboard we will obtaine the following graph
-![Recording Rule](../../doc/RecordingRules-01.JPG)
+![Recording Rule](../../../doc/RecordingRules-01.JPG)
 
 Rather than remembering and typing this query every time, we can create a recording rule that will run at a chosen interval and make the data available as a time series
 The following lines should be added to the prometheus confimap.
@@ -102,7 +102,7 @@ data:
 ```
 
 Apply the the new config map and restart the prometheus POD tu pick up the new config
-````
+```
 $ kubectl apply -f recording-rules-prometheus-configmap.yaml
 configmap/prometheus-server-conf configured
 
@@ -111,4 +111,4 @@ pod "prometheus-deployment-55d57cf76f-d8x6r" deleted
 ```
 
 Now in the prometheus Dashbord we should be able to see the metrics ***node_memory_MemFree_percent*** containing the values of our expression
-![Recording Rule](../../doc/RecordingRules-02.JPG)
+![Recording Rule](../../../doc/RecordingRules-02.JPG)
