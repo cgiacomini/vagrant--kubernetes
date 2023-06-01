@@ -32,6 +32,18 @@
        1. [Expression Browser](./Visualization/README.md#expression-browser)
        2. [Console Templates](./Visualization/README.md#console-templates)
        3. [Console Templates Graph Library](./Visualization/README.md#console-templates-graph-library)
+4. [Kube State Metrics](././KubeStateMetrics/KubeStateMetrics.md)
+    1. [Deployment](./KubeStateMetrics/KubeStateMetrics.md#Deployment)
+    2. [Verification](./KubeStateMetrics/KubeStateMetrics.md#Verification)
+5. [Monitoring Docker Daemon](./DockerExporter/README.md)
+    1. [Configure Docker](./DockerExporter/README.md#configure-Docker)
+    2. [Configure Prometheus](./DockerExporter/README.md#configure-prometheus)
+6. [Monitoring Docker Containers (cAdvisor)](./DockerExporter/README.md)
+    1. [Run cAdvisor as a Docker Container](./DockerExporter/README.md#run-cadvisor-as-a-docker-container)
+    2. [Configure Prometheus for cAdvisor Metrics](./DockerExporter/README.md#configure-prometheus-for-cadvisor-Metrics)
+7. [Recording Rules](./RecordingRules/RecordingRules.md)
+    1. [Recording rules YAML file syntax](./RecordingRules/RecordingRules.md#recording-rules-YAML-file-syntax) 
+
 # Installing Prometheus on Kubernetes
 1. [Prepare NFS share](./README.md#prepare-nfs-share)
 2. [Preparing the playbooks](./README.md#preparing-the-playbooks)
@@ -52,16 +64,6 @@
 # Monitoring Python Applications using Prometheus
 1. [Example1v0](./Example1v0/README.md)
 2. [Example1v1](./Example1v1/README.md)
-# Kube State Metrics
-1. [Kube State Metrics](./KubeStateMetrics.md#kube-state-metrics)
-    1. [Deployment](./KubeStateMetrics/KubeStateMetrics.md#Deployment)
-    2. [Verification](./KubeStateMetrics/KubeStateMetrics.md#Verification)
-# Monitoring Docker Daemon
-1. [Configure Docker](./DockerExporter/README.md#configure-Docker)
-2. [Configure Prometheus](./DockerExporter/README.md#configure-prometheus)
-# Monitoring Docker Containers (cAdvisor)
-1. [Run cAdvisor as a Docker Container](./DockerExporter/README.md#run-cadvisor-as-a-docker-container)
-2. [Configure Prometheus for cAdvisor Metrics](./DockerExporter/README.md#configure-prometheus-for-cadvisor-Metrics)
 ## Prepare NFS share
 In this example the ***centos8s-server.singleton.net*** server, configured and used in [example-014-PriveRegistry](../014-PrivateRegistry/README.md)
 will be configured to serve as NFS server. The NFS server will share a portion of its filesystem to all nodes of the couchbase cluster.
