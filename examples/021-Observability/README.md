@@ -54,8 +54,8 @@
 2. [Example1v1](./Example1v1/README.md)
 # Kube State Metrics
 1. [Kube State Metrics](./KubeStateMetrics.md#kube-state-metrics)
-    1. [Deployment](./KubeStateMetrics.md#Deployment)
-    2. [Verification](./KubeStateMetrics.md#Verification)
+    1. [Deployment](./KubeStateMetrics/KubeStateMetrics.md#Deployment)
+    2. [Verification](./KubeStateMetrics/KubeStateMetrics.md#Verification)
 # Monitoring Docker Daemon
 1. [Configure Docker](./DockerExporter/README.md#configure-Docker)
 2. [Configure Prometheus](./DockerExporter/README.md#configure-prometheus)
