@@ -1,0 +1,33 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: alertmanager-config
+  namespace: monitoring
+data:
+  config.yml: |-
+    global:
+    templates:
+    - '/etc/alertmanager-templates/*.tmpl'
+    route:
+      receiver: alert-emailer
+      group_by: ['alertname']
+      group_wait: 10s
+      repeat_interval: 30m
+    receivers:
+    - name: alert-emailer
+      email_configs:
+      - to: receiver_email_id@gmail.com
+        from: 'email_id@gmail.com'
+        smarthost: smtp.gmail.com:587
+        auth_username: 'email_id@gmail.com'
+        auth_identity: 'email_id@gmail.com'
+        auth_password: 'password'
+        headers:
+           subject: '{{ template "custom_mail_subject" . }}'
+        html: '{{ template "custom_mail_html" . }}'
+    inhibit_rules:
+      - source_match:
+          severity: 'critical'
+        target_match:
+          severity: 'warning'
+        equal: ['alertname', 'dev', 'instance']
