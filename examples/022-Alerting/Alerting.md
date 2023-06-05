@@ -697,3 +697,15 @@ At some point the number of raised exceptions reache the imposed treshold of 20 
 
 If we open now the Alert Manger Dashboard we can see the prometheus as correctly sent the alert to the alert manager aswell
 ![AlertManager](../../doc/AlertManager-06.JPG)
+
+## Managing Alerts
+Alert manager allow more soffisticated management around alerts fired bu prometheus.
+* **Routing**
+Alert Manager implement a ***routing tree*** which is represented in the route block of the alert manager config file.  
+The routing tree control how and when alerts will be sent.
+* **Grouping** 
+Allow to combine multiple related alerts into a single notification. ( **group_by** )
+* **Inhibition** 
+Allow to suppress an alert if another alert is already firing.  ( **inhibit_rule** )
+* **Silences** 
+Is a way to temporarely turn off certain notifications.
