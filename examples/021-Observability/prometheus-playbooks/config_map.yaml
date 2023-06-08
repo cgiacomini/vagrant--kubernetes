@@ -29,7 +29,7 @@ data:
       - scheme: http
         static_configs:
         - targets:
-          - "aletargetsrtmanager.monitoring.svc:9093"
+           "alertmanager.monitoring.svc.cluster.local"
     scrape_configs:
       - job_name: prometheus
         static_configs:

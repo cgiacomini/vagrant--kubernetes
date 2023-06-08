@@ -19,7 +19,7 @@ spec:
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: prumetheus-ui
+  name: prometheus-ui
   namespace: monitoring
 spec:
   ingressClassName: nginx
