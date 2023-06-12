@@ -195,7 +195,7 @@ Address 1: 10.110.34.105 sms-sender.monitoring.svc.cluster.local
 If all works correctly we should soon receive the Hello message on our mobile phone.
 
 
-## Deploy Alert Manager
+## Deploy the Alert Manager
 
 The Alert Manager installation consist of :
 * A Persitent volume and Persistent Volume Claim to store persistent data.
@@ -291,7 +291,7 @@ grafana-pvc         Bound    grafana-pv         1Gi        RWX            nfs-st
 prometheus-pvc      Bound    prometheus-pv      1Gi        RWX            nfs-storageclass   85d
 ```
 
-### Alert Manager Configmap
+### The Alert Manager Configmap
 Here we configure the Alertmanager to send us an SMS whenever an alert reaches the firing state.
 The following is an example on how we should configure the **receiver**.  
   
@@ -345,17 +345,16 @@ You can customize these templates based on your needs.
 
 Here is an example of a custm template for the subject and the body of the alert email.  
 
-### Alert template Configmap
-***alert-manager-template.yaml***
+### The Alert Templates Configmap
+***alert-manager-templates.yaml***
 ```
 TBD
 ```
 
-### Alert Manager Deployment
+### The Alert Manager Deployment
 
 In the Deployment file *args* section we specify the location of the config file and the path that the Alertmanager can use for internal storage which is where we mount our PV as NFS.
 We also mount the configuration volumes int dedicate place.
-
 
 ***AlertManagerDeployment.yaml***
 
@@ -413,7 +412,7 @@ spec:
           path: /mnt/nfs_shares/cluster_nfs/AlertManager
 ```
 
-### Alert Manager service
+### The Alert Manager Service
 
 The service will be used to instruct prometheus on where alerts should be sent.
 
@@ -514,7 +513,7 @@ Address 1: 10.99.85.39 alertmanager-service.monitoring.svc.cluster.local
 </html>
 ```
 
-### Alert Manager UI
+### The Alert Manager UI
 As usuall to make the ingress to work we need to add an entry in */etc/hosts*.
 ***/etc/hosts***
 ```
@@ -617,7 +616,7 @@ Basicaly the defined alert says that if the sum of the memory usage of the runni
 We can se this in the Prometheus dashboard under the Alert page:
 ![AlertManager](../../doc/AlertManager-03.JPG)
 
-## Define our Own Alert
+## Define our own Alert
 Using the previous example application [Example1v1](../021-Observability/Example1v1/README.md) we define here an alert that is fired when the number of exception in the application is greater that 20.  
 To do so we need to change prometheus configuration map to add the scrap_configs to target the aplication and we need also to define the alert as defined in the following prometheus configuration map.
 ```
