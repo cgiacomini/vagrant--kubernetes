@@ -47,4 +47,3 @@ spec:
           nfs:
             server: centos8s-server.singleton.net
             path: /mnt/nfs_shares/cluster_nfs/Prometheus
-

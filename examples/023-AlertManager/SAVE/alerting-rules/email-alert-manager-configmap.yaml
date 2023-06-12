@@ -1,0 +1,37 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: alertmanager-config
+  namespace: monitoring
+data:
+  config.yml: |-
+    global:
+      resolve_timeout:  1m
+    templates:
+    - '/etc/alertmanager-templates/*.tmpl'
+    route:
+      group_by: ['alertname']
+      group_wait: 10s
+      repeat_interval: 30m
+      routes:
+        - match:
+          severity: "critical"
+        receiver: gmail-notification
+
+    receivers:
+    - name: gmail-notification
+      email_configs:
+      - smarthost: smtp.gmail.com:587
+        to: giacomini.corrado@free.fr
+        from: corrado.giacomini@gmail.com
+        auth_username: 'corrado.giacomini@gmail.com'
+        auth_identity: 'corrado.giacomini@gmail.com'
+        auth_password: '+Ncc1701d+'
+        send_resolved: true
+
+    inhibit_rules:
+      - source_match:
+          severity: 'critical'
+        target_match:
+          severity: 'warning'
+        equal: ['alertname', 'dev', 'instance']

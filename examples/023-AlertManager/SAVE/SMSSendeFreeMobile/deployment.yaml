@@ -1,0 +1,48 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sms-sender
+  namespace: monitoring
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sms-sender
+  template:
+    metadata:
+      name: sms-sender
+      labels:
+        app: sms-sender
+    spec:
+      imagePullSecrets:
+      - name: centos8s-server-secret
+      containers:
+      - name: sms-sender
+        imagePullPolicy: Always
+        image:  centos8s-server.singleton.net:443/sms-sender:latest
+        ports:
+        - name: sms-sender
+          containerPort: 9088
+          protocol: TCP
+        - name: metrics
+          containerPort: 9089
+          protocol: TCP
+        resources:
+            requests:
+              cpu: 500m
+              memory: 500M
+            limits:
+              cpu: 1
+              memory: 1Gi
+        env:
+        - name: ID
+          valueFrom:
+            secretKeyRef:
+              name: sms-secret
+              key: id
+        - name: KEY
+          valueFrom:
+            secretKeyRef:
+              name: sms-secret
+              key: key

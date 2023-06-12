@@ -15,13 +15,15 @@ data:
         expr: sum(container_memory_usage_bytes) > 1
         for: 1m
         labels:
-          severity: slack
+          severity: warning
         annotations:
           summary: High Memory Usage
   prometheus.yml: |-
     global:
-      scrape_interval: 5s # default is every 1 minute
-      evaluation_interval: 5s  # default is every 1 minute
+      # default is every 1 minute
+      scrape_interval: 5s 
+      # default is every 1 minute
+      evaluation_interval: 5s  
     rule_files:
       - /etc/prometheus/prometheus.rules
     alerting:
@@ -29,7 +31,7 @@ data:
       - scheme: http
         static_configs:
         - targets:
-           "alertmanager.monitoring.svc.cluster.local"
+           "alertmanager-service.monitoring.svc.cluster.local"
     scrape_configs:
       - job_name: prometheus
         static_configs:

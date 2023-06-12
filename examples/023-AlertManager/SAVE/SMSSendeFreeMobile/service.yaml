@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: sms-sender
+  namespace: monitoring
+  annotations:
+      prometheus.io/scrape: 'true'
+      prometheus.io/port:   '9089'
+spec:
+  selector:
+    app: sms-sender
+  type: ClusterIP
+  ports:
+    - port: 9088
+      targetPort: 9088
+      name: sms-sender
+    - port: 9089
+      name: metrics
+      targetPort: 9089
