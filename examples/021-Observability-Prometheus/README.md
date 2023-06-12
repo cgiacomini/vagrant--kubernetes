@@ -43,6 +43,8 @@
     2. [Configure Prometheus for cAdvisor Metrics](./DockerExporter/README.md#configure-prometheus-for-cadvisor-Metrics)
 7. [Recording Rules](./RecordingRules/RecordingRules.md)
     1. [Recording rules YAML file syntax](./RecordingRules/RecordingRules.md#recording-rules-YAML-file-syntax) 
+8. [High Availability](./PrometheusHighAvailability.md)
+9. [Security](./PrometheusSecurity.md)
 
 # Installing Prometheus on Kubernetes
 1. [Prepare NFS share](./README.md#prepare-nfs-share)
@@ -64,6 +66,8 @@
 # Monitoring Python Applications using Prometheus
 1. [Example1v0](./Example1v0/README.md)
 2. [Example1v1](./Example1v1/README.md)
+
+
 ## Prepare NFS share
 In this example the ***centos8s-server.singleton.net*** server, configured and used in [example-014-PriveRegistry](../014-PrivateRegistry/README.md)
 will be configured to serve as NFS server. The NFS server will share a portion of its filesystem to all nodes of the couchbase cluster.
