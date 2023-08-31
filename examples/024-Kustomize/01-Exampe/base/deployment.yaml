@@ -1,0 +1,15 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: http-test-kustomize
+  namespace: sandbox
+spec:
+  template:
+    spec:
+      containers:
+      - name: http-test-kustomize
+        image: nginx
+        ports:
+        - name: http
+          containerPort: 8080
+          protocol: TCP
