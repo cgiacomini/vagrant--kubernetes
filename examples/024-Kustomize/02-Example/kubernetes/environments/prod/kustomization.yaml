@@ -11,3 +11,5 @@ patchesStrategicMerge:
 patches:
 - path: replica_count.yaml
 - path: resources.yaml
+
+namespace: prod-namespace
