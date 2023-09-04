@@ -157,7 +157,24 @@ kubectl apply -k kubernetes/application
 
 ## Customization
 
-Now that we have our base,et of YAML file, we can create our custom configurations for each environment that we maight have: prod, preprod, qa etc.
+Now that we have our base set of YAML file, we can create our custom configurations for each environment that we maight have: prod, preprod, qa etc.
+At the end of this tutorial example we will end up to have the following directory structure :
+```
+kubernetes/
+├── application
+│   ├── configmap.yaml
+│   ├── deployment.yaml
+│   └── kustomization.yml
+└── environments
+    ├── dev
+    │   ├── kustomization.yaml
+    │   └── replica_count.yaml
+    └── prod
+        ├── env.yaml
+        ├── kustomization.yaml
+        ├── replica_count.yaml
+        └── resources.yaml
+```
 
 In the /kubernetes folder, we create a folder ***/environments***. Then, in this folder, we create two folders ***/dev*** and ***/prod*** (representing each environment that we have),
 and we create a ***kustomization.yaml*** file in both /dev and /prod.

@@ -1,6 +1,9 @@
 # Kustomize
 
+
 ***REF***:  [https://devopssec.fr/article/deploiements-k8s-avec-kustomize]
+
+**In this simple example we use kustomize to simply add labesl and selector properties to the base resouces YAML files: deployment.yaml and service.yaml.**
 
 **Kustomize** is a Kubernetes configuration transformation tool that enables you to customize untemplated YAML files, leaving the original files untouched.  
 Kustomize can also generate resources such as ConfigMaps and Secrets from other representations.
@@ -32,7 +35,7 @@ status:
   phase: Active
 ```
   
-### deployement.yaml
+### deployment.yaml
 ```
 
 apiVersion: apps/v1
@@ -106,7 +109,7 @@ deployment.apps "http-test-kustomize" deleted
 ```
 ## Using Kustomize
 
-To show how Kustomize could be used to deploy the same above application in a different way, we ar going to delete  the *Labels* ant *Selector* attributes from the the above YAML files:
+To show how Kustomize could be used to deploy the same above application in a different way, we are going to delete the *Labels* ant *Selector* attributes from the the above YAML files:
 ### deployment.yaml
 ```
 apiVersion: apps/v1
@@ -138,8 +141,8 @@ spec:
       port: 8080
 ```
 
-The new version of these YAML file will be the base for our customization. We will customize them base on the environment where we want to deploy the application DEV, PREPROD, PROD or whatever.
-Here then we use kustomize to handle the delete *Labels* and *Selector* what we just need is a ***kustomize.yaml*** as follow:
+The new version of these YAML file will be the base for our customization. 
+Here then we use kustomize to handle the deleted *Labels* and *Selector* what we just need is a ***kustomize.yaml*** as follow:
 
 ### Kustomization.yaml 
 ```
