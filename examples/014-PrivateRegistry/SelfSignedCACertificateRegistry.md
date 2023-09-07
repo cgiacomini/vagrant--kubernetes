@@ -64,31 +64,20 @@ $ openssl s_client -showcerts -connect 192.168.56.200:443 < /dev/null
 CONNECTED(00000003)
 Can't use SSL_get_servername
 depth=0 C = FR, ST = Alpes Maritimes, L = Nice, O = SINGLETON, OU = R&D, CN = docker-registry
-verify error:num=18:self signed certificate
-verify return:1
-depth=0 C = FR, ST = Alpes Maritimes, L = Nice, O = SINGLETON, OU = R&D, CN = docker-registry
 verify return:1
 ---
 Certificate chain
  0 s:C = FR, ST = Alpes Maritimes, L = Nice, O = SINGLETON, OU = R&D, CN = docker-registry
    i:C = FR, ST = Alpes Maritimes, L = Nice, O = SINGLETON, OU = R&D, CN = docker-registry
-...
-Server certificate
-subject=C = FR, ST = Alpes Maritimes, L = Nice, O = SINGLETON, OU = R&D, CN = docker-registry
-issuer=C = FR, ST = Alpes Maritimes, L = Nice, O = SINGLETON, OU = R&D, CN = docker-registry
----
-No client certificate CA names sent
-Peer signing digest: SHA256
-Peer signature type: RSA
-Server Temp Key: X25519, 253 bits
----
-SSL handshake has read 2387 bytes and written 382 bytes
-Verification: OK
+-----BEGIN CERTIFICATE-----
+MIIGEzCCA/ugAwIBAgIUY7GfwxQtOEGGQOMk3pXHFww2Jg8wDQYJKoZIhvcNAQEL
+BQAwcjELMAkGA1UEBhMCRlIxGDAWBgNVBAgMD0FscGVzIE1hcml0aW1lczENMAsG
+A1UEBwwETmljZTESMBAGA1UECgwJU0lOR0xFVE9OMQwwCgYDVQQLDANSJkQxGDAW
+BgNVBAMMD2RvY2tlci1yZWdpc3RyeTAeFw0yMjEwMjUxNDMxMTdaFw0yMzEwMTYx
+NDMxMTdaMHIxCzAJBgNVBAYTAkZSMRgwFgYDVQQIDA9BbHBlcyBNYXJpdGltZXMx
+DTALBgNVBAcMBE5pY2UxEjAQBgNVBAoMCVNJTkdMRVRPTjEMMAoGA1UECwwDUiZE
 ...
 ...
-    Timeout   : 7200 (sec)
-    Verify return code: 18 (self signed certificate)
-    Extended master secret: no
 ---
 DONE
 ```
