@@ -37,4 +37,4 @@ It detects and prevents drift in your Kubernetes clusters by working with raw YA
 ArgoCD can also work with Helm and Kustomize to render the YAML produced by those tools before applying them to the Kubernetes cluster.  
 
 * [Installation](./Installation.md)
-* [00-deploying-application.md](./00-deploying-application/REAME.md)
+* [00-deploying-application.md](./00-deploying-application/README.md)
