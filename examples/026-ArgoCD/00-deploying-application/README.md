@@ -8,7 +8,7 @@ An Argo CD Application is controlled by the Argo CD Application Controller via a
 ## Application Custom Resource 
 
 The application we are going to use is available on GitHub:
-![00-deploying-application](https://github.com/cgiacomini/vagrant--kubernetes/tree/centos8stream/examples/026-ArgoCD/00-deploying-application)
+[00-deploying-application](https://github.com/cgiacomini/vagrant--kubernetes/tree/centos8stream/examples/026-ArgoCD/00-deploying-application)
 
 The application is deployed with ArgoCD using the Application Custom Resource (CR).
 The CR is created via the UI in the "New APP" window, where we need to fill all the requested field:
@@ -18,14 +18,14 @@ The CR is created via the UI in the "New APP" window, where we need to fill all 
 + **SYNC POLICY**: Manual
 + **RETRY**: Enable this, and leave the defaults
 + **Revision**: main
-+ **Path**: 00-deploying-application
 + **Cluster URL**: https://kubernetes.default.svc
 + **Namespace**: test
 + **Repository URL**: https://github.com/cgiacomini/vagrant--kubernetes
 + **Revision**: Specify the branch. here is *centos8stream*
-+ **Path**: Specify the application path inside the repository ( here is examples/026-ArgoCD/00-deploying-application)
++ **Path**: Specify the application path inside the repository (here is *examples/026-ArgoCD/00-deploying-application*)
 
 ***Note***: Cluster URL is the Argo CD's way of identifying which cluster to apply the manifests to. In this case we have only one cluster which is the one ArgoCD is running on and returned by the argocd CLI command:
+
 ```
 $ argocd cluster list
 SERVER                          NAME        VERSION  STATUS   MESSAGE                                                  PROJECT
@@ -33,7 +33,7 @@ https://kubernetes.default.svc  in-cluster           Unknown  Cluster has no app
 ```
 
 We leave everything else as the default values, click CREATE and we get the following screen with Application as "Missing" and "OutOfSy:
-![Create Application CR](../../doc/argocdApplicationExample1.JPG)
+![Create Application CR](../../../doc/argocdApplicationExample1.JPG)
 
 We can see nothing is deployed in the **test** namespace
 ```
@@ -62,7 +62,7 @@ apps   Deployment  test       bgd   OutOfSync  Missing
 To Actually apply the manifests we need to click on SYNC in the Argo CD UI, then SYNCHRONIZE to apply them.  
 After a while we should get the following screen:
 
-![Application Deployed](../../doc/argocdApplicationExample2.JPG)
+![Application Deployed](../../../doc/argocdApplicationExample2.JPG)
 
 ```
 # Verify the pod is running
@@ -98,10 +98,12 @@ apps   Deployment  test       bgd   Synced   Healthy        deployment.apps/bgd 
 Argo CD has the ability to visualize any divergence between the manifest files in the repository and those applied in your cluster, as well as the ability to reconcile that divergence.  
 Let's introduce a change to the *test-deployment.yaml* manifest by changing the ***replicas*** of the Deployment from 1 to 3.  We commit and push the changes on the Git repository.
 Now if we refresh the ArgoCD application status we will be informed that the application is out of sync:
-![Application AutoOfSync](../../doc/argocdApplicationExample3.JPG)
+
+![Application AutoOfSync](../../../doc/argocdApplicationExample3.JPG)
 
 To reconcilate it we need to click on SYNC button and then on SYNCHRONIZE. After a while the application deployment will be alligned with the changes in the repository;
-![Application AutoOfSync](../../doc/argocdApplicationExample4.JPG)
+
+![Application AutoOfSync](../../../doc/argocdApplicationExample4.JPG)
 
 ```
 # Verify we have 3 replicas on the cluster
@@ -247,7 +249,3 @@ $ kubectl get pods -n test
 NAME                   READY   STATUS    RESTARTS   AGE
 bgd-74dc875f9b-jqxgg   1/1     Running   0          50m
 ```
-
-
-
-

@@ -4,7 +4,9 @@
 ***REF***:[https://kubebyexample.com/learning-paths/argo-cd/argo-cd-overview]
 
 ### GitOps
+
 ***REF***: [https://www.techtarget.com/searchitoperations/definition/GitOps]
+
 GitOps uses Git repositories as a single source of truth to deliver infrastructure as code.
 Code changes are tracked, which provides version control if a rollback is needed.  
 Once declared in Git, a GitOps agent is used to apply all code configurations automatically in development, test, staging and production environments.
@@ -17,7 +19,8 @@ Changes to an application or cluster could include updates to container images, 
 Troubleshooting with GitOps is fast, as users can fix any issues that appear with a pull request rather than in the underlying system.
 
 GitOps works with any CI and Git server. It can also use other tools for Git pushes, development and continuous integration. Jenkins X, for example, is an open source tool that works with GitOps to provide CI/CD as well as other automated testing tools designed for cloud-native applications -- specifically in a Kubernetes environment. Other tools, including Bitbucket, GitHub and Amazon Web Services CodeDeploy, can be used in GitOps as well.
-![GitOps pipeline](../..//doc/whatis-gitops_pipeline-f.png)
+
+![GitOps pipeline](../../doc/whatis-gitops_pipeline-f.png)
 
 
 GitOps can be used for several applications; for example, teams might use it to implement continuous deployment for Kubernetes.
@@ -33,5 +36,5 @@ Argo CD was written with GitOps in mind, to deliver changes to a Kubernetes clus
 It detects and prevents drift in your Kubernetes clusters by working with raw YAML stored in a Git repository and using the application functionality in Kubernetes.  
 ArgoCD can also work with Helm and Kustomize to render the YAML produced by those tools before applying them to the Kubernetes cluster.  
 
-* ![Installation](./ArgocdInstallation.md)
-* ![Deploy Application using ArgoCD](./ApplicationExample.md)
+* [Installation](./Installation.md)
+* [00-deploying-application.md](./00-deploying-application/REAME.md)
