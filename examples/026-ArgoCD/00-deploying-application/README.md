@@ -1,4 +1,4 @@
-# Application Deployment Example
+# Application teployment Example
 Argo CD's primary job is to make sure that your desired state, stored in Git, matches your running state on your Kubernetes installation.  
 It does this by comparing Kubernetes declarations (stored in YAML or JSON in Git) with the running state.  
 Argo CD does this by treating a group of related manifests as an atomic unit.  
@@ -17,7 +17,6 @@ The CR is created via the UI in the "New APP" window, where we need to fill all 
 + **Project Name**: default
 + **SYNC POLICY**: Manual
 + **RETRY**: Enable this, and leave the defaults
-+ **Revision**: main
 + **Cluster URL**: https://kubernetes.default.svc
 + **Namespace**: test
 + **Repository URL**: https://github.com/cgiacomini/vagrant--kubernetes
