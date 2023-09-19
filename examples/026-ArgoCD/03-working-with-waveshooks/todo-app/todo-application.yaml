@@ -10,7 +10,7 @@ spec:
   project: default
   source:
     path: examples/026-ArgoCD/03-working-with-waveshooks/todo-app
-    repoURL: https//github.com/cgiacomini/vagrant--kubernetes
+    repoURL: https://github.com/cgiacomini/vagrant--kubernetes
     targetRevision: centos8stream
   syncPolicy:
     automated:

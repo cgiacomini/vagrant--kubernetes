@@ -347,7 +347,7 @@ spec:
   project: default
   source:
     path: examples/026-ArgoCD/03-working-with-waveshooks/todo-app
-    repoURL: https//github.com/cgiacomini/vagrant--kubernetes
+    repoURL: https://github.com/cgiacomini/vagrant--kubernetes
     targetRevision: centos8stream
   syncPolicy:
     automated:
@@ -359,8 +359,13 @@ spec:
 
 To create the application custom resource and deploy 
 ```
-# kubectl apply -f todo-app/todo-application.yaml
+$ kubectl apply -f todo-app/todo-application.yaml
+application.argoproj.io/todo-app created
 ```
+
+On the ArgoCD UI we should now see the todo-app application :
+![todo-app](../../../doc/argocdSyncWavesResourceHooks3.JPG)
+
 
 ### Using Syncwaves and Hooks
 
