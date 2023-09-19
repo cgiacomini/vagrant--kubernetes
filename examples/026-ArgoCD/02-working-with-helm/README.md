@@ -37,7 +37,7 @@ metadata:
   namespace: argocd
 spec:
   destination:
-    namespace: demo
+    namespace: argocd
     server: https://kubernetes.default.svc
   project: default
   source:
@@ -97,7 +97,7 @@ $ kubectl get applications
 NAME          SYNC STATUS   HEALTH STATUS
 quarkus-app   Unknown       Healthy
 
-$ kubectl get pods -n demo
+$ kubectl get pods -n argocd
 NAME                           READY   STATUS    RESTARTS   AGE
 quarkus-app-69ff649b9c-mk7cl   1/1     Running   0          99s
 

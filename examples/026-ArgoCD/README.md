@@ -39,3 +39,5 @@ ArgoCD can also work with Helm and Kustomize to render the YAML produced by thos
 * [Installation](./Installation.md)
 * [00-deploying-application.md](./00-deploying-application/README.md)
 * [01-working-with-kustomize](./01-working-with-kustomize/README.md)
+* [02-working-with-helm](./02-working-with-helm/README.md)
+* [03-working-with-waveshooks](./03-working-with-waveshooks/README.md)
