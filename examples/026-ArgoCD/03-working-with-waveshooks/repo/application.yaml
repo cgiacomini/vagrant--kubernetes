@@ -1,0 +1,20 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: wave-test
+  namespace: argocd
+spec:
+  destination:
+    namespace: synctest
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    path: examples/026-ArgoCD/03-working-with-waveshooks/repo
+    repoURL: https://github.com/cgiacomini/vagrant--kubernetes
+    targetRevision: centos8stream
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: false
+    syncOptions:
+    - CreateNamespace=true
