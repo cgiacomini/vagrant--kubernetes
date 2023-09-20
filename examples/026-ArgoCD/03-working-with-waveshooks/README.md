@@ -262,4 +262,32 @@ Ordering manifests comes in handy when you are deploying a workload that needs t
 For example, if you have a 3-tiered application with a frontend, backend, and database. 
 In this scenario you might want the database to come up first, then the backend, and at the end the frontend
 
+## Automated Sync Policy
 
+
+
+```
+$ kubectl get pods -n synctest
+NAMESPACE              NAME                                                READY   STATUS      RESTARTS          AGE
+synctest               bgd-58cf8d95bf-86j54                                1/1     Running     0                 80m
+synctest               bgd-74544d4c44-vpjkx                                0/1     Running     0                 4m1s
+synctest               presync-pod                                         0/1     Completed   0                 4m9s
+
+
+$ kubectl describe pod bgd-74544d4c44-vpjkx -n synctest
+...
+...
+Events:
+  Type     Reason     Age                   From               Message
+  ----     ------     ----                  ----               -------
+  Normal   Scheduled  3m41s                 default-scheduler  Successfully assigned synctest/bgd-74544d4c44-vpjkx to k8s-node1
+  Normal   Pulling    3m40s                 kubelet            Pulling image "quay.io/redhatworkshops/bgd"
+  Normal   Pulled     3m40s                 kubelet            Successfully pulled image "quay.io/redhatworkshops/bgd" in 621.322576ms
+  Normal   Created    3m40s                 kubelet            Created container init-bgd
+  Normal   Started    3m40s                 kubelet            Started container init-bgd
+  Normal   Pulling    3m34s                 kubelet            Pulling image "quay.io/redhatworkshops/bgd"
+  Normal   Pulled     3m33s                 kubelet            Successfully pulled image "quay.io/redhatworkshops/bgd" in 589.586494ms
+  Normal   Created    3m33s                 kubelet            Created container bgd
+  Normal   Started    3m33s                 kubelet            Started container bgd
+  Warning  Unhealthy  70s (x17 over 3m30s)  kubelet            Readiness probe failed: Get "http://10.10.1.38:8081/": dial tcp 10.10.1.38:8081: connect: connection ref
+```
