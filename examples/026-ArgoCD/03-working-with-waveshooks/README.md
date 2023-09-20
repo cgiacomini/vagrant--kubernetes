@@ -1,5 +1,6 @@
 # Argo CD Syncwaves and Hooks
-[**REF**: https://redhat-scholars.github.io/argocd-tutorial/argocd-tutorial/04-syncwaves-hooks.html]
+## Introduction
+[**REF**: https://kubebyexample.com/learning-paths/argo-cd/argo-cd-syncwaves-and-hooks]
 
 *Syncwaves* are used in Argo CD to order how manifests are applied to the cluster.  
 Whereas *resource hooks* breaks up the delivery of these manifests in different phases.
@@ -8,8 +9,6 @@ Using the combination of *syncwaves* and *resources hooks* we can control how an
 
 The sample application that we will deploy is a **todo** application with a database, syncwaves and resource hooks are used:
 ![Deployment example](../../../doc/argocdSyncWavesResourceHooks1.JPG)
-
-## SyncWave to order deployment
 
 All manifests have a wave of zero by default, but you can set these by using the *argocd.argoproj.io/sync-wave* annotation.
 
@@ -35,360 +34,151 @@ When Argo CD starts a sync action, the manifest get placed in the following orde
 + By kind (Namspaces first, then services, then deployments, etc ...)
 + By name (ascending order)
 
-### todo-namespace.yaml
-Here we define a **todo** namespace that have a sync-wave of -1
-```
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: todo
-  annotations:
-    argocd.argoproj.io/sync-wave: "-1"
-```
 
-### postgres-deployment.yaml
-Here we define a deployment to our postgresql database giving to it a sync-wave of 0
-```
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: postgresql
-  namespace: todo
-  annotations:
-    argocd.argoproj.io/sync-wave: "0"
-spec:
-  selector:
-    matchLabels:
-      app: postgresql
-  template:
-    metadata:
-      labels:
-        app: postgresql
-    spec:
-      containers:
-        - name: postgresql
-          image: postgres:12
-          imagePullPolicy: Always
-          ports:
-            - name: tcp
-              containerPort: 5432
-          env:
-            - name: POSTGRES_PASSWORD
-              value: admin
-            - name: POSTGRES_USER
-              value: admin
-            - name: POSTGRES_DB
-              value: todo
-```
+Controlling your sync operation can be futher redefined by using hooks. These hooks can run before, during, and after a sync operation.
 
-### postgres-service.yaml
-The postgres service also have a sync-wave of 0.
+These hooks are:
 
-```
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: postgres
-  namespace: todo
-  annotations:
-    argocd.argoproj.io/sync-wave: "0"
-spec:
-  selector:
-    app: postgresql
-  ports:
-    - name: pgsql
-      port: 5432
-      targetPort: 5432
-```
++ ***PreSync***:  Runs before the sync operation. This can be something like a database backup before a schema change
++ ***Sync***:     Runs after PreSync has successfully ran. This will run alongside your normal manifests.
++ ***PostSync***: Runs after Sync has ran successfully. This can be something like a Slack message or an email notification.
++ ***SyncFail***: Runs if the Sync operation as failed. This is also used to send notifications or do other evasive actions.
 
-### postgres-create-table.yaml
-Once postgresql POD is deployed along with its service we can use postgresql client to create a database. 
-To do so we use a *Job* yaml file to launch a specific postgres sql command.  The job access the database via the postgres service by using the service FQDN *postgres.todo.svc.cluster.local*
-This time the sync-wave is set to 1
+To enable a sync, annotate the specific object manifest with ***argocd.argoproj.io/hook*** with the type of sync you want to use for that resource.
+For example, if we want to use the PreSync hook:
 
-```
----
-apiVersion: batch/v1
-kind: Job
-metadata:
-  name: todo-table
-  namespace: todo
-  annotations:
-    argocd.argoproj.io/sync-wave: "1"
-spec:
-  ttlSecondsAfterFinished: 100
-  template:
-    spec:
-      containers:
-        - name: postgresql-client
-          image: postgres:12
-          imagePullPolicy: Always
-          env:
-            - name: PGPASSWORD
-              value: admin
-          command: ["psql"]
-          args:
-            [
-              "--host=postgres.todo.svc.cluster.local",
-              "--username=admin",
-              "--no-password",
-              "--dbname=todo",
-              "--command=create table Todo (id bigint not null,completed boolean not null,ordering integer,title varchar(255),url varchar(255),primary key (id));create sequence hibernate_sequence start with 1 increment by 1;",
-            ]
-      restartPolicy: Never
-  backoffLimit: 1
-```
-
-### todo-qpplication-deployment.yaml
-The postgress database server is now deployed, a service is configured to acces it, and a database is created.  
-
-Here we deploy a ServiceAccount and the application that acces the postgres database.  This time the sync-wave is set to 2
-
-```
----
-apiVersion: "v1"
-kind: "ServiceAccount"
-metadata:
-  labels:
-    app.kubernetes.io/name: "todo-gitops"
-    app.kubernetes.io/version: "1.0.0"
-  name: "todo-gitops"
-  namespace: todo
-  annotations:
-    argocd.argoproj.io/sync-wave: "2"
----
-apiVersion: "apps/v1"
-kind: "Deployment"
-metadata:
-  labels:
-    app.kubernetes.io/name: "todo-gitops"
-    app.kubernetes.io/version: "1.0.0"
-  name: "todo-gitops"
-  namespace: todo
-  annotations:
-    argocd.argoproj.io/sync-wave: "2"
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app.kubernetes.io/name: "todo-gitops"
-      app.kubernetes.io/version: "1.0.0"
-  template:
-    metadata:
-      labels:
-        app.kubernetes.io/name: "todo-gitops"
-        app.kubernetes.io/version: "1.0.0"
-    spec:
-      containers:
-      - env:
-        - name: "KUBERNETES_NAMESPACE"
-          valueFrom:
-            fieldRef:
-              fieldPath: "metadata.namespace"
-        image: "quay.io/rhdevelopers/todo-gitops:1.0.0"
-        imagePullPolicy: "Always"
-        name: "todo-gitops"
-        ports:
-        - containerPort: 8080
-          name: "http"
-          protocol: "TCP"
-      serviceAccount: "todo-gitops"
-```
-
-### todo-application-service.yaml
-The application can be reached via the followin service. Note that the sync-wave is set to 2 as per the application deploymen and service account above.
-```
----
-apiVersion: "v1"
-kind: "Service"
-metadata:
-  labels:
-    app.kubernetes.io/name: "todo-gitops"
-    app.kubernetes.io/version: "1.0.0"
-  name: "todo-gitops"
-  annotations:
-    argocd.argoproj.io/sync-wave: "2"
-  namespace: todo
-spec:
-  ports:
-  - name: "http"
-    port: 8080
-    targetPort: 8080
-  selector:
-    app.kubernetes.io/name: "todo-gitops"
-    app.kubernetes.io/version: "1.0.0"
-```
-
-## todo-application-ingress.yaml
-In front of the application service we also deploy an *ingress* to access the application from a defined FQDN  (todo singleton.net)
-Note that the ingress have a sync-wave set to 3, that means it will be processed last since it has the highest sync-wave.
-
-```
----
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: todo
-  namespace: todo
-  annotations:
-    argocd.argoproj.io/sync-wave: "3"
-spec:
-  rules:
-    - host: todo.singleton.net
-      http:
-        paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: todo-gitops
-                port:
-                  number: 8080
-```
-
-We need to add ***todo.singleton.net*** to  */etc/hosts* pointing to the k8s-master node where our ingress controller runs.
-```
-192.168.56.10 k8s-master.singleton.net k8s-master argocd.singleton.net todo.singleton.net
-```
-
-ArgoCD will apply Namespace first since hase the lowest wave value, it make sure it is in the "*healthy*" state before moving on.
-Next will apply the PostgreSQL deployment waiting for its "healthy" status as well before moving on the rest of the resources.
-
-***NOTE***: Argo CD won’t apply the next manifest until the previous reports "healthy".
-
-## Hooks
-
-Controlling your sync operation can be futher redefined by using **hooks**.  These hooks can run before, during, and after a sync operation.
-
-Hooks Types are:
-
-+ PreSync - Runs before the sync operation. This can be something like a database backup before a schema change
-+ Sync - Runs after PreSync has successfully ran. This will run alongside your normal manifests.
-+ PostSync - Runs after Sync has ran successfully. This can be something like a Slack message or an email notification.
-+ SyncFail - Runs if the Sync operation as failed. This is also used to send notifications or do other evasive actions.
-
-To enable a sync, annotate the specific object manifest with ***argocd.argoproj.io/hook*** with the *type of sync* you want to use for that resource.
-
-For example, if I wanted to use the *PreSync* hook:
 ```
 metadata:
   annotations:
     argocd.argoproj.io/hook: PreSync
 ```
-
 You can also have the hooks deleted after a successful/unsuccessful run.
 
-+ HookSucceeded - The resource will be deleted after it has succeeded.
-+ HookFailed - The resource will be deleted if it has failed.
-+ BeforeHookCreation - The resource will be deleted before a new one is created (when a new sync is triggered).
++ ***HookSucceeded***": The resource will be deleted after it has succeeded.
++ ***HookFailed***: The resource will be deleted if it has failed.
++ ***BeforeHookCreation***: The resource will be deleted before a new one is created (when a new sync is triggered).
 
-You can apply these with the *argocd.argoproj.io/hook-delete-policy* annotation. For example
-````
+You can apply these with the ***argocd.argoproj.io/hook-delete-policy*** annotation. For example
+
+```
 metadata:
   annotations:
     argocd.argoproj.io/hook: PostSync
     argocd.argoproj.io/hook-delete-policy: HookSucceeded
 ```
 
-Although hooks can be any resource, they are usually Pods and/or Jobs
+## Using Syncwaves and Hooks
+*presync.yaml* : This manifest is annotated with ***argocd.argoproj.io/hook: PreSync*** and therefore is execute first before the ArgoCD Sync phase. It also hase ***argocd.argoproj.io/sync-wave: "0"*** annotation ( also is the default value )
+*namespace.yaml*: The namespace manifest will processed next because it's in the "Sync" phase (the default when no annotation is present), and it is in wave 0 as indicated with the annotation argocd.argoproj.io/sync-wave: "0"
+*deployment.yaml*:  The deployment manifest is processed after the namespace one because it's annotated with argocd.argoproj.io/sync-wave: "1"
+*service.yaml*: Finally, the service gets deployed as it's annotated with argocd.argoproj.io/sync-wave: "2"
 
-### todo-insert-data.yaml
-The following is an example of *PostSync* manifest that send an HTTP request to insert a new TODO item:
-This PostSync hook run in PostSync phase after the application of the manifests Sync Phase
+### presync.yaml
+This will run a dummy PreSync script using the RedHat Universal Base Image (**ubi**) which is designed and engineered to be the base layer for all of your containerized applications, middleware and utilities.   
+The script just sleep for 3 seconds and echo "Presync". We could use a Job for this instead of a POD but this is just for demonstration purpose.
+
 ```
 ---
-apiVersion: batch/v1
-kind: Job
+apiVersion: v1
+kind: Pod
 metadata:
-  name: todo-insert
+  name: presync-pod
+  namespace: synctest
   annotations:
-    argocd.argoproj.io/hook: PostSync 
-    argocd.argoproj.io/hook-delete-policy: HookSucceeded
+    argocd.argoproj.io/sync-wave: "0"
+    argocd.argoproj.io/hook: PreSync
+  labels:
+    app.kubernetes.io/name: presync-pod
 spec:
-  ttlSecondsAfterFinished: 100
-  template:
-    spec:
-      containers:
-        - name: httpie
-          image: alpine/httpie:2.4.0
-          imagePullPolicy: Always
-          command: ["http"]
-          args:
-            [
-              "POST",
-              "todo-gitops:8080/api",
-              "title=Finish ArgoCD tutorial",
-              "--ignore-stdin"
-            ]
-      restartPolicy: Never
-  backoffLimit: 1
+  containers:
+  - name: myapp-container
+    image: registry.access.redhat.com/ubi8/ubi
+    command: ['bash', '-c', 'sleep 3 ; echo Presync']
+    imagePullPolicy: Always
+  restartPolicy: "Never"
+
 ```
 
-The execution order can be seen in the following diagram:
-![Execution Order](../../../doc/argocdSyncWavesResourceHooks2.JPG)
+### namespace.yaml
+```
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  annotations:
+    argocd.argoproj.io/sync-wave: "0"
+  name: synctest
+spec: {}
+```
 
-### todo-application.yaml
-
-This will instruct ArgoCD on how to deploy the application.
+### deployment.yaml
+Here we deploy an **initContainer**  which runs simple application. The BGD application is an example web application that just shows a color (blue by default).  
+The initContainer is just for demostration purpose it run a sleep command for 5 seconds. Once fineshed the application container start. 
+The application will be in ready status when the readinessProbe  (an http get on port 8080 ) will succeed. The livenvessProbe wil check the application status.
 
 ```
 ---
-apiVersion: argoproj.io/v1alpha1
-kind: Application
+apiVersion: apps/v1
+kind: Deployment
 metadata:
-  name: todo-app
-  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
+  labels:
+    app: bgd
+  name: bgd
+  namespace: synctest
 spec:
-  destination:
-    namespace: todo
-    server: https://kubernetes.default.svc
-  project: default
-  source:
-    path: examples/026-ArgoCD/03-working-with-waveshooks/todo-app
-    repoURL: https://github.com/cgiacomini/vagrant--kubernetes
-    targetRevision: centos8stream
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: false
-    syncOptions:
-    - CreateNamespace=true
+  replicas: 1
+  selector:
+    matchLabels:
+      app: bgd
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: bgd
+    spec:
+      initContainers:
+      - name: init-bgd
+        image: quay.io/redhatworkshops/bgd
+        command: ['bash', '-c', "sleep 5"]
+        imagePullPolicy: Always
+      containers:
+      - image: quay.io/redhatworkshops/bgd
+        name: bgd
+        imagePullPolicy: Always
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 8080
+          initialDelaySeconds: 2
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 8080
+          initialDelaySeconds: 3
+        resources: {}
 ```
 
-To create the application custom resource and deploy 
+### service.yaml
+The service having the sync-wave set to "2" will be deployed as last
+
 ```
-$ kubectl apply -f todo-app/todo-application.yaml
-application.argoproj.io/todo-app created
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
+  labels:
+    app: bgd
+  name: bgd
+  namespace: synctest
+spec:
+  ports:
+  - port: 8080
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    app: bgd
 ```
-
-On the ArgoCD UI we should now see the todo-app application :
-![todo-app](../../../doc/argocdSyncWavesResourceHooks3.JPG)
-
-
-### Using Syncwaves and Hooks
-
-In this example, we will be deploying the sample application in the *03-working-with-waveshooks*.
-You'll notice that there are various YAMLs for this application. Each manifest has been annotated with a wave.
-
-Argo CD, using the annotations, will deploy the manifests in the following order.
-
-presync.yaml - This will go first because it is in the "PreSync" phase since it's annotated with argocd.argoproj.io/hook: PreSync
-namespace.yaml - The namespace will then go next because it's in the "Sync" phase (the default when no annotation is present), and it is in wave 0 as indicated with the annotation argocd.argoproj.io/sync-wave: "0"
-deployment.yaml - The deployment will come after the deployment because it's annotated with argocd.argoproj.io/sync-wave: "1"
-service.yaml - Finally, the service gets deployed as it's annotated with argocd.argoproj.io/sync-wave: "2"
-To see this in action, create the Application with the argocd cli:
-
-argocd app create wave-test \
---repo https://github.com/christianh814/kbe-apps \
---path 03-working-with-waveshooks \
---dest-namespace synctest \
---dest-server https://kubernetes.default.svc \
---self-heal \
---sync-policy automated \
---sync-option CreateNamespace=true \
---sync-retry-limit 5 \
---revision main
-This should create an Application that you can see in the Argo CD UI
-
