@@ -182,3 +182,77 @@ spec:
   selector:
     app: bgd
 ```
+
+### application.yaml
+Here is the application YAML file for the Application CustomResource to give ArgoCD the details of the deployment.
+```
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: wave-test
+  namespace: argocd
+spec:
+  destination:
+    namespace: synctest
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    path: examples/026-ArgoCD/03-working-with-waveshooks/repo
+    repoURL: https://github.com/cgiacomini/vagrant--kubernetes
+    targetRevision: centos8stream
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: false
+    syncOptions:
+    - CreateNamespace=true
+```
+
+### ingress.yaml
+The ingress allow to access the application from outside the kubernets cluster.  
+For this to work we also need to add ***synctest.singleton.net*** entry in ***/ectc/hosts*** pointing to the node (here the k8s-master node) where the ingress controller is running.
+
+```
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: wave-test-ingress
+  namespace: synctest
+  annotations:
+    argocd.argoproj.io/sync-wave: "3"
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: synctest.singleton.net
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: bgd
+                port:
+                  number: 8080
+```
+
+### Deploy the app
+```
+$ k apply -f repo/application.yaml
+application.argoproj.io/wave-test created
+
+$ kubectl get pods -n synctest
+NAME                   READY   STATUS      RESTARTS   AGE
+bgd-58cf8d95bf-sk7rq   1/1     Running     0          77s
+presync-pod            0/1     Completed   0          100s
+```
+If we take a look at the application card on the ArgoCD UI we will have the following graph:
+![Deployment example](../../../doc/argocdWavesHooksExample1.JPG)
+
+You will note that the manifests will deploy in the order specified by the annotations. 
+
+Ordering manifests comes in handy when you are deploying a workload that needs to have a certain order. 
+For example, if you have a 3-tiered application with a frontend, backend, and database. 
+In this scenario you might want the database to come up first, then the backend, and at the end the frontend
+
+
