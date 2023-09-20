@@ -212,6 +212,8 @@ spec:
 The ingress allow to access the application from outside the kubernets cluster.  
 For this to work we also need to add ***synctest.singleton.net*** entry in ***/ectc/hosts*** pointing to the node (here the k8s-master node) where the ingress controller is running.
 
+The ingress as sync-wave set to 3 so that it will be processed after all previous mainifest files. 
+
 ```
 ---
 apiVersion: networking.k8s.io/v1
@@ -246,10 +248,15 @@ NAME                   READY   STATUS      RESTARTS   AGE
 bgd-58cf8d95bf-sk7rq   1/1     Running     0          77s
 presync-pod            0/1     Completed   0          100s
 ```
+
 If we take a look at the application card on the ArgoCD UI we will have the following graph:
 ![Deployment example](../../../doc/argocdWavesHooksExample1.JPG)
 
+
 You will note that the manifests will deploy in the order specified by the annotations. 
+
+We can access now the application via a web browser to verify the deployment by accessing the URL *sync-test.singleton.net*
+![Deployment example](../../../doc/argocdWavesHooksExample2.JPG)
 
 Ordering manifests comes in handy when you are deploying a workload that needs to have a certain order. 
 For example, if you have a 3-tiered application with a frontend, backend, and database. 
