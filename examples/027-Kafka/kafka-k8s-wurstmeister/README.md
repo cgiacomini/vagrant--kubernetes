@@ -1,4 +1,4 @@
-# Kubernetee Kafka cluster deployment 
+# Kubernetee Kafka cluster deployment with zookeeper
 
 In its simplest example, we are going to install kafka in our 3 nodes kubernetes cluster.
 

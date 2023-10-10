@@ -63,6 +63,12 @@ In General:
 + Each Broker must be able to talk to every other Broker - for replication etc.
 + Each Consumer/Producer must be able to talk to every Broker - for reading/writing data etc.
   
+## Kafka Deployment
+There are popular docker images for Kafka development. 
+Some of them are 
++ confluentinc/cp-kafka from Confluent, 
++ wurstmeister/kafka from wurstmeister, 
++ bitnami/kafka from Bitnami ( the Apache Kafka )
   
-[Kafka cluster](./kafka-k8s/README.md)
-[Kafka docker](./kafka-docker/README.md)
+[Kafka cluster (wurstmeister)](./kafka-k8s-wurstmeister/README.md)
+[Kafka docker (wurstmeister)](./kafka-docker-wurstmeister/README.md)
