@@ -58,7 +58,7 @@ To configure argocd server to handle TLS see the proper section in  https://argo
 [ArgoCD server Deployment](./playbooks/argocd-server-deployment.yaml)
 
 Here is the ingress that allow to acces ArgoCD server UI on HTTP port 80 using the FQDN ***argocd.singleton.net***.
-![ArgoCD Ingress](./playbook/argocd-ingress.yaml)
+[ArgoCD Ingress](./playbook/argocd-ingress.yaml)
 
 Note that we do not have dns server and loadblancer so we need to add the following line in the host */etc/hosts* file.
 ```
