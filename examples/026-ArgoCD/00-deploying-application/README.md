@@ -1,4 +1,4 @@
-# Application teployment Example
+# Application deployment Example
 Argo CD's primary job is to make sure that your desired state, stored in Git, matches your running state on your Kubernetes installation.  
 It does this by comparing Kubernetes declarations (stored in YAML or JSON in Git) with the running state.  
 Argo CD does this by treating a group of related manifests as an atomic unit.  
@@ -23,7 +23,8 @@ The CR is created via the UI in the "New APP" window, where we need to fill all 
 + **Revision**: Specify the branch. here is *centos8stream*
 + **Path**: Specify the application path inside the repository (here is *examples/026-ArgoCD/00-deploying-application*)
 
-***Note***: Cluster URL is the Argo CD's way of identifying which cluster to apply the manifests to. In this case we have only one cluster which is the one ArgoCD is running on and returned by the argocd CLI command:
+***Note***: Cluster URL is the Argo CD's way of identifying which cluster to apply the manifests to.  
+In this case we have only one cluster which is the one ArgoCD is running on and returned by the argocd CLI command:
 
 ```
 $ argocd cluster list
@@ -68,7 +69,6 @@ After a while we should get the following screen:
 $ kubectl get pods -n test
 NAME                   READY   STATUS    RESTARTS   AGE
 bgd-74dc875f9b-6rrxg   1/1     Running   0          3m4s
-
 
 # Verify the application status
 $  argocd app get test
