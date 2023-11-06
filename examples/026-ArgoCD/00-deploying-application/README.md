@@ -10,8 +10,8 @@ An Argo CD Application is controlled by the Argo CD Application Controller via a
 The application we are going to use is available on GitHub:
 [00-deploying-application](https://github.com/cgiacomini/vagrant--kubernetes/tree/centos8stream/examples/026-ArgoCD/00-deploying-application)
 
-The application is deployed with ArgoCD using the Application Custom Resource (CR).
-The CR is created via the UI in the "New APP" window, where we need to fill all the requested field:
+The application is deployed with ArgoCD using the Application Custom Resource (CR).  
+The CR is created via the UI in the "*New APP*" window, where we need to fill all the requested field:
 
 + **Application Name**: test
 + **Project Name**: default
@@ -32,7 +32,7 @@ SERVER                          NAME        VERSION  STATUS   MESSAGE           
 https://kubernetes.default.svc  in-cluster           Unknown  Cluster has no applications and is not being monitored
 ```
 
-We leave everything else as the default values, click CREATE and we get the following screen with Application as "Missing" and "OutOfSy:
+We leave everything else as the default values, click **CREATE** and we get the following screen with Application as "Missing" and "OutOfSy:
 ![Create Application CR](../../../doc/argocdApplicationExample1.JPG)
 
 We can see nothing is deployed in the **test** namespace
@@ -59,7 +59,7 @@ GROUP  KIND        NAMESPACE  NAME  STATUS     HEALTH   HOOK  MESSAGE
        Service     test       bgd   OutOfSync  Missing
 apps   Deployment  test       bgd   OutOfSync  Missing
 ```
-To Actually apply the manifests we need to click on SYNC in the Argo CD UI, then SYNCHRONIZE to apply them.  
+To Actually apply the manifests we need to click on **SYNC** in the Argo CD UI, then SYNCHRONIZE to apply them.  
 After a while we should get the following screen:
 
 ![Application Deployed](../../../doc/argocdApplicationExample2.JPG)
