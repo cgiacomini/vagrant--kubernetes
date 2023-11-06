@@ -1,4 +1,4 @@
-# ArgoCD Installaton
+# ArgoCD Installation
 Here we are going to install ArgoCD on a 3 nodes kubernetes cluster. We deploy it using the installation notes described in https://kubebyexample.com/learning-paths/argo-cd/argo-cd-getting-started.  
 After the installation is completed we modify the ArgoCD server deployment and service to make it running on the k8s-master node and make it accessible via an ingress.
 ```
