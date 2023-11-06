@@ -39,23 +39,23 @@ argocd-server-5cc766df8c-dwhjt                      1/1     Running   0         
 
 # Verify argocd CLI
 $ argocd version --client
-argocd: v2.6.15+2f7922b
-  BuildDate: 2023-09-07T18:26:53Z
-  GitCommit: 2f7922be9c8f364fec435eec4860b49279be77da
+argocd: v2.9.0+9cf0c69
+  BuildDate: 2023-11-06T05:01:52Z
+  GitCommit: 9cf0c69bbe70393db40e5755e34715f30179ee09
   GitTreeState: clean
-  GoVersion: go1.19.10
+  GoVersion: go1.21.3
   Compiler: gc
-  Platform: windows/amd64
-
+  Platform: linux/amd64
 ```
 
 ## Make ArgoCD Ingress Configuration
 First we need to change the argocd-server service from NodePort Type to ClusterIP.
-![ArgoCD server Service](./playbooks/argocd-server-service.yaml)
+[ArgoCD server Service](./playbooks/argocd-server-service.yaml)
 
 We also need to change the deployment to add ***tolerations*** to the master node ***taint***, the **nodeSelector** to force deployment on the node labeled ***run-argocd: "true"*** and also we need to add ***"--insecure"*** option to the container arguments.  
-To configure argocd server to handle TLS see the proper section in https://argo-cd.readthedocs.io/en/stable/operator-manual/ingress/
-![ArgoCD server Deployment](./playbooks/argocd-server-deployment.yaml)
+To configure argocd server to handle TLS see the proper section in  https://argo-cd.readthedocs.io/en/stable/operator-manual/ingress/
+
+[ArgoCD server Deployment](./playbooks/argocd-server-deployment.yaml)
 
 Here is the ingress that allow to acces ArgoCD server UI on HTTP port 80 using the FQDN ***argocd.singleton.net***.
 ![ArgoCD Ingress](./playbook/argocd-ingress.yaml)
