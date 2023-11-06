@@ -10,7 +10,10 @@ namespace/argocd created
 $ kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
 
 # Download the ArgoCD CLI for the OS from where you normally operate on the kubernetes cluster. I am normally using cygwin so I download a windows version of the ArgoCD CLI.
-$ curl -OL https://github.com/argoproj/argo-cd/releases/download/v2.6.15/argocd-windows-amd64.exe
+# Fpr windows
+$ curl -OL https://github.com/argoproj/argo-cd/releases/download/v2.9.0/argocd-windows-amd64.exe
+# For linux
+# $ curl -OL https://github.com/argoproj/argo-cd/releases/download/v2.9.0/argocd-linux-arm64
 ...
 
 # Move the executable in a directory pointed by $PATH
