@@ -46,7 +46,7 @@ hello-world/hello-world 0.2.0           1.16.0          A Helm chart for Kuberne
 The repository contains one only chart that will install an hello world application.
 
 ## Install the chart
-``
+```
 $ helm install my-hello-world hello-world/hello-world --version 0.2.0
 NAME: my-hello-world
 LAST DEPLOYED: Thu Dec  1 16:58:21 2022
@@ -59,7 +59,6 @@ NOTES:
   export CONTAINER_PORT=$(kubectl get pod --namespace ckad $POD_NAME -o jsonpath="{.spec.containers[0].ports[0].containerPort}")
   echo "Visit http://127.0.0.1:8080 to use your application"
   kubectl --namespace ckad port-forward $POD_NAME 8080:$CONTAINER_PORT
-
 ```
 ## Verify the installation
 ```
