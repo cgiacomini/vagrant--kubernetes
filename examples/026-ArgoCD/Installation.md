@@ -102,13 +102,10 @@ We can try to login with argocd CLI
 $ argocd login --grpc-web  --insecure --username=admin --password=tiJw1x9MMjsF7VTP argocd.singleton.net
 'admin:login' logged in successfully
 Context 'argocd.singleton.net' updated
-
 # List the kubernetes configured clusters
-```
 $ argocd  cluster list
-SERVER                          NAME        VERSION  STATUS   MESSAGE                                                  PROJECT
+SERVER                          NAME        VERSION  STATUS   MESSAGE                                                PROJECT
 https://kubernetes.default.svc  in-cluster           Unknown  Cluster has no applications and is not being monitored.
 ```
-
 we can also access the Web UI using http://argocd.singleton.net URL and the same credentials used with argocd CLI.
 
