@@ -21,7 +21,7 @@
         1. [Label Matching](./PromSQL.md#label-matching)
         2. [Range Vector Selector](./PromSQL.md#range-vector-selector)
         3. [Offset Modifier](./PromSQL.md#offset-modifier)
-    2. [Query Operators](./PromSQL.md@query-operators)
+    2. [Query Operators](./PromSQL.md#query-operators)
         1. [Arithmetic Binary Operatos](./PromSQL.md#arithmetic-binary-operators)
         2. [Comparison Binary Operators](./PromSQL.md#comparison-binary-operators)
         3. [Logical Set Binary Operators](./PromSQL.md#logical-set-binary-operators)
