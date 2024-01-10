@@ -243,7 +243,7 @@ $ curl http://prometheus.singleton.net/api/v1/query?query=node_cpu_seconds_total
 ...
 ...
 ```
-Because some special characters can like brachets can cause problems when sending a more complex HTTP request where we specify also some labels, we can pass the query as data to curl using **--data** option.  
+Because some special characters like brachets can cause problems when sending a more complex HTTP request where we specify also some labels, we can pass the query as data to curl using **--data** option.  
 Examples:
 ```
 $ curl http://prometheus.singleton.net/api/v1/query?query=node_cpu_seconds_total --data 'query=node_cpu_seconds_total{cpu="0", instance="10.10.0.86:9100"}'
