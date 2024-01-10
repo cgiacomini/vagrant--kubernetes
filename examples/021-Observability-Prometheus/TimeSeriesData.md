@@ -16,7 +16,7 @@ The metric name may contain ASCII letters and digits, as well as underscores and
 ```
 [a-zA-Z_:][a-zA-Z0-9_:]*.
 ```
-The metric name is very general, *node_cpu_seconds_total* metric name does not point to a specific CPU or even specifice node.
+The metric name is very general, *node_cpu_seconds_total* metric name does not point to a specific CPU or even specific node.
 If we query prometheus using just the metric name we probably get a list of multiple set of of time series data.  
 Infact quering on prometues UI for node_cpu_seconds_total we get this result : 
 
