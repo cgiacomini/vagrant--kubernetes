@@ -26,7 +26,7 @@
         2. [Comparison Binary Operators](./PromSQL.md#comparison-binary-operators)
         3. [Logical Set Binary Operators](./PromSQL.md#logical-set-binary-operators)
         4. [Agregation Operators](./PromSQL.md#agregation-operators)
-    3. [Query Functions](./PronSQL.md#query-functions)
+    3. [Query Functions](./PromSQL.md#query-functions)
     4. [HTTP API](./PromSQL.md#http-api)
     5. [Visualization](./Visualization/README.md)
        1. [Expression Browser](./Visualization/README.md#expression-browser)
