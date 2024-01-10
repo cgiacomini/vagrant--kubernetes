@@ -175,7 +175,7 @@ subjects:
 Prometheus's configuration is defined in ***prometheus.yaml*** file.   
 All the alert rules for AlertManager are configured in ***prometheus.rules***.  
 We will set up an AlertManager to handle all alerting from prometheus metrics.  
-These two files will present inside the Prometheus container in ***/etc/prometheus*** location as 
+These two files will be present inside the Prometheus container in ***/etc/prometheus*** location as 
 * ***/etc/prometheus/prometheus.yaml*** 
 * ***/etc/prometheus/prometheus.rules*** 
 
@@ -219,7 +219,7 @@ data:
       - scheme: http
         static_configs:
         - :
-          - "aletargetsrtmanager.monitoring.svc:9093"
+          - "alertmanager-service.monitoring.svc.cluster.local:9093"
     scrape_configs:
       - job_name: 'node-exporter'
         ervubernetes_sd_configs:
