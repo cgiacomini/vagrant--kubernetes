@@ -39,12 +39,11 @@ node_cpu_seconds_total{cpu="0"}[2m] # select all values of the metric over last 
 It provide a time offset to select data from the past, with or without a range selector.  
 Example:
 
-Ge the amount of second of CPU used by the system from on hour ago
+Get the amount of seconds of CPU used by the system from on hour ago
 ```
 node_cpu_seconds_total{cpu="0", instance="10.10.0.82:9100", mode="system"} offset 1h
 ```
-Ge of second of CPU used by the system from on hour ago over a period of five minutes
-
+Get the amount of seconds of CPU used by the system from on hour ago over a period of five minutes
 ```
 node_cpu_seconds_total{cpu="0", instance="10.10.0.82:9100", mode="system"}[5m] offset 1h 
 ```
@@ -61,7 +60,7 @@ Using these operators we can perform basic aritmetic operation on metrics numeri
 
 Examples:
 ```
-node_cp_seconds_total * 2  # Multiply the metric valu by 2
+node_cp_seconds_total * 2  # Multiply the metric value by 2
 ```
 What if we would like to get the total ammout of CPU usage for system and user time of cpu=0 of a particular node for example instance="10.10.0.82:9100"?
 We could try something like this
@@ -101,7 +100,7 @@ These operators are used to filter results to only those where the comparison ex
 * "<=" : Less then or equal
   
 Examples:  
-In The following example we select the node_cpu_seconds_total  metrics that has a value of 0.  
+In the following example we select the node_cpu_seconds_total  metrics that has a value of 0.  
 We see that the cpus 0 and 1 on all nodes has usage of 0 seconds in steal mode.
 ```
 node_cpu_seconds_total == 0
@@ -137,7 +136,7 @@ These operators are used to combine set of results in varius ways by using label
 
 Examples:  
 Here we ask to return a combination of results using *and* operator for two metrics that have similar but not all matching labels values.
-**node_cpu_seconds_total** have modes: *idle, iowait, irq, nice sofirq, steal, system, user* while **node_cpu_seconds_total** has only modes: *users, nice*.
+**node_cpu_seconds_total** have modes: *idle, iowait, irq, nice sofirq, steal, system, user* while **node_cpu_guest_seconds_total** has only modes: *users, nice*.
 By combining them using *and* operator we only get the metrics for the two modes *user* and *nice* in both the metrics.
 ```
 node_cpu_seconds_total and node_cpu_guest_seconds_total
@@ -169,13 +168,13 @@ Are used to combine multiple values into a single value.
 * "quantile" : return the quantile for a particular dimension
 
 Examples:  
-The following query uses the avg operator to get the avarage users cpu time from all the nodes 
+The following query uses the **avg** operator to get the avarage users cpu time from all the nodes 
 ```
 avg(node_cpu_seconds_total{mode="user"})
 {} 1096.715
 ```
 ## Query Functions
-Prmetheus Query Language provivdes a set functions that give variety of built-in functionalities.
+Prometheus Query Language provivdes a set functions that give variety of built-in functionalities.
 There are a lot of them so for a full list of PromQL functions have a look at the Prometheus the official documentation [Query Functions](https://prometheus.io/docs/prometheus/latest/querying/functions).  
 Here are some examples:  
 
