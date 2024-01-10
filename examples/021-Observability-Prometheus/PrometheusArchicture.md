@@ -8,7 +8,7 @@ Each request is called a ***scrape***, and is created according to the config in
 Scraped data are stored by prometheus and can be queried via PromQL on the prometheus dashboard. 
 Prometheus discovers targets to scrape from service discovery.  
 Targets are instrumented applications then can be scraped via an exporter.  
-Data can be also used t send alerts to the alert manager which in turn  could use them to produce different forms of notifications.
+Data can be also used to send alerts to the alert manager which in turn  could use them to produce different forms of notifications.
 
 Prometheus provides four main types of metrics:
 
@@ -32,7 +32,7 @@ Client Libraries are used to instruments the applications to produce metrics.
 Available for many languages, they take care of the details for producing metrics and respond t http requests.
 
 ## Exporters
-Like SNMP agents, exporters they are responsible to collect metrics data and expose them to prometheus whenever there no direct instrumentation.
+Like SNMP agents, exporters are responsible to collect metrics data and expose them to Prometheus whenever there no direct instrumentation.
 basically are kind of proxy that receive requests, collect the required information and return them in the correct expected format.  
 You can use exporters to access data you do not have control over, such as kernel metrics.
 
@@ -42,9 +42,7 @@ With Service Discovery we provide to prometheus the necessary information to fin
 
 # Scraping
 Service discovery and relabeling give us a list of targets to be monitored. Prometheus fetch metrics by sending HTTP requests (scrape).  
-The response to a scrape (an http request) is parsed and stored. Prometheus is configure to pull metrics but a monitoring targer can also 
-push information about if and when is going to be monitored
-
+The response to a scrape (an http request) is parsed and stored. 
 
 # Storage
 Data are stored locally in a custum database 
