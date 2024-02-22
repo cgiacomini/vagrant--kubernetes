@@ -233,18 +233,18 @@ For this to work, as explained for prometheus installaution, we need to add the 
 
 ## Verificaton
 Once deployed grafana can be accessed at the following URL : grafana.singleton.net
-![Grafana Dashboard](../../../doc/Grafana-01.JPG)
-
+![Grafana Dashboard](../../doc/Grafana-01.JPG)
+https://github.com/cgiacomini/vagrant--kubernetes/blob/centos8stream/doc/Grafana-01.JPG
 We can login as admin/admin; grafana will ask change password at first login.  
 Once login the first thing to verify is the datasource configuration. We have configured grafana with configmap telling the url of the prometheus service as datasource.
 From the welcomme page we can navigate to HOME -> Connections -> Your connections ad we will see that our prometheus data source is well configured.
-![Grafana Data Source](../../../doc/Grafana-02.JPG)
+![Grafana Data Source](../../doc/Grafana-02.JPG)
 
 We can click on it and at the bottom of the page we can click on ***Save & test*** button. We should see ***Data source is working***
-![Grafana Data Source](../../../doc/Grafana-03.JPG)
+![Grafana Data Source](../../doc/Grafana-03.JPG)
 
 By clicking  on the ***Explore*** button we open a page similar to the prometheus one. From there we can send some metrics queries for example : 
-![Grafana Data Source](../../../doc/Grafana-04.JPG)
+![Grafana Data Source](../../doc/Grafana-04.JPG)
 
 
 ## Create Dashboard
