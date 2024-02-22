@@ -234,7 +234,7 @@ For this to work, as explained for prometheus installaution, we need to add the 
 ## Verificaton
 Once deployed grafana can be accessed at the following URL : grafana.singleton.net
 ![Grafana Dashboard](../../doc/Grafana-01.JPG)
-https://github.com/cgiacomini/vagrant--kubernetes/blob/centos8stream/doc/Grafana-01.JPG
+
 We can login as admin/admin; grafana will ask change password at first login.  
 Once login the first thing to verify is the datasource configuration. We have configured grafana with configmap telling the url of the prometheus service as datasource.
 From the welcomme page we can navigate to HOME -> Connections -> Your connections ad we will see that our prometheus data source is well configured.
